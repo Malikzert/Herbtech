@@ -8,11 +8,15 @@ class QualityControl extends Model
 {
     protected $fillable = [
         'production_id', 'inspector_name', 'inspected_at', 
-        'total_inspected', 'total_passed', 'total_rejected', 'status'
+        'total_inspected', 'total_passed', 'total_rejected', 'status', 'action'
     ];
 
     protected $casts = [
         'inspected_at' => 'datetime',
+    ];
+
+    protected $hidden = [
+        'created_at', 'updated_at',
     ];
 
     public function production()

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Production extends Model
 {
     protected $fillable = [
-        'batch_number', 'product_id', 'start_date', 'end_date', 'status', 'pic_name'
+        'batch_number', 'product_id', 'start_date', 'end_date', 'status', 'pic_name', 'user_id', 'rework_of'
     ];
 
     protected $casts = [
@@ -18,6 +18,11 @@ class Production extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function productionMaterials()
@@ -33,5 +38,15 @@ class Production extends Model
     public function finishedGoodsInventories()
     {
         return $this->hasMany(FinishedGoodsInventory::class);
+    }
+
+    public function reworkProduction()
+    {
+        return $this->hasMany(Production::class, 'rework_of');
+    }
+
+    public function originalProduction()
+    {
+        return $this->belongsTo(Production::class, 'rework_of');
     }
 }
