@@ -85,15 +85,36 @@ class AuthController extends Controller
             return redirect()->intended('/dashboard');
 
         } catch (\Exception $e) {
-            dd([
-                'Pesan Error' => $e->getMessage(),
-                'File' => $e->getFile(),
-                'Baris' => $e->getLine(),
-                'Trace' => $e->getTraceAsString()
-            ]);
+            // Ambil pesan error singkat untuk log internal
+            $errorCode = $e->getCode();
+            $errorMessage = $e->getMessage();
+
+            // Log detailnya ke file storage/logs/laravel.log agar kamu bisa cek nanti
+            \Log::error("Google Login Failed: " . $errorMessage);
+
+            // Kirim pesan tegas ke user
+            return redirect()->route('login')->with('error', 
+                "Gagal Login! Masalah terdeteksi pada: " . $this->getFriendlyError($errorMessage)
+            );
         }
     }
-
+    private function getFriendlyError($msg) 
+    {
+        if (str_contains($msg, 'Data truncated')) {
+            return "Data tidak cocok (Anda tidak memiliki akses).";
+        }
+        if (str_contains($msg, 'default value')) {
+            return "Data Role belum diatur/tidak sesuai di database.";
+        }
+        if (str_contains($msg, 'cURL error 77')) {
+            return "Sertifikat SSL (cacert.pem) pada server/XAMPP belum terpasang.";
+        }
+        if (str_contains($msg, 'Connection could not be established')) {
+            return "Koneksi ke layanan Email terputus.";
+        }
+        
+        return "Gangguan sistem internal. Silakan hubungi Developer.";
+    }
     private function determineRole(string $email): string
     {
         $adminDomains = ['admin@', 'administrator@', 'herbitech.admin@'];
