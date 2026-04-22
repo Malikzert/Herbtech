@@ -7,7 +7,7 @@
 <div class="space-y-8">
     <!-- Big Action Buttons -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="#" class="group block bg-gradient-to-br from-emerald-600 to-emerald-800 hover:from-emerald-700 hover:to-emerald-900 rounded-2xl shadow-md p-8 text-center transition-all duration-300 transform hover:-translate-y-1 border border-emerald-500/30">
+        <a href="{{ route('operator.productions.index') }}" class="group block bg-gradient-to-br from-emerald-600 to-emerald-800 hover:from-emerald-700 hover:to-emerald-900 rounded-2xl shadow-md p-8 text-center transition-all duration-300 transform hover:-translate-y-1 border border-emerald-500/30">
             <div class="mx-auto w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-inner">
                 <svg class="w-8 h-8 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             </div>
@@ -15,7 +15,7 @@
             <p class="text-emerald-100 text-sm font-medium">Buat batch baru</p>
         </a>
 
-        <a href="#" class="group block bg-white/80 backdrop-blur-md hover:bg-white border-2 border-emerald-500/50 rounded-2xl shadow-sm p-8 text-center transition-all duration-300 transform hover:-translate-y-1">
+        <a href="{{ route('operator.qc.create') }}" class="group block bg-white/80 backdrop-blur-md hover:bg-white border-2 border-emerald-500/50 rounded-2xl shadow-sm p-8 text-center transition-all duration-300 transform hover:-translate-y-1">
             <div class="mx-auto w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
@@ -23,7 +23,7 @@
             <p class="text-gray-500 text-sm font-medium">Validasi kualitas batch</p>
         </a>
 
-        <a href="#" class="group block bg-white/80 backdrop-blur-md hover:bg-white border border-gray-200/60 rounded-2xl shadow-sm p-8 text-center transition-all duration-300 transform hover:-translate-y-1 hover:border-blue-300/50">
+        <a href="{{ route('operator.raw-materials.index') }}" class="group block bg-white/80 backdrop-blur-md hover:bg-white border border-gray-200/60 rounded-2xl shadow-sm p-8 text-center transition-all duration-300 transform hover:-translate-y-1 hover:border-blue-300/50">
             <div class="mx-auto w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                 <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
             </div>
@@ -66,16 +66,21 @@
                 
                 <div class="mt-6 flex gap-3">
                     @if($production->status == 'qc_check')
-                        <button class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-2.5 px-4 rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition shadow-sm text-sm text-center">
+                        <a href="{{ route('operator.qc.create', ['production_id' => $production->id]) }}" class="w-full block bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-2.5 px-4 rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition shadow-sm text-sm text-center">
                             Input Form QC
-                        </button>
+                        </a>
                     @else
-                        <button class="flex-1 bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold py-2.5 px-4 rounded-xl hover:bg-emerald-100 transition text-sm text-center">
-                            Selesaikan
-                        </button>
-                        <button class="bg-white text-gray-600 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition border border-gray-200 text-sm shadow-sm hover:shadow">
+                        <form action="{{ route('operator.productions.updateStatus', $production->id) }}" method="POST" class="flex-1">
+                            @csrf
+                            @method('PATCH')
+                            <input type="hidden" name="status" value="qc_check">
+                            <button type="submit" class="w-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold py-2.5 px-4 rounded-xl hover:bg-emerald-100 transition text-sm text-center">
+                                Selesaikan
+                            </button>
+                        </form>
+                        <a href="{{ route('operator.productions.show', $production->id) }}" class="block bg-white text-gray-600 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition border border-gray-200 text-sm shadow-sm hover:shadow text-center">
                             Detail
-                        </button>
+                        </a>
                     @endif
                 </div>
             </div>

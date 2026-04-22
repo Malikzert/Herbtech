@@ -29,7 +29,8 @@ class ProductController extends Controller
         $products = $query->latest()->paginate(10)->appends($request->query());
         $categories = Product::distinct()->pluck('category')->filter()->values();
         
-        return view('admin.products.index', compact('products', 'categories'));
+        $view = auth()->user()->can('admin') ? 'admin.products.index' : 'operator.products.index';
+        return view($view, compact('products', 'categories'));
     }
 
     public function create()

@@ -28,7 +28,8 @@ class RawMaterialController extends Controller
         
         $rawMaterials = $query->latest()->paginate(10)->appends($request->query());
         
-        return view('admin.raw-materials.index', compact('rawMaterials'));
+        $view = auth()->user()->can('admin') ? 'admin.raw-materials.index' : 'operator.raw-materials.index';
+        return view($view, compact('rawMaterials'));
     }
 
     public function create()

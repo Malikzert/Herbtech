@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('operator')->middleware(['can:operator', 'verified'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'operator'])->name('operator.dashboard');
 
+        Route::patch('productions/{id}/status', [ProductionController::class, 'updateStatus'])->name('operator.productions.updateStatus');
         Route::resource('productions', ProductionController::class)->names('operator.productions');
         Route::resource('qc', QCController::class)->names('operator.qc');
 

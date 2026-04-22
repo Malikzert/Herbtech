@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('title', 'Quality Control Operator')
 @section('header', 'Quality Control')
@@ -6,31 +6,46 @@
 @section('content')
 <div x-data="{ showModal: false, modalMode: 'create', selectedQc: {} }">
     <!-- Header with Search & Filters -->
-    <div class="mb-6 flex flex-col lg:flex-row gap-4 justify-between">
-        <form method="GET" action="{{ route('operator.qc.index') }}" class="flex flex-col lg:flex-row gap-3 w-full">
-            <div class="relative">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari batch..." 
-                    class="pl-10 pr-4 py-2.5 w-full lg:w-72 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
-                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
-            <select name="status" class="px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+    <div class="mb-6">
+        <div class="bg-glass rounded-xl border border-white/50 p-4 shadow-sm">
+            <form method="GET" action="{{ route('operator.qc.index') }}" class="flex flex-wrap gap-3 items-center w-full">
+                <div class="relative flex-1 min-w-[200px]">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari batch..." 
+                        class="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition">
+                </div>
+                <select name="status" class="modern-select h-11 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition cursor-pointer">
                 <option value="">Semua Hasil</option>
                 <option value="passed" {{ request('status') === 'passed' ? 'selected' : '' }}>Passed</option>
                 <option value="partial_reject" {{ request('status') === 'partial_reject' ? 'selected' : '' }}>Partial Reject</option>
                 <option value="full_reject" {{ request('status') === 'full_reject' ? 'selected' : '' }}>Full Reject</option>
             </select>
-            <button type="submit" class="px-4 py-2.5 bg-emerald-600 text-white font-medium rounded-xl hover:bg-emerald-700">Filter</button>
-            @if(request('search') || request('status'))
-            <a href="{{ route('operator.qc.index') }}" class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200">Reset</a>
-            @endif
-        </form>
+                <button type="submit" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2H4V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6H3v-6zM12 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
+                    Filter
+                </button>
+                @if(request('search') || request('status'))
+                <a href="{{ route('operator.qc.index') }}" class="h-11 px-5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    Reset
+                </a>
+                @endif
+                <div class="flex-1"></div>
+                <a href="{{ route('operator.qc.create') }}" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2 shadow-lg shadow-emerald-600/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah QC
+                </a>
+            </form>
+        </div>
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+    <div class="bg-glass rounded-xl border border-white/50 overflow-hidden shadow-sm glass-card">
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                <thead class="bg-gray-50/80 text-gray-500 text-xs uppercase">
                     <tr>
                         <th class="px-6 py-3 font-medium text-left">ID QC</th>
                         <th class="px-6 py-3 font-medium text-left">Batch</th>
@@ -76,7 +91,7 @@
         </div>
         
         @if($qualityControls->hasPages())
-        <div class="px-6 py-4 border-t border-gray-100">
+        <div class="px-6 py-4 border-t border-gray-100/50 bg-gray-50/30">
             {{ $qualityControls->links() }}
         </div>
         @endif
