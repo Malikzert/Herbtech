@@ -2,28 +2,45 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        \App\Models\User::create([
-            'name' => 'Admin SIP',
-            'email' => 'admin@sipjamu.com',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]);
+        // 1. Akun Admin Utama
+        User::updateOrCreate(
+            ['email' => 'admin@sipjamu.com'],
+            [
+                'name' => 'Admin SIP',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
 
-        \App\Models\User::create([
-            'name' => 'Operator Produksi',
-            'email' => 'operator@sipjamu.com',
-            'password' => bcrypt('password'),
-            'role' => 'operator',
-        ]);
+        // 2. Akun Operator Produksi
+        User::updateOrCreate(
+            ['email' => 'operator@sipjamu.com'],
+            [
+                'name' => 'Operator Produksi',
+                'password' => Hash::make('password'),
+                'role' => 'operator',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // 3. Akun Spesifik Dwi Rizky
+        User::updateOrCreate(
+            ['email' => 'dwirsk6@gmail.com'],
+            [
+                'name' => 'Dwi Rizky',
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
