@@ -55,25 +55,54 @@ class ProductionController extends Controller
     public function create()
     {
         $products = Product::all();
-        return view('operator.productions.create', compact('products'));
+        $rawMaterials = \App\Models\RawMaterial::all();
+        return view('operator.productions.create', compact('products', 'rawMaterials'));
     }
 
     public function store(Request $request)
     {
+        if ($request->has('materials')) {
+            $materials = array_filter($request->input('materials'), function ($mat) {
+                return !empty($mat['raw_material_id']) && !empty($mat['quantity']);
+            });
+            $request->merge(['materials' => $materials]);
+        }
+
         $validated = $request->validate([
             'batch_number' => 'required|string|max:100|unique:productions,batch_number',
             'product_id' => 'required|exists:products,id',
+            'target_quantity' => 'required|integer|min:1',
             'start_date' => 'required|date',
             'pic_name' => 'nullable|string|max:255',
+            'materials' => 'nullable|array',
+            'materials.*.raw_material_id' => 'required|exists:raw_materials,id',
+            'materials.*.quantity' => 'required|numeric|min:0.1',
         ]);
 
-        $validated['user_id'] = auth()->id();
-        $validated['status'] = 'draft';
+        $status = $request->input('action') === 'start' ? 'in_progress' : 'draft';
 
-        $production = Production::create($validated);
+        $production = Production::create([
+            'batch_number' => $validated['batch_number'],
+            'product_id' => $validated['product_id'],
+            'target_quantity' => $validated['target_quantity'],
+            'start_date' => $validated['start_date'],
+            'pic_name' => $validated['pic_name'],
+            'user_id' => auth()->id(),
+            'status' => $status,
+        ]);
+
+        if (!empty($validated['materials'])) {
+            foreach ($validated['materials'] as $mat) {
+                \App\Models\ProductionMaterial::create([
+                    'production_id' => $production->id,
+                    'raw_material_id' => $mat['raw_material_id'],
+                    'quantity_used' => $mat['quantity'],
+                ]);
+            }
+        }
 
         return redirect()->route('operator.productions.show', $production->id)
-            ->with('success', 'Produksi berhasil dibuat.');
+            ->with('success', 'Produksi berhasil ' . ($status === 'in_progress' ? 'dimulai.' : 'disimpan sebagai draft.'));
     }
 
     public function show(string $id)
@@ -117,6 +146,8 @@ class ProductionController extends Controller
         $validated = $request->validate([
             'batch_number' => 'required|string|max:100|unique:productions,batch_number,' . $id,
             'product_id' => 'required|exists:products,id',
+            'target_quantity' => 'required|integer|min:1',
+            'actual_quantity' => 'nullable|integer|min:0',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
             'pic_name' => 'nullable|string|max:255',

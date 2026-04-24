@@ -27,6 +27,14 @@
                 <p class="text-base font-semibold text-gray-900">{{ $production->product->name ?? '-' }}</p>
             </div>
             <div>
+                <p class="text-sm text-gray-500">Target Produksi (Qty)</p>
+                <p class="text-base font-semibold text-gray-900">{{ $production->target_quantity }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Aktual Produksi (Qty)</p>
+                <p class="text-base font-semibold text-gray-900">{{ $production->actual_quantity ?? '-' }}</p>
+            </div>
+            <div>
                 <p class="text-sm text-gray-500">Mulai</p>
                 <p class="text-base font-semibold text-gray-900">{{ $production->start_date ? $production->start_date->format('d M Y H:i') : '-' }}</p>
             </div>

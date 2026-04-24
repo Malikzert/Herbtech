@@ -11,6 +11,7 @@ use App\Http\Controllers\QCController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RecipeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,10 +42,14 @@ Route::middleware('auth')->group(function () {
         
         Route::resource('raw-materials', RawMaterialController::class)->names('admin.raw-materials');
         Route::resource('products', ProductController::class)->names('admin.products');
+        Route::resource('recipes', RecipeController::class)->names('admin.recipes');
+        Route::post('recipes/store-batch', [RecipeController::class, 'storeBatch'])->name('admin.recipes.store-batch');
+        Route::get('recipes/by-product/{productId}', [RecipeController::class, 'getByProduct'])->name('admin.recipes.by-product');
         Route::resource('users', UserController::class)->names('admin.users');
 
         Route::get('productions', [ProductionController::class, 'index'])->name('admin.productions.index');
         Route::get('productions/{id}', [ProductionController::class, 'show'])->name('admin.productions.show');
+        Route::put('productions/{id}/update-status', [ProductionController::class, 'updateStatus'])->name('admin.productions.update-status');
         
         Route::get('qc', [QCController::class, 'index'])->name('admin.qc.index');
         Route::get('qc/{id}', [QCController::class, 'show'])->name('admin.qc.show');

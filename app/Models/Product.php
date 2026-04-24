@@ -19,4 +19,9 @@ class Product extends Model
     {
         return $this->hasMany(FinishedGoodsInventory::class);
     }
+
+    public function recipes()
+    {
+        return $this->hasMany(Recipe::class);
+    }
 }

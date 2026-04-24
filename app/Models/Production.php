@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Production extends Model
 {
     protected $fillable = [
-        'batch_number', 'product_id', 'start_date', 'end_date', 'status', 'pic_name', 'user_id', 'rework_of'
+        'batch_number', 'product_id', 'target_quantity', 'actual_quantity', 'start_date', 'end_date', 'status', 'pic_name', 'user_id', 'rework_of'
     ];
 
     protected $casts = [

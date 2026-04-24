@@ -35,10 +35,10 @@
                 </a>
                 @endif
                 <div class="flex-1"></div>
-                <button @click="showModal = true; modalMode = 'create'; selectedProduction = {}" type="button" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2 shadow-lg shadow-emerald-600/20">
+                <a href="{{ route('operator.productions.create') }}" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2 shadow-lg shadow-emerald-600/20">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Tambah Produksi
-                </button>
+                </a>
             </form>
         </div>
     </div>
@@ -51,6 +51,8 @@
                     <tr>
                         <th class="px-6 py-3 font-medium text-left">No Batch</th>
                         <th class="px-6 py-3 font-medium text-left">Produk</th>
+                        <th class="px-6 py-3 font-medium text-center">Target Qty</th>
+                        <th class="px-6 py-3 font-medium text-center">Aktual Qty</th>
                         <th class="px-6 py-3 font-medium text-left">Mulai</th>
                         <th class="px-6 py-3 font-medium text-left">Status</th>
                         <th class="px-6 py-3 font-medium text-right">Aksi</th>
@@ -61,6 +63,8 @@
                     <tr class="hover:bg-gray-50 transition">
                         <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $production->batch_number }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $production->product->name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-gray-600">{{ $production->target_quantity }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-gray-600">{{ $production->actual_quantity ?? '-' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $production->start_date ? $production->start_date->format('d M Y') : '-' }}</td>
                         <td class="px-6 py-4">
                             @switch($production->status)
@@ -99,51 +103,6 @@
             {{ $productions->links() }}
         </div>
         @endif
-    </div>
-
-    <!-- Create Modal -->
-    <div x-show="showModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
-        <div class="flex min-h-screen items-center justify-center p-4">
-            <div x-show="showModal" @click="showModal = false" class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
-            <div x-show="showModal" @click.stop class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-gray-800">Tambah Produksi Baru</h3>
-                    <button @click="showModal = false" class="p-2 text-gray-400 hover:text-gray-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-                
-                <form action="{{ route('operator.productions.store') }}" method="POST">
-                    @csrf
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">No Batch</label>
-                            <input type="text" name="batch_number" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Produk</label>
-                            <select name="product_id" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
-                                @foreach(\App\Models\Product::all() as $product)
-                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
-                            <input type="datetime-local" name="start_date" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">PIC Name</label>
-                            <input type="text" name="pic_name" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
-                        </div>
-                    </div>
-                    <div class="flex justify-end gap-3 mt-6">
-                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Batal</button>
-                        <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

@@ -74,6 +74,35 @@
                 <p class="text-3xl font-bold text-red-700 mt-2">{{ $qc->total_rejected }}</p>
             </div>
         </div>
+
+        @if($qc->qcDefects && $qc->qcDefects->count() > 0)
+        <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mt-8 mb-4">Rincian Cacat</h3>
+        <div class="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
+            <table class="w-full text-left text-sm text-gray-600">
+                <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="px-4 py-3 font-medium">Jenis Cacat</th>
+                        <th class="px-4 py-3 font-medium text-right">Jumlah (Botol)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @foreach($qc->qcDefects as $defect)
+                    <tr>
+                        <td class="px-4 py-3">{{ $defect->defectCategory->name ?? 'Kategori tidak diketahui' }}</td>
+                        <td class="px-4 py-3 text-right font-medium text-red-600">{{ $defect->defect_quantity }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
+
+        @if($qc->notes)
+        <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mt-8 mb-4">Catatan QC</h3>
+        <div class="bg-yellow-50/50 rounded-xl border border-yellow-100 p-4 text-gray-700">
+            {{ $qc->notes }}
+        </div>
+        @endif
     </div>
 </div>
 @endsection

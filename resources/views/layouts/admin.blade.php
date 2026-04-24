@@ -28,13 +28,26 @@
             padding-right: 2.5rem;
         }
         
-        /* Glass Effect Classes */
-        .bg-glass { background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .bg-glass-dark { background-color: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        /* Glass Effect Classes - 20% Opacity with Strong Blur */
+        .bg-glass { 
+            background-color: rgba(255, 255, 255, 0.2); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .bg-glass-dark { 
+            background-color: rgba(0, 0, 0, 0.2); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+        }
         
         /* Card Hover Effect */
         .glass-card { transition: all 0.3s ease; }
-        .glass-card:hover { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12); transform: translateY(-2px); }
+        .glass-card:hover { 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); 
+            transform: translateY(-2px); 
+            background-color: rgba(255, 255, 255, 0.25);
+        }
         
         /* Background Image */
         .bg-admin-wall {
@@ -53,12 +66,68 @@
         }
         
         .glass-sidebar {
-            background-color: rgba(5, 150, 105, 0.95);
-            backdrop-filter: blur(12px);
+            background-color: rgba(5, 150, 105, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
         }
         .glass-topbar {
-            background-color: rgba(255, 255, 255, 0.85);
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Glass Button */
+        .btn-glass {
+            background-color: rgba(5, 150, 105, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .btn-glass:hover {
+            background-color: rgba(5, 150, 105, 1);
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.4);
+        }
+        
+        /* Glass Input */
+        .input-glass {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .input-glass:focus {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(5, 150, 105, 0.6);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+        
+        /* Glass Table */
+        .glass-table {
+            background-color: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .glass-table thead {
+            background-color: rgba(5, 150, 105, 0.5);
+        }
+        .glass-table thead th {
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .glass-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Text Shadow for Glass UI */
+        .text-shadow {
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .text-shadow-sm {
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
     </style>
     @stack('styles')
@@ -78,52 +147,57 @@
                     </div>
 
                     <nav class="mt-6 px-4 space-y-1">
-                        <p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4">Menu Utama</p>
+                        <p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Menu Utama</p>
                         
-                        <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.dashboard') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.dashboard') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2H4V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6H4v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
-                            Dashboard
+                            <span class="text-shadow-sm">Dashboard</span>
                         </a>
 
-                        <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4">Master Data</p></div>
+                        <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Master Data</p></div>
                         
-                        <a href="{{ route('admin.products.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.products.*') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.products.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.products.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                            Produk
+                            <span class="text-shadow-sm">Produk</span>
                         </a>
                         
-                        <a href="{{ route('admin.raw-materials.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.raw-materials.*') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.raw-materials.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.raw-materials.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                            Bahan Baku
+                            <span class="text-shadow-sm">Bahan Baku</span>
                         </a>
 
-                        <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4">Monitoring</p></div>
+                        <a href="{{ route('admin.recipes.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.recipes.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                            <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            <span class="text-shadow-sm">Resep</span>
+                        </a>
+
+                        <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Monitoring</p></div>
                         
-                        <a href="{{ route('admin.productions.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.productions.*') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.productions.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.productions.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                            Produksi
+                            <span class="text-shadow-sm">Produksi</span>
                         </a>
                         
-                        <a href="{{ route('admin.qc.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.qc.*') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.qc.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.qc.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Quality Control
+                            <span class="text-shadow-sm">Quality Control</span>
                         </a>
                         
-                        <a href="{{ route('admin.reports.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.reports.*') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.reports.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.reports.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            Laporan
+                            <span class="text-shadow-sm">Laporan</span>
                         </a>
 
-                        <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4">Pengaturan</p></div>
+                        <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Pengaturan</p></div>
                         
-                        <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.users.*') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.users.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                            Manajemen User
+                            <span class="text-shadow-sm">Manajemen User</span>
                         </a>
                         
-                        <a href="{{ route('admin.profile.edit') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition {{ request()->routeIs('admin.profile.*') ? 'bg-white/20' : '' }}">
+                        <a href="{{ route('admin.profile.edit') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.profile.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            Profil Saya
+                            <span class="text-shadow-sm">Profil Saya</span>
                         </a>
                     </nav>
                 </aside>

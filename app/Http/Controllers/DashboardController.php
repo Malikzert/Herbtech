@@ -53,6 +53,10 @@ class DashboardController extends Controller
             ->latest()
             ->get();
 
-        return view('operator.dashboard', compact('myProductions', 'activeProductions'));
+        $inProgressCount = Production::where('user_id', auth()->id())->where('status', 'in_progress')->count();
+        $qcCheckCount = Production::where('user_id', auth()->id())->where('status', 'qc_check')->count();
+        $safeStockCount = RawMaterial::where('current_stock', '>=', 10)->count();
+
+        return view('operator.dashboard', compact('myProductions', 'activeProductions', 'inProgressCount', 'qcCheckCount', 'safeStockCount'));
     }
 }

@@ -50,17 +50,30 @@ class QCController extends Controller
         $productions = Production::whereIn('status', ['in_progress', 'qc_check'])
             ->with('product')
             ->get();
+            
+        $defectCategories = \App\Models\DefectCategory::all();
 
-        return view('operator.qc.create', compact('productions'));
+        return view('operator.qc.create', compact('productions', 'defectCategories'));
     }
 
     public function store(Request $request)
     {
+        if ($request->has('defects')) {
+            $defects = array_filter($request->input('defects'), function ($defect) {
+                return !empty($defect['defect_cat_id']) && !empty($defect['quantity']);
+            });
+            $request->merge(['defects' => $defects]);
+        }
+
         $validated = $request->validate([
             'production_id' => 'required|exists:productions,id',
             'total_inspected' => 'required|integer|min:1',
             'total_passed' => 'required|integer|min:0',
             'total_rejected' => 'required|integer|min:0',
+            'defects' => 'nullable|array',
+            'defects.*.defect_cat_id' => 'required|exists:defect_categories,id',
+            'defects.*.quantity' => 'required|integer|min:1',
+            'notes' => 'nullable|string',
         ]);
 
         $production = Production::with('product')->findOrFail($validated['production_id']);
@@ -88,7 +101,18 @@ class QCController extends Controller
             'total_rejected' => $validated['total_rejected'],
             'status' => $this->determineStatus($validated['total_passed'], $validated['total_rejected']),
             'action' => $action,
+            'notes' => $validated['notes'] ?? null,
         ]);
+
+        if (!empty($validated['defects'])) {
+            foreach ($validated['defects'] as $defect) {
+                \App\Models\QcDefect::create([
+                    'qc_id' => $qc->id,
+                    'defect_cat_id' => $defect['defect_cat_id'],
+                    'defect_quantity' => $defect['quantity'],
+                ]);
+            }
+        }
 
         $this->processAction($production, $qc);
 

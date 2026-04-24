@@ -5,91 +5,88 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Big Action Buttons -->
+    <!-- Stat Cards (Dashboard Operasional) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="{{ route('operator.productions.index') }}" class="group block bg-gradient-to-br from-emerald-600 to-emerald-800 hover:from-emerald-700 hover:to-emerald-900 rounded-2xl shadow-md p-8 text-center transition-all duration-300 transform hover:-translate-y-1 border border-emerald-500/30">
-            <div class="mx-auto w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-inner">
-                <svg class="w-8 h-8 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl shadow-md p-6 border border-emerald-500/30 flex items-center justify-between">
+            <div>
+                <p class="text-emerald-100 text-sm font-medium mb-1">Sedang Berjalan</p>
+                <h3 class="text-3xl font-extrabold text-white">{{ $inProgressCount }}</h3>
             </div>
-            <h3 class="text-xl font-extrabold text-white mb-1 tracking-tight">Mulai Produksi</h3>
-            <p class="text-emerald-100 text-sm font-medium">Buat batch baru</p>
-        </a>
+            <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-inner">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+        </div>
 
-        <a href="{{ route('operator.qc.create') }}" class="group block bg-white/80 backdrop-blur-md hover:bg-white border-2 border-emerald-500/50 rounded-2xl shadow-sm p-8 text-center transition-all duration-300 transform hover:-translate-y-1">
-            <div class="mx-auto w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-6 border border-amber-200 flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium mb-1">Menunggu QC</p>
+                <h3 class="text-3xl font-bold text-gray-800">{{ $qcCheckCount }}</h3>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-1 tracking-tight">Input Hasil QC</h3>
-            <p class="text-gray-500 text-sm font-medium">Validasi kualitas batch</p>
-        </a>
+            <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center border border-amber-100">
+                <svg class="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+        </div>
 
-        <a href="{{ route('operator.raw-materials.index') }}" class="group block bg-white/80 backdrop-blur-md hover:bg-white border border-gray-200/60 rounded-2xl shadow-sm p-8 text-center transition-all duration-300 transform hover:-translate-y-1 hover:border-blue-300/50">
-            <div class="mx-auto w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-6 border border-blue-200 flex items-center justify-between">
+            <div>
+                <p class="text-gray-500 text-sm font-medium mb-1">Stok Aman</p>
+                <h3 class="text-3xl font-bold text-gray-800">{{ $safeStockCount }}</h3>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-1 tracking-tight">Cek Stok</h3>
-            <p class="text-gray-500 text-sm font-medium">Lihat ketersediaan bahan</p>
-        </a>
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
+                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+            </div>
+        </div>
     </div>
 
-    <!-- Active Productions Cards -->
+    <!-- Active Productions Table -->
     <div>
-        <h3 class="text-xl font-bold text-gray-800 mb-5 tracking-tight">Produksi Sedang Berjalan</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            @forelse($activeProductions as $production)
-            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-gray-100 p-6 relative overflow-hidden hover:shadow-md transition">
-                <div class="absolute top-0 right-0 w-2 h-full {{ $production->status == 'qc_check' ? 'bg-blue-400' : 'bg-yellow-400' }}"></div>
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ $production->status == 'qc_check' ? 'bg-blue-100/80 text-blue-800' : 'bg-yellow-100/80 text-yellow-800' }} mb-3 backdrop-blur-sm border {{ $production->status == 'qc_check' ? 'border-blue-200' : 'border-yellow-200' }}">
-                            {{ ucfirst(str_replace('_', ' ', $production->status)) }}
-                        </span>
-                        <h4 class="text-xl font-extrabold text-gray-800 tracking-tight">{{ $production->product->name ?? 'Produk' }}</h4>
-                        <p class="text-sm font-medium text-gray-500 mt-1">Batch: <span class="text-gray-700">{{ $production->batch_number }}</span></p>
-                    </div>
-                    <div class="text-right bg-white/60 p-2 rounded-lg border border-gray-100">
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Mulai</p>
-                        <p class="text-sm font-bold text-gray-800">{{ $production->start_date ? $production->start_date->format('H:i') : '-' }}</p>
-                    </div>
-                </div>
-                
-                <!-- Progress -->
-                <div class="mt-5 bg-white/50 p-3 rounded-xl border border-gray-100/50">
-                    <div class="flex justify-between text-xs font-bold text-gray-500 mb-2">
-                        <span>{{ $production->status == 'qc_check' ? 'Menunggu Validasi QC' : 'Progress Produksi' }}</span>
-                        <span class="{{ $production->status == 'qc_check' ? 'text-blue-600' : 'text-yellow-600' }}">{{ $production->status == 'qc_check' ? '90%' : '50%' }}</span>
-                    </div>
-                    <div class="w-full bg-gray-200/80 rounded-full h-2.5 overflow-hidden">
-                        <div class="{{ $production->status == 'qc_check' ? 'bg-gradient-to-r from-blue-400 to-blue-500' : 'bg-gradient-to-r from-yellow-400 to-yellow-500' }} h-2.5 rounded-full shadow-inner" style="width: {{ $production->status == 'qc_check' ? '90%' : '50%' }}"></div>
-                    </div>
-                </div>
-                
-                <div class="mt-6 flex gap-3">
-                    @if($production->status == 'qc_check')
-                        <a href="{{ route('operator.qc.create', ['production_id' => $production->id]) }}" class="w-full block bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-2.5 px-4 rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition shadow-sm text-sm text-center">
-                            Input Form QC
-                        </a>
-                    @else
-                        <form action="{{ route('operator.productions.updateStatus', $production->id) }}" method="POST" class="flex-1">
-                            @csrf
-                            @method('PATCH')
-                            <input type="hidden" name="status" value="qc_check">
-                            <button type="submit" class="w-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold py-2.5 px-4 rounded-xl hover:bg-emerald-100 transition text-sm text-center">
-                                Selesaikan
-                            </button>
-                        </form>
-                        <a href="{{ route('operator.productions.show', $production->id) }}" class="block bg-white text-gray-600 font-bold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition border border-gray-200 text-sm shadow-sm hover:shadow text-center">
-                            Detail
-                        </a>
-                    @endif
-                </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-5 tracking-tight">Tabel Produksi Aktif Hari Ini</h3>
+        <div class="bg-glass rounded-xl border border-white/50 overflow-hidden shadow-sm glass-card">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50/80 text-gray-500 text-xs uppercase">
+                        <tr>
+                            <th class="px-6 py-3 font-medium text-left">No Batch</th>
+                            <th class="px-6 py-3 font-medium text-left">Produk</th>
+                            <th class="px-6 py-3 font-medium text-left">Status</th>
+                            <th class="px-6 py-3 font-medium text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @forelse($activeProductions as $production)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $production->batch_number }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $production->product->name ?? 'Produk' }}</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-full {{ $production->status == 'qc_check' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700' }}">
+                                    {{ $production->status == 'qc_check' ? 'QC' : 'Proses' }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                @if($production->status == 'qc_check')
+                                    <a href="{{ route('operator.qc.create', ['production_id' => $production->id]) }}" class="inline-block bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-1.5 px-3 rounded-lg transition shadow-sm">
+                                        Cek QC
+                                    </a>
+                                @else
+                                    <form action="{{ route('operator.productions.updateStatus', $production->id) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="status" value="qc_check">
+                                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-1.5 px-3 rounded-lg transition shadow-sm">
+                                            Selesai
+                                        </button>
+                                    </form>
+                                @endif
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-gray-500">Tidak ada produksi aktif hari ini.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            @empty
-            <div class="col-span-full p-8 bg-white/80 backdrop-blur-md border border-gray-200/60 rounded-2xl text-center text-gray-500 shadow-sm">
-                <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                <p class="font-medium text-lg">Tidak ada batch produksi yang sedang berjalan saat ini.</p>
-            </div>
-            @endforelse
         </div>
     </div>
 </div>

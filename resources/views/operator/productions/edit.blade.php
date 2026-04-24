@@ -34,6 +34,18 @@
             </div>
             
             <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Target Produksi (Qty)</label>
+                <input type="number" name="target_quantity" value="{{ old('target_quantity', $production->target_quantity) }}" required min="1" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
+                @error('target_quantity') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Aktual Produksi (Qty)</label>
+                <input type="number" name="actual_quantity" value="{{ old('actual_quantity', $production->actual_quantity) }}" min="0" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="Kosongkan jika belum selesai">
+                @error('actual_quantity') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+            
+            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
                 <input type="datetime-local" name="start_date" value="{{ old('start_date', $production->start_date ? $production->start_date->format('Y-m-d\TH:i') : '') }}" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
                 @error('start_date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror

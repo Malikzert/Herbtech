@@ -8,7 +8,7 @@ class QualityControl extends Model
 {
     protected $fillable = [
         'production_id', 'inspector_name', 'inspected_at', 
-        'total_inspected', 'total_passed', 'total_rejected', 'status', 'action'
+        'total_inspected', 'total_passed', 'total_rejected', 'status', 'action', 'notes'
     ];
 
     protected $casts = [

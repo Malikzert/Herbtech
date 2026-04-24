@@ -15,11 +15,11 @@
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari batch/produk/operator..." 
-                        class="input-glass w-full h-11 pl-10 pr-4 border border-white/30 rounded-lg text-sm text-slate-900 placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none">
+                        class="w-full h-11 pl-10 pr-4 bg-white/50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none focus:bg-white transition">
                 </div>
                 
                 <!-- Filter Dropdown -->
-                <select name="status" class="modern-select input-glass h-11 px-4 py-2 border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none cursor-pointer">
+                <select name="status" class="modern-select h-11 px-4 py-2 bg-white/50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none focus:bg-white transition cursor-pointer">
                     <option value="">Semua Status</option>
                     <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>On Progress</option>
@@ -30,18 +30,18 @@
                 
                 <!-- Date Range -->
                 <div class="flex gap-2">
-                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="input-glass h-11 px-3 py-2 border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none">
-                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="input-glass h-11 px-3 py-2 border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none">
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="h-11 px-3 py-2 bg-white/50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none">
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="h-11 px-3 py-2 bg-white/50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none">
                 </div>
                 
                 <!-- Filter Button -->
-                <button type="submit" class="btn-glass h-11 px-5 font-medium rounded-lg transition flex items-center gap-2">
+                <button type="submit" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2H4V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6H3v-6zM12 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
                     Filter
                 </button>
                 
                 @if(request()->hasAny(['search', 'status', 'start_date', 'end_date']))
-                <a href="{{ route('admin.productions.index') }}" class="h-11 px-5 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition flex items-center gap-2 border border-white/30">
+                <a href="{{ route('admin.productions.index') }}" class="h-11 px-5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     Reset
                 </a>
@@ -53,45 +53,49 @@
     <!-- Table with Glass Effect -->
     <div class="bg-glass rounded-xl border border-white/50 overflow-hidden shadow-sm glass-card">
         <div class="overflow-x-auto">
-            <table class="w-full glass-table">
-                <thead class="bg-emerald-600 text-white text-xs uppercase">
+            <table class="w-full">
+                <thead class="bg-gray-50/80 text-gray-500 text-xs uppercase">
                     <tr>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">No Batch</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Produk</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Operator</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Mulai</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Status</th>
-                        <th class="px-6 py-3.5 font-bold text-right text-white text-shadow-sm">Aksi</th>
+                        <th class="px-6 py-3.5 font-medium text-left">No Batch</th>
+                        <th class="px-6 py-3.5 font-medium text-left">Produk</th>
+                        <th class="px-6 py-3.5 font-medium text-center">Target Qty</th>
+                        <th class="px-6 py-3.5 font-medium text-center">Aktual Qty</th>
+                        <th class="px-6 py-3.5 font-medium text-left">Operator</th>
+                        <th class="px-6 py-3.5 font-medium text-left">Mulai</th>
+                        <th class="px-6 py-3.5 font-medium text-left">Status</th>
+                        <th class="px-6 py-3.5 font-medium text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-white/20">
+                <tbody class="divide-y divide-gray-100/50">
                     @forelse($productions as $production)
-                    <tr class="hover:bg-white/10 transition">
-                        <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ $production->batch_number }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $production->product->name ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $production->user->name ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $production->start_date ? $production->start_date->format('d M Y') : '-' }}</td>
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $production->batch_number }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ $production->product->name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-gray-600">{{ $production->target_quantity }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-gray-600">{{ $production->actual_quantity ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ $production->user->name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ $production->start_date ? $production->start_date->format('d M Y') : '-' }}</td>
                         <td class="px-6 py-4">
                             @switch($production->status)
                                 @case('draft')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-gray-500/40 text-white border border-gray-400/50">Draft</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100/60 text-gray-600">Draft</span>
                                     @break
                                 @case('in_progress')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-500/40 text-white border border-blue-400/50">On Progress</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100/60 text-blue-700">On Progress</span>
                                     @break
                                 @case('qc_check')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-500/40 text-white border border-amber-400/50">QC Check</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100/60 text-amber-700">QC Check</span>
                                     @break
                                 @case('completed')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/40 text-white border border-emerald-400/50">Completed</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-100/60 text-emerald-700">Completed</span>
                                     @break
                                 @case('cancelled')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-500/40 text-white border border-red-400/50">Cancelled</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-red-100/60 text-red-700">Cancelled</span>
                                     @break
                             @endswitch
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.productions.show', $production->id) }}" class="text-emerald-400 hover:text-emerald-300 text-sm font-medium">Detail</a>
+                            <a href="{{ route('admin.productions.show', $production->id) }}" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Detail</a>
                         </td>
                     </tr>
                     @empty
@@ -99,7 +103,7 @@
                         <td colspan="6" class="px-6 py-16 text-center">
                             <div class="flex flex-col items-center">
                                 <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                                <p class="text-slate-600 font-medium">Belum ada data produksi</p>
+                                <p class="text-gray-500 font-medium">Belum ada data produksi</p>
                             </div>
                         </td>
                     </tr>
@@ -109,7 +113,7 @@
         </div>
         
         @if($productions->hasPages())
-        <div class="px-6 py-4 border-t border-white/20 bg-white/5">
+        <div class="px-6 py-4 border-t border-gray-100/50 bg-gray-50/30">
             {{ $productions->links() }}
         </div>
         @endif
