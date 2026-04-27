@@ -9,7 +9,7 @@
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
         <div class="flex items-start justify-between">
             <div>
-                <h3 class="text-xl font-bold text-white">Batch: {{ $qc->production->batch_number ?? '-' }}</h3>
+                <h3 class="text-xl font-bold black">Batch: {{ $qc->production->batch_number ?? '-' }}</h3>
                 <p class="text-gray-400 mt-1">{{ $qc->production->product->name ?? '-' }}</p>
             </div>
             <div>
@@ -30,15 +30,15 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
             <div>
                 <p class="text-xs text-gray-400 uppercase">Inspector</p>
-                <p class="text-sm font-medium text-white">{{ $qc->inspector_name ?? '-' }}</p>
+                <p class="text-sm font-medium black">{{ $qc->inspector_name ?? '-' }}</p>
             </div>
             <div>
                 <p class="text-xs text-gray-400 uppercase">Waktu Inspeksi</p>
-                <p class="text-sm font-medium text-white">{{ $qc->inspected_at ? $qc->inspected_at->format('d M Y H:i') : '-' }}</p>
+                <p class="text-sm font-medium black">{{ $qc->inspected_at ? $qc->inspected_at->format('d M Y H:i') : '-' }}</p>
             </div>
             <div>
                 <p class="text-xs text-gray-400 uppercase">Total Diperiksa</p>
-                <p class="text-sm font-medium text-white">{{ $qc->total_inspected ?? 0 }}</p>
+                <p class="text-sm font-medium black">{{ $qc->total_inspected ?? 0 }}</p>
             </div>
             <div>
                 <p class="text-xs text-gray-400 uppercase">Aksi</p>
@@ -54,7 +54,7 @@
 
     <!-- Inspection Results -->
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
-        <h4 class="text-lg font-bold text-white mb-4">Hasil Inspeksi</h4>
+        <h4 class="text-lg font-bold black mb-4">Hasil Inspeksi</h4>
         <div class="grid grid-cols-3 gap-4">
             <div class="bg-emerald-500/20 border border-emerald-400/30 rounded-lg p-4 text-center">
                 <p class="text-2xl font-bold text-emerald-400">{{ $qc->total_passed ?? 0 }}</p>
@@ -65,7 +65,7 @@
                 <p class="text-sm text-red-300">Rejected</p>
             </div>
             <div class="bg-white/10 border border-white/30 rounded-lg p-4 text-center">
-                <p class="text-2xl font-bold text-white">{{ $qc->total_inspected ?? 0 }}</p>
+                <p class="text-2xl font-bold black">{{ $qc->total_inspected ?? 0 }}</p>
                 <p class="text-sm text-gray-300">Total</p>
             </div>
         </div>
@@ -74,7 +74,7 @@
     <!-- Defects -->
     @if($qc->qcDefects && $qc->qcDefects->count() > 0)
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
-        <h4 class="text-lg font-bold text-white mb-4">Detail Defect</h4>
+        <h4 class="text-lg font-bold black mb-4">Detail Defect</h4>
         <div class="overflow-x-auto">
             <table class="w-full glass-table">
                 <thead class="glass-table text-gray-300 text-xs uppercase">
@@ -87,7 +87,7 @@
                 <tbody class="divide-y divide-white/20">
                     @foreach($qc->qcDefects as $defect)
                     <tr>
-                        <td class="px-4 py-3 text-sm text-white">{{ $defect->defectCategory->name ?? '-' }}</td>
+                        <td class="px-4 py-3 text-sm black">{{ $defect->defectCategory->name ?? '-' }}</td>
                         <td class="px-4 py-3 text-sm text-center font-medium text-red-400">{{ $defect->quantity }}</td>
                         <td class="px-4 py-3 text-sm text-gray-300">{{ $defect->notes ?? '-' }}</td>
                     </tr>

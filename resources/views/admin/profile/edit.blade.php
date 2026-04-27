@@ -25,12 +25,12 @@
                     <div>
                         <label class="block text-sm font-bold text-white mb-1 text-shadow-sm">Nama Lengkap</label>
                         <input type="text" name="name" value="{{ old('name', $user->name) }}" required
-                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm black focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-white mb-1 text-shadow-sm">Email</label>
                         <input type="email" name="email" value="{{ old('email', $user->email) }}" required
-                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm black focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
                     </div>
                 </div>
 
@@ -53,19 +53,19 @@
                 <div>
                     <label class="block text-sm font-bold text-white mb-1 text-shadow-sm">Password Lama</label>
                     <input type="password" name="current_password" required
-                        class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                        class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm black focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-white mb-1 text-shadow-sm">Password Baru</label>
                         <input type="password" name="password" required
-                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm black focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-white mb-1 text-shadow-sm">Konfirmasi Password</label>
                         <input type="password" name="password_confirmation" required
-                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                            class="w-full px-4 py-2.5 input-glass border border-white/30 rounded-lg text-sm black focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
                     </div>
                 </div>
 
@@ -96,7 +96,7 @@
             <div class="space-y-3 text-sm">
                 <div class="flex justify-between">
                     <span class="text-white/70">ID User</span>
-                    <span class="text-slate-900 font-bold">#{{ $user->id }}</span>
+                    <span class="black font-bold">#{{ $user->id }}</span>
                 </div>
                 <div class="flex justify-between">
                     <span class="text-white/70">Status</span>
@@ -104,7 +104,7 @@
                 </div>
                 <div class="flex justify-between">
                     <span class="text-white/70">Terdaftar</span>
-                    <span class="text-slate-900 font-medium">{{ $user->created_at->format('d M Y') }}</span>
+                    <span class="black font-medium">{{ $user->created_at->format('d M Y') }}</span>
                 </div>
             </div>
         </div>

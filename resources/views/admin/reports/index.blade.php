@@ -41,7 +41,7 @@
         <!-- Summary Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 border-b border-white/30">
             <div class="text-center">
-                <div class="text-3xl font-bold text-slate-900">{{ $totalProductions ?? 0 }}</div>
+                <div class="text-3xl font-bold black">{{ $totalProductions ?? 0 }}</div>
                 <div class="text-sm text-white/80">Total Batch</div>
             </div>
             <div class="text-center">
@@ -72,10 +72,10 @@
                 <tbody class="divide-y divide-white/20">
                     @forelse($productions ?? [] as $production)
                     <tr class="hover:bg-white/10">
-                        <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ $production->batch_number }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $production->product->name ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $production->user->name ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $production->created_at->format('d M Y') }}</td>
+                        <td class="px-6 py-4 text-sm font-bold black">{{ $production->batch_number }}</td>
+                        <td class="px-6 py-4 text-sm font-medium black">{{ $production->product->name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm font-medium black">{{ $production->user->name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm font-medium black">{{ $production->created_at->format('d M Y') }}</td>
                         <td class="px-6 py-4">
                             @switch($production->status)
                                 @case('completed')
@@ -112,7 +112,7 @@
         
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 border-b border-white/30">
             <div class="text-center">
-                <div class="text-2xl font-bold text-slate-900">{{ $totalQc ?? 0 }}</div>
+                <div class="text-2xl font-bold black">{{ $totalQc ?? 0 }}</div>
                 <div class="text-sm text-white/80">Total QC</div>
             </div>
             <div class="text-center">
@@ -139,7 +139,7 @@
     @if($reportType === 'raw_material')
     <div class="bg-glass rounded-xl border border-white/50 p-6">
         <h3 class="font-bold text-white text-shadow-sm mb-4">Penggunaan Bahan Baku</h3>
-        <p class="text-slate-900 font-bold text-lg">Total penggunaan: {{ number_format($totalUsage ?? 0, 2) }}</p>
+        <p class="black font-bold text-lg">Total penggunaan: {{ number_format($totalUsage ?? 0, 2) }}</p>
     </div>
     @endif
 </div>
