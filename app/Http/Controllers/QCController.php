@@ -6,6 +6,7 @@ use App\Models\Production;
 use App\Models\QualityControl;
 use App\Models\FinishedGoodsInventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QCController extends Controller
 {
@@ -70,11 +71,20 @@ class QCController extends Controller
             'total_inspected' => 'required|integer|min:1',
             'total_passed' => 'required|integer|min:0',
             'total_rejected' => 'required|integer|min:0',
+            'final_status' => 'nullable|in:release,rework,reject',
             'defects' => 'nullable|array',
             'defects.*.defect_cat_id' => 'required|exists:defect_categories,id',
             'defects.*.quantity' => 'required|integer|min:1',
             'notes' => 'nullable|string',
         ]);
+
+        $totalInspected = (int) $request->total_inspected;
+        $totalPassed = (int) $request->total_passed;
+        $totalRejected = (int) $request->total_rejected;
+
+        if ($totalPassed + $totalRejected !== $totalInspected) {
+            return back()->with('error', 'Total passed + rejected harus sama dengan total inspected.');
+        }
 
         $production = Production::with('product')->findOrFail($validated['production_id']);
 
@@ -86,35 +96,44 @@ class QCController extends Controller
             return back()->with('error', 'Produksi harus dalam status in_progress untuk QC.');
         }
 
-        if ($validated['total_passed'] + $validated['total_rejected'] !== $validated['total_inspected']) {
-            return back()->with('error', 'Total passed + rejected harus sama dengan total inspected.');
-        }
+        try {
+            $qc = null;
+            DB::transaction(function () use ($request, $validated, $production, &$qc, $totalPassed, $totalRejected, $totalInspected) {
+                $finalStatus = $request->final_status ?? $this->determineAction($totalPassed, $totalRejected, $totalInspected);
 
-        $action = $this->determineAction($validated['total_passed'], $validated['total_rejected'], $validated['total_inspected']);
-
-        $qc = QualityControl::create([
-            'production_id' => $validated['production_id'],
-            'inspector_name' => auth()->user()->name,
-            'inspected_at' => now(),
-            'total_inspected' => $validated['total_inspected'],
-            'total_passed' => $validated['total_passed'],
-            'total_rejected' => $validated['total_rejected'],
-            'status' => $this->determineStatus($validated['total_passed'], $validated['total_rejected']),
-            'action' => $action,
-            'notes' => $validated['notes'] ?? null,
-        ]);
-
-        if (!empty($validated['defects'])) {
-            foreach ($validated['defects'] as $defect) {
-                \App\Models\QcDefect::create([
-                    'qc_id' => $qc->id,
-                    'defect_cat_id' => $defect['defect_cat_id'],
-                    'defect_quantity' => $defect['quantity'],
+                $qc = QualityControl::create([
+                    'production_id' => $validated['production_id'],
+                    'inspector_name' => auth()->user()->name,
+                    'inspected_at' => now(),
+                    'total_inspected' => $totalInspected,
+                    'total_passed' => $totalPassed,
+                    'total_rejected' => $totalRejected,
+                    'status' => $this->determineStatus($totalPassed, $totalRejected),
+                    'action' => $finalStatus,
+                    'notes' => $validated['notes'] ?? null,
                 ]);
-            }
-        }
 
-        $this->processAction($production, $qc);
+                if (!empty($validated['defects'])) {
+                    foreach ($validated['defects'] as $defect) {
+                        \App\Models\QcDefect::create([
+                            'qc_id' => $qc->id,
+                            'defect_cat_id' => $defect['defect_cat_id'],
+                            'defect_quantity' => (int) $defect['quantity'],
+                        ]);
+                    }
+                }
+
+                $production->update([
+                    'actual_quantity' => $totalPassed,
+                    'end_date' => now(),
+                    'status' => $this->mapFinalStatusToProductionStatus($finalStatus),
+                ]);
+
+                $this->processAction($production, $qc);
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan QC: ' . $e->getMessage());
+        }
 
         return redirect()->route('operator.qc.show', $qc->id)
             ->with('success', 'QC berhasil dilakukan.');
@@ -216,6 +235,16 @@ class QCController extends Controller
         } else {
             return 'full_reject';
         }
+    }
+
+    private function mapFinalStatusToProductionStatus(string $finalStatus): string
+    {
+        return match ($finalStatus) {
+            'release' => 'completed',
+            'rework' => 'in_progress',
+            'reject' => 'cancelled',
+            default => 'completed',
+        };
     }
 
     private function processAction(Production $production, QualityControl $qc): void

@@ -193,6 +193,34 @@ class ProductionController extends Controller
         return back()->with('success', 'Status produksi berhasil diperbarui.');
     }
 
+    public function getRecipeByProduct(string $productId)
+    {
+        $recipes = \App\Models\Recipe::with('rawMaterial')
+            ->where('product_id', $productId)
+            ->get();
+
+        if ($recipes->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resep tidak ditemukan untuk produk ini.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $recipes->map(function ($recipe) {
+                return [
+                    'id' => $recipe->id,
+                    'raw_material_id' => $recipe->raw_material_id,
+                    'name' => $recipe->rawMaterial->name,
+                    'quantity_needed' => $recipe->quantity_needed,
+                    'unit' => $recipe->unit,
+                    'current_stock' => $recipe->rawMaterial->current_stock,
+                ];
+            })
+        ]);
+    }
+
     public function destroy(string $id)
     {
         $production = Production::findOrFail($id);

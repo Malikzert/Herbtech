@@ -10,9 +10,10 @@ class ProfileController extends Controller
 {
     public function edit()
     {
-        return view('admin.profile.edit', [
-            'user' => auth()->user()
-        ]);
+        $user = auth()->user();
+        $view = $user->role === 'admin' ? 'admin.profile.edit' : 'operator.profile.index';
+        
+        return view($view, compact('user'));
     }
 
     public function update(Request $request)

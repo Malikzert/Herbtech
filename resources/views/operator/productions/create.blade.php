@@ -37,7 +37,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Produk</label>
-                    <select name="product_id" required class="modern-select w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                    <select name="product_id" required x-model="selectedProduct" @change="loadRecipe()" class="modern-select w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
                         <option value="">-- Pilih Jamu --</option>
                         @foreach($products as $product)
                             <option value="{{ $product->id }}">{{ $product->name }}</option>
@@ -47,7 +47,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Target Produksi (Qty)</label>
-                    <input type="number" name="target_quantity" required min="1" value="{{ old('target_quantity', 1) }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Contoh: 100">
+                    <input type="number" name="target_quantity" required min="1" value="{{ old('target_quantity', 1) }}" x-model="targetQuantity" @input="updateTotalQuantities()" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Contoh: 100">
                 </div>
 
                 <div>
@@ -76,7 +76,7 @@
                 </button>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-3" id="materials-container">
                 <template x-for="(material, index) in materials" :key="index">
                     <div class="flex items-end gap-4 p-3 bg-gray-50/50 rounded-xl border border-gray-100 relative">
                         <div class="w-8 text-center pt-3 font-bold text-gray-400" x-text="(index + 1) + '.'"></div>
@@ -94,8 +94,8 @@
                         <div class="w-32">
                             <label class="block text-xs font-medium text-gray-500 mb-1">Jumlah</label>
                             <div class="relative">
-                                <input type="number" step="0.1" min="0.1" x-model="material.quantity" :name="`materials[${index}][quantity]`" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-right pr-12">
-                                <span class="absolute right-3 top-2 text-sm text-gray-400" x-text="getUnit(material.raw_material_id)"></span>
+                                <input type="number" step="0.01" min="0.01" x-model="material.quantity" :name="`materials[${index}][quantity]`" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-right pr-12">
+                                <span class="absolute right-3 top-2 text-sm text-gray-400" x-text="material.unit || '-'"></span>
                             </div>
                         </div>
 
@@ -108,6 +108,20 @@
                 <div x-show="materials.length === 0" class="text-center py-6 text-gray-500 text-sm border-2 border-dashed border-gray-200 rounded-xl">
                     Belum ada bahan baku yang ditambahkan.<br>
                     Klik "Tambah Bahan" untuk memilih bahan yang digunakan.
+                </div>
+            </div>
+
+            <div x-show="recipeLoaded && materials.length > 0" class="mt-4 p-4 bg-emerald-50/50 rounded-xl border border-emerald-100">
+                <div class="flex items-center gap-2 text-emerald-700 text-sm font-medium">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Resep otomatis dimuat dari produk yang dipilih</span>
+                </div>
+            </div>
+
+            <div x-show="noRecipe" class="mt-4 p-4 bg-amber-50/50 rounded-xl border border-amber-100">
+                <div class="flex items-center gap-2 text-amber-700 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <span>Produk ini belum memiliki resep. Tambahkan bahan baku secara manual.</span>
                 </div>
             </div>
         </div>
@@ -123,25 +137,80 @@
     </form>
 </div>
 
-<!-- Raw Materials Data for Alpine -->
 <script>
     const rawMaterialsData = {!! json_encode($rawMaterials->mapWithKeys(function ($item) {
-        return [$item->id => $item->unit];
+        return [$item->id => [
+            'unit' => $item->unit,
+            'name' => $item->name,
+            'current_stock' => $item->current_stock
+        ]];
     })) !!};
 
     function productionForm() {
         return {
-            materials: [
-                { raw_material_id: '', quantity: '' }
-            ],
+            selectedProduct: '',
+            targetQuantity: {{ old('target_quantity', 1) }},
+            materials: [],
+            recipeLoaded: false,
+            noRecipe: false,
+
             addMaterial() {
-                this.materials.push({ raw_material_id: '', quantity: '' });
+                this.materials.push({ 
+                    raw_material_id: '', 
+                    quantity: '', 
+                    quantity_needed: 0,
+                    unit: '',
+                    current_stock: 0 
+                });
             },
+
             removeMaterial(index) {
                 this.materials.splice(index, 1);
             },
-            getUnit(id) {
-                return id && rawMaterialsData[id] ? rawMaterialsData[id] : '-';
+
+            async loadRecipe() {
+                if (!this.selectedProduct) {
+                    this.materials = [];
+                    this.recipeLoaded = false;
+                    this.noRecipe = false;
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/operator/productions/${this.selectedProduct}/recipe`);
+                    const result = await response.json();
+
+                    if (result.success && result.data.length > 0) {
+                        this.materials = result.data.map(item => ({
+                            raw_material_id: item.raw_material_id,
+                            quantity: (item.quantity_needed * this.targetQuantity).toFixed(2),
+                            quantity_needed: item.quantity_needed,
+                            unit: item.unit,
+                            current_stock: item.current_stock
+                        }));
+                        this.recipeLoaded = true;
+                        this.noRecipe = false;
+                    } else {
+                        this.materials = [];
+                        this.recipeLoaded = false;
+                        this.noRecipe = true;
+                    }
+                } catch (error) {
+                    console.error('Error loading recipe:', error);
+                    this.materials = [];
+                    this.recipeLoaded = false;
+                    this.noRecipe = true;
+                }
+            },
+
+            updateTotalQuantities() {
+                if (this.materials.length > 0 && this.targetQuantity > 0) {
+                    this.materials.forEach(material => {
+                        if (material.quantity_needed > 0) {
+                            material.quantity = (material.quantity_needed * this.targetQuantity).toFixed(2);
+                        }
+                    });
+                }
             }
         }
     }
