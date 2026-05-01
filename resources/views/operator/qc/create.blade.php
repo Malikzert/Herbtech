@@ -6,7 +6,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto" x-data="qcForm()">
     <div class="mb-4">
-        <a href="{{ route('operator.qc.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-2">
+        <a href="{{ route('operator.qc.index') }}" class="text-blue-800 hover:text-blue-900 font-medium flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali
         </a>
@@ -33,16 +33,16 @@
             <div class="mb-6 border-b border-gray-200 pb-4">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Batch Produksi</label>
-                    <select name="production_id" id="production_id" x-model="selectedProductionId" @change="updateProductionInfo" required class="modern-select w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
+                    <select name="production_id" x-model="selectedProductionId" @change="updateProductionInfo" required class="modern-select w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700">
                         <option value="">-- Pilih Batch --</option>
                         @foreach($productions as $production)
-                        <option value="{{ $production->id }}" data-target-qty="{{ $production->target_quantity }}">{{ $production->batch_number }}</option>
+                        <option value="{{ $production->id }}">{{ $production->batch_number }}</option>
                         @endforeach
                     </select>
                 </div>
                 
                 <h2 class="text-xl font-bold text-gray-800" x-text="selectedProductionId ? 'Pengecekan Mutu (QC) - ' + getBatchNumber() : 'Pilih batch untuk memulai QC'"></h2>
-                <p class="text-emerald-700 font-medium mt-1" x-show="selectedProductionId" x-text="'Produk: ' + getProductName()"></p>
+                <p class="text-blue-900 font-medium mt-1" x-show="selectedProductionId" x-text="'Produk: ' + getProductName()"></p>
             </div>
 
             <div class="space-y-6">
@@ -51,26 +51,23 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Total Barang Diproduksi</label>
                         <div class="relative">
-                            <input type="number" id="total_produced" x-model.number="totalInspected" disabled class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-lg font-bold bg-gray-100 text-gray-600 cursor-not-allowed">
+                            <input type="number" x-model.number="totalInspected" name="total_inspected" required min="1" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 text-lg font-bold">
                             <span class="absolute right-4 top-3 text-gray-400 font-medium">Botol</span>
                         </div>
-                        <input type="hidden" name="total_inspected" x-model="totalInspected">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-emerald-700 mb-1">Barang Lolos QC (Bagus)</label>
+                        <label class="block text-sm font-medium text-blue-900 mb-1">Barang Lolos QC (Bagus)</label>
                         <div class="relative">
-                            <input type="number" x-model.number.lazy="totalPassed" @change="calculateRejected" class="w-full px-4 py-2.5 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 text-lg font-bold text-emerald-700 bg-emerald-50/50">
-                            <span class="absolute right-4 top-3 text-emerald-600/50 font-medium">Botol</span>
+                            <input type="number" x-model.number="totalPassed" @input="calculateRejected" name="total_passed" required min="0" class="w-full px-4 py-2.5 border border-blue-1000 rounded-lg focus:ring-2 focus:ring-blue-700 text-lg font-bold text-blue-900 bg-blue-100/50">
+                            <span class="absolute right-4 top-3 text-blue-800/50 font-medium">Botol</span>
                         </div>
-                        <input type="hidden" name="total_passed" x-model="totalPassed">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-red-700 mb-1">Barang Cacat / Ditolak</label>
                         <div class="relative">
-                            <input type="number" x-model.number.lazy="totalRejected" @change="calculatePassed" class="w-full px-4 py-2.5 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 text-lg font-bold text-red-700 bg-red-50/50">
+                            <input type="number" x-model.number="totalRejected" @input="calculatePassed" name="total_rejected" required min="0" class="w-full px-4 py-2.5 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 text-lg font-bold text-red-700 bg-red-50/50">
                             <span class="absolute right-4 top-3 text-red-600/50 font-medium">Botol</span>
                         </div>
-                        <input type="hidden" name="total_rejected" x-model="totalRejected">
                     </div>
                 </div>
 
@@ -113,33 +110,33 @@
 
                 <div class="border-t border-gray-200 pt-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Catatan QC</label>
-                    <textarea name="notes" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="Tuliskan catatan tambahan jika diperlukan..."></textarea>
+                    <textarea name="notes" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700" placeholder="Tuliskan catatan tambahan jika diperlukan..."></textarea>
                 </div>
 
                 <!-- Final Result -->
-                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex items-center justify-between">
                     <div class="flex items-center gap-4">
                         <span class="font-bold text-gray-700">Hasil Akhir:</span>
-                        <div class="flex gap-6">
-                            <label class="flex items-center gap-2 px-3 py-2 rounded-lg transition" :class="disableRelease ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-emerald-50'">
-                                <input type="radio" x-model="finalResult" name="final_status" value="release" :disabled="disableRelease" class="w-4 h-4 text-emerald-600 border-gray-300 focus:ring-emerald-500 disabled:cursor-not-allowed">
-                                <span class="text-sm font-bold" :class="finalResult === 'release' ? 'text-emerald-700' : 'text-gray-600'">Release</span>
+                        <div class="flex gap-4">
+                            <label class="flex items-center gap-2 cursor-not-allowed opacity-80">
+                                <input type="radio" :checked="finalResult === 'release'" disabled class="w-4 h-4 text-blue-800 border-gray-300">
+                                <span class="text-sm font-bold" :class="finalResult === 'release' ? 'text-blue-900' : 'text-gray-500'">Release</span>
                             </label>
-                            <label class="flex items-center gap-2 px-3 py-2 rounded-lg transition" :class="disableRework ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-amber-50'">
-                                <input type="radio" x-model="finalResult" name="final_status" value="rework" :disabled="disableRework" class="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500 disabled:cursor-not-allowed">
-                                <span class="text-sm font-bold" :class="finalResult === 'rework' ? 'text-amber-700' : 'text-gray-600'">Rework</span>
+                            <label class="flex items-center gap-2 cursor-not-allowed opacity-80">
+                                <input type="radio" :checked="finalResult === 'rework'" disabled class="w-4 h-4 text-amber-600 border-gray-300">
+                                <span class="text-sm font-bold" :class="finalResult === 'rework' ? 'text-amber-700' : 'text-gray-500'">Rework</span>
                             </label>
-                            <label class="flex items-center gap-2 px-3 py-2 rounded-lg transition" :class="disableReject ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-red-50'">
-                                <input type="radio" x-model="finalResult" name="final_status" value="reject" :disabled="disableReject" class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500 disabled:cursor-not-allowed">
-                                <span class="text-sm font-bold" :class="finalResult === 'reject' ? 'text-red-700' : 'text-gray-600'">Reject</span>
+                            <label class="flex items-center gap-2 cursor-not-allowed opacity-80">
+                                <input type="radio" :checked="finalResult === 'reject'" disabled class="w-4 h-4 text-red-600 border-gray-300">
+                                <span class="text-sm font-bold" :class="finalResult === 'reject' ? 'text-red-700' : 'text-gray-500'">Reject</span>
                             </label>
                         </div>
                     </div>
-                    <p x-show="qcMessage" x-text="qcMessage" :class="qcMessageType" class="mt-2 text-sm font-medium px-3 py-2 rounded-lg"></p>
+                    <div class="text-xs text-gray-500 italic">(Dihitung otomatis)</div>
                 </div>
 
                 <div class="flex justify-end pt-2">
-                    <button type="submit" class="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <button type="submit" class="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-700 to-blue-800 text-white font-bold rounded-xl hover:from-blue-800 hover:to-blue-900 transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                         SIMPAN HASIL QC & MASUKKAN GUDANG
                     </button>
                 </div>
@@ -152,8 +149,7 @@
     const productionsData = {!! json_encode($productions->mapWithKeys(function ($item) {
         return [$item->id => [
             'batch_number' => $item->batch_number,
-            'product_name' => $item->product ? $item->product->name : 'Produk',
-            'target_quantity' => $item->target_quantity
+            'product_name' => $item->product ? $item->product->name : 'Produk'
         ]];
     })) !!};
     
@@ -163,22 +159,10 @@
     function qcForm() {
         return {
             selectedProductionId: defaultProductionId,
-            totalInspected: 0,
-            totalPassed: 0,
+            totalInspected: 100,
+            totalPassed: 100,
             totalRejected: 0,
             defects: [],
-            finalResult: 'release',
-            qcMessage: '',
-            qcMessageType: '',
-            disableRelease: false,
-            disableRework: false,
-            disableReject: false,
-            
-            init() {
-                if (this.selectedProductionId) {
-                    this.updateProductionInfo();
-                }
-            },
             
             getBatchNumber() {
                 return this.selectedProductionId && productionsData[this.selectedProductionId] 
@@ -191,98 +175,47 @@
             },
             
             updateProductionInfo() {
-                if (this.selectedProductionId && productionsData[this.selectedProductionId]) {
-                    const targetQty = parseInt(productionsData[this.selectedProductionId].target_quantity, 10) || 0;
-                    this.totalInspected = targetQty;
-                    this.totalPassed = targetQty;
-                    this.totalRejected = 0;
-                } else {
-                    this.totalInspected = 0;
-                    this.totalPassed = 0;
-                    this.totalRejected = 0;
-                }
-                this.evaluateSOP();
+                // Trigger Alpine reactivity
             },
 
             calculateRejected() {
-                const inspected = parseInt(this.totalInspected, 10) || 0;
-                if (inspected <= 0) return;
-                
-                const passedStr = String(this.totalPassed).trim();
-                if (passedStr === '' || passedStr === null || passedStr === undefined) return;
-                
-                const passed = parseInt(passedStr, 10) || 0;
-                const clampedPassed = Math.min(passed, inspected);
-                this.totalPassed = clampedPassed;
-                this.totalRejected = Math.max(0, inspected - clampedPassed);
-                this.evaluateSOP();
+                if(this.totalInspected && this.totalPassed !== null) {
+                    let passed = parseInt(this.totalPassed) || 0;
+                    if(passed > this.totalInspected) {
+                        this.totalPassed = this.totalInspected;
+                        passed = this.totalInspected;
+                    }
+                    this.totalRejected = Math.max(0, this.totalInspected - passed);
+                }
             },
 
             calculatePassed() {
-                const inspected = parseInt(this.totalInspected, 10) || 0;
-                if (inspected <= 0) return;
-                
-                const rejectedStr = String(this.totalRejected).trim();
-                if (rejectedStr === '' || rejectedStr === null || rejectedStr === undefined) return;
-                
-                const rejected = parseInt(rejectedStr, 10) || 0;
-                const clampedRejected = Math.min(rejected, inspected);
-                this.totalRejected = clampedRejected;
-                this.totalPassed = Math.max(0, inspected - clampedRejected);
-                this.evaluateSOP();
-            },
-
-            evaluateSOP() {
-                const inspected = parseInt(this.totalInspected, 10) || 0;
-                const passed = parseInt(this.totalPassed, 10) || 0;
-                
-                if (inspected <= 0 || passed < 0) {
-                    this.qcMessage = '';
-                    this.qcMessageType = '';
-                    this.disableRelease = true;
-                    this.disableRework = true;
-                    this.disableReject = true;
-                    return;
-                }
-                
-                const percentage = (passed / inspected) * 100;
-                
-                if (percentage === 100) {
-                    this.finalResult = 'release';
-                    this.disableRelease = false;
-                    this.disableRework = true;
-                    this.disableReject = true;
-                    this.qcMessage = 'Kualitas Sempurna (100%). Batch siap di-release.';
-                    this.qcMessageType = 'text-emerald-700 bg-emerald-50 border border-emerald-200';
-                } else if (percentage >= 90) {
-                    this.disableRelease = false;
-                    this.disableRework = false;
-                    this.disableReject = true;
-                    this.qcMessage = `Persentase lolos ${percentage.toFixed(1)}%. Pertimbangkan untuk Rework atau tetap Release.`;
-                    this.qcMessageType = 'text-amber-700 bg-amber-50 border border-amber-200';
-                } else if (percentage >= 40) {
-                    this.finalResult = 'rework';
-                    this.disableRelease = true;
-                    this.disableRework = false;
-                    this.disableReject = false;
-                    this.qcMessage = `Persentase lolos ${percentage.toFixed(1)}%. Kualitas di bawah standar, wajib Rework.`;
-                    this.qcMessageType = 'text-red-700 bg-red-50 border border-red-200';
-                } else {
-                    this.finalResult = 'reject';
-                    this.disableRelease = true;
-                    this.disableRework = true;
-                    this.disableReject = false;
-                    this.qcMessage = `Fatal Error (Lolos ${percentage.toFixed(1)}%). Batch gagal total dan wajib di-Reject.`;
-                    this.qcMessageType = 'text-red-800 bg-red-100 border border-red-300 font-bold';
+                if(this.totalInspected && this.totalRejected !== null) {
+                    let rejected = parseInt(this.totalRejected) || 0;
+                    if(rejected > this.totalInspected) {
+                        this.totalRejected = this.totalInspected;
+                        rejected = this.totalInspected;
+                    }
+                    this.totalPassed = Math.max(0, this.totalInspected - rejected);
                 }
             },
 
             addDefect() {
-                this.defects.push({ defect_cat_id: '', quantity: 1 });
+                this.defects.push({ defect_cat_id: '', quantity: '' });
             },
 
             removeDefect(index) {
                 this.defects.splice(index, 1);
+            },
+
+            get finalResult() {
+                let passed = parseInt(this.totalPassed) || 0;
+                let rejected = parseInt(this.totalRejected) || 0;
+                let inspected = parseInt(this.totalInspected) || 1;
+                
+                if (rejected === 0) return 'release';
+                if (passed > 0 && rejected < inspected) return 'rework';
+                return 'reject';
             }
         }
     }

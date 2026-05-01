@@ -7,9 +7,9 @@
 <div class="space-y-8">
     <!-- Stat Cards (Dashboard Operasional) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl shadow-md p-6 border border-emerald-500/30 flex items-center justify-between">
+        <div class="bg-gradient-to-br from-blue-800 to-blue-950 rounded-2xl shadow-md p-6 border border-blue-700/30 flex items-center justify-between">
             <div>
-                <p class="text-emerald-100 text-sm font-medium mb-1">Sedang Berjalan</p>
+                <p class="text-blue-200 text-sm font-medium mb-1">Sedang Berjalan</p>
                 <h3 class="text-3xl font-extrabold text-white">{{ $inProgressCount }}</h3>
             </div>
             <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-inner">
@@ -27,13 +27,13 @@
             </div>
         </div>
 
-        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-6 border border-blue-200 flex items-center justify-between">
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-sm p-6 border border-blue-400 flex items-center justify-between">
             <div>
                 <p class="text-gray-500 text-sm font-medium mb-1">Stok Aman</p>
                 <h3 class="text-3xl font-bold text-gray-800">{{ $safeStockCount }}</h3>
             </div>
-            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
-                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center border border-blue-200">
+                <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $production->batch_number }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $production->product->name ?? 'Produk' }}</td>
                             <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 text-xs font-medium rounded-full {{ $production->status == 'qc_check' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700' }}">
+                                <span class="px-2.5 py-1 text-xs font-medium rounded-full {{ $production->status == 'qc_check' ? 'bg-amber-100 text-amber-700' : 'bg-blue-200 text-blue-900' }}">
                                     {{ $production->status == 'qc_check' ? 'QC' : 'Proses' }}
                                 </span>
                             </td>
@@ -72,7 +72,7 @@
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="status" value="qc_check">
-                                        <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-1.5 px-3 rounded-lg transition shadow-sm">
+                                        <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold py-1.5 px-3 rounded-lg transition shadow-sm">
                                             Selesai
                                         </button>
                                     </form>

@@ -13,11 +13,11 @@
                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk..." 
-                    class="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition">
+                    class="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-700 focus:border-blue-700 focus:outline-none transition">
             </div>
             
             <!-- Filter Dropdown -->
-            <select name="category" class="modern-select h-11 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition cursor-pointer">
+            <select name="category" class="modern-select h-11 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-blue-700 focus:border-blue-700 focus:outline-none transition cursor-pointer">
                 <option value="">Semua Kategori</option>
                 @foreach($categories as $cat)
                 <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
@@ -25,7 +25,7 @@
             </select>
             
             <!-- Filter Button -->
-            <button type="submit" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2">
+            <button type="submit" class="h-11 px-5 bg-blue-800 text-white font-medium rounded-lg hover:bg-blue-900 transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2H4V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6H3v-6zM12 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
                 Filter
             </button>
@@ -66,7 +66,7 @@
                     <td class="px-6 py-4 text-sm text-gray-600 font-mono">{{ $product->sku_code }}</td>
                     <td class="px-6 py-4">
                         @if($product->category)
-                        <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-100/80 text-emerald-700 border border-emerald-200">{{ $product->category }}</span>
+                        <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200/80 text-blue-900 border border-blue-400">{{ $product->category }}</span>
                         @else
                         <span class="text-xs text-gray-400">-</span>
                         @endif

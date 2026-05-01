@@ -14,9 +14,9 @@
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari batch..." 
-                        class="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition">
+                        class="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-700 focus:border-blue-700 focus:outline-none transition">
                 </div>
-                <select name="status" class="modern-select h-11 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition cursor-pointer">
+                <select name="status" class="modern-select h-11 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-blue-700 focus:border-blue-700 focus:outline-none transition cursor-pointer">
                 <option value="">Semua Status</option>
                 <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
                 <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>On Progress</option>
@@ -24,7 +24,7 @@
                 <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed</option>
                 <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
             </select>
-                <button type="submit" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2">
+                <button type="submit" class="h-11 px-5 bg-blue-800 text-white font-medium rounded-lg hover:bg-blue-900 transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2H4V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6H3v-6zM12 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
                     Filter
                 </button>
@@ -35,7 +35,7 @@
                 </a>
                 @endif
                 <div class="flex-1"></div>
-                <a href="{{ route('operator.productions.create') }}" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2 shadow-lg shadow-emerald-600/20">
+                <a href="{{ route('operator.productions.create') }}" class="h-11 px-5 bg-blue-800 text-white font-medium rounded-lg hover:bg-blue-900 transition flex items-center gap-2 shadow-lg shadow-blue-800/20">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Tambah Produksi
                 </a>
@@ -72,13 +72,13 @@
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Draft</span>
                                     @break
                                 @case('in_progress')
-                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">On Progress</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">On Progress</span>
                                     @break
                                 @case('qc_check')
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">QC Check</span>
                                     @break
                                 @case('completed')
-                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700">Completed</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">Completed</span>
                                     @break
                                 @case('cancelled')
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Cancelled</span>
@@ -86,7 +86,7 @@
                             @endswitch
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{{ route('operator.productions.show', $production->id) }}" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Detail</a>
+                            <a href="{{ route('operator.productions.show', $production->id) }}" class="text-blue-800 hover:text-blue-900 text-sm font-medium">Detail</a>
                         </td>
                     </tr>
                     @empty

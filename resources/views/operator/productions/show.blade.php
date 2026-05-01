@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <div class="flex justify-between items-center">
-        <a href="{{ route('operator.productions.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-2">
+        <a href="{{ route('operator.productions.index') }}" class="text-blue-800 hover:text-blue-900 font-medium flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Daftar
         </a>
@@ -50,13 +50,13 @@
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Draft</span>
                             @break
                         @case('in_progress')
-                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">On Progress</span>
+                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">On Progress</span>
                             @break
                         @case('qc_check')
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">QC Check</span>
                             @break
                         @case('completed')
-                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700">Completed</span>
+                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">Completed</span>
                             @break
                         @case('cancelled')
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Cancelled</span>
@@ -75,14 +75,14 @@
             @method('PATCH')
             <div class="flex items-center gap-4">
                 <label class="text-sm font-medium text-gray-700">Ubah Status:</label>
-                <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500">
+                <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700">
                     <option value="draft" {{ $production->status == 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="in_progress" {{ $production->status == 'in_progress' ? 'selected' : '' }}>On Progress</option>
                     <option value="qc_check" {{ $production->status == 'qc_check' ? 'selected' : '' }}>QC Check</option>
                     <option value="completed" {{ $production->status == 'completed' ? 'selected' : '' }}>Completed</option>
                     <option value="cancelled" {{ $production->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                 </select>
-                <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Update Status</button>
+                <button type="submit" class="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900">Update Status</button>
             </div>
         </form>
     </div>
@@ -108,10 +108,10 @@
                     <td class="px-4 py-3 text-sm">{{ $qc->inspected_at->format('d M Y H:i') }}</td>
                     <td class="px-4 py-3 text-sm">{{ $qc->inspector_name }}</td>
                     <td class="px-4 py-3 text-sm text-center">{{ $qc->total_inspected }}</td>
-                    <td class="px-4 py-3 text-sm text-center text-emerald-600 font-bold">{{ $qc->total_passed }}</td>
+                    <td class="px-4 py-3 text-sm text-center text-blue-800 font-bold">{{ $qc->total_passed }}</td>
                     <td class="px-4 py-3 text-sm text-center text-red-600 font-bold">{{ $qc->total_rejected }}</td>
                     <td class="px-4 py-3 text-sm">
-                        <span class="px-2 py-1 text-xs rounded-full {{ $qc->action == 'release' ? 'bg-emerald-100 text-emerald-700' : ($qc->action == 'rework' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }}">
+                        <span class="px-2 py-1 text-xs rounded-full {{ $qc->action == 'release' ? 'bg-blue-200 text-blue-900' : ($qc->action == 'rework' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }}">
                             {{ ucfirst($qc->action) }}
                         </span>
                     </td>

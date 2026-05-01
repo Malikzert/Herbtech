@@ -14,15 +14,15 @@
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari batch..." 
-                        class="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition">
+                        class="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-700 focus:border-blue-700 focus:outline-none transition">
                 </div>
-                <select name="status" class="modern-select h-11 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition cursor-pointer">
+                <select name="status" class="modern-select h-11 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-blue-700 focus:border-blue-700 focus:outline-none transition cursor-pointer">
                 <option value="">Semua Hasil</option>
                 <option value="passed" {{ request('status') === 'passed' ? 'selected' : '' }}>Passed</option>
                 <option value="partial_reject" {{ request('status') === 'partial_reject' ? 'selected' : '' }}>Partial Reject</option>
                 <option value="full_reject" {{ request('status') === 'full_reject' ? 'selected' : '' }}>Full Reject</option>
             </select>
-                <button type="submit" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2">
+                <button type="submit" class="h-11 px-5 bg-blue-800 text-white font-medium rounded-lg hover:bg-blue-900 transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2H4V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6H3v-6zM12 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
                     Filter
                 </button>
@@ -33,7 +33,7 @@
                 </a>
                 @endif
                 <div class="flex-1"></div>
-                <a href="{{ route('operator.qc.create') }}" class="h-11 px-5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2 shadow-lg shadow-emerald-600/20">
+                <a href="{{ route('operator.qc.create') }}" class="h-11 px-5 bg-blue-800 text-white font-medium rounded-lg hover:bg-blue-900 transition flex items-center gap-2 shadow-lg shadow-blue-800/20">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     Tambah QC
                 </a>
@@ -62,12 +62,12 @@
                         <td class="px-6 py-4 text-sm font-medium text-gray-900">#{{ $qc->id }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $qc->production->batch_number ?? '-' }}</td>
                         <td class="px-6 py-4 text-sm text-gray-600">{{ $qc->inspected_at->format('d M Y, H:i') }}</td>
-                        <td class="px-6 py-4 text-sm text-center text-emerald-600 font-medium">{{ $qc->total_passed }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-blue-800 font-medium">{{ $qc->total_passed }}</td>
                         <td class="px-6 py-4 text-sm text-center text-red-600 font-medium">{{ $qc->total_rejected }}</td>
                         <td class="px-6 py-4">
                             @switch($qc->action)
                                 @case('release')
-                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700">Passed</span>
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">Passed</span>
                                     @break
                                 @case('rework')
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Rework</span>
@@ -78,7 +78,7 @@
                             @endswitch
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{{ route('operator.qc.show', $qc->id) }}" class="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Detail</a>
+                            <a href="{{ route('operator.qc.show', $qc->id) }}" class="text-blue-800 hover:text-blue-900 text-sm font-medium">Detail</a>
                         </td>
                     </tr>
                     @empty

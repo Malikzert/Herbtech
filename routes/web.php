@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('operator')->middleware(['can:operator', 'verified'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'operator'])->name('operator.dashboard');
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('operator.profile.index');
+        Route::put('/profile', [ProfileController::class, 'update'])->name('operator.profile.update');
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('operator.profile.password');
 
         Route::patch('productions/{id}/status', [ProductionController::class, 'updateStatus'])->name('operator.productions.updateStatus');
         Route::get('productions/{id}/recipe', [ProductionController::class, 'getRecipeByProduct'])->name('operator.productions.get-recipe');

@@ -6,7 +6,7 @@
 @section('content')
 <div class="space-y-6">
     <div class="flex justify-between items-center">
-        <a href="{{ route('operator.qc.index') }}" class="text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-2">
+        <a href="{{ route('operator.qc.index') }}" class="text-blue-800 hover:text-blue-900 font-medium flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Daftar
         </a>
@@ -38,7 +38,7 @@
                 <p class="text-base font-semibold text-gray-900 mt-1">
                     @switch($qc->status)
                         @case('passed')
-                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700">Passed</span>
+                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">Passed</span>
                             @break
                         @case('partial_reject')
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Partial Reject</span>
@@ -52,7 +52,7 @@
             <div>
                 <p class="text-sm text-gray-500">Tindakan Lanjut</p>
                 <p class="text-base font-semibold text-gray-900 mt-1">
-                    <span class="px-2 py-1 text-xs rounded-full {{ $qc->action == 'release' ? 'bg-emerald-100 text-emerald-700' : ($qc->action == 'rework' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }}">
+                    <span class="px-2 py-1 text-xs rounded-full {{ $qc->action == 'release' ? 'bg-blue-200 text-blue-900' : ($qc->action == 'rework' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }}">
                         {{ ucfirst($qc->action) }}
                     </span>
                 </p>
@@ -65,9 +65,9 @@
                 <p class="text-sm text-gray-500 font-medium">Total Diperiksa</p>
                 <p class="text-3xl font-bold text-gray-800 mt-2">{{ $qc->total_inspected }}</p>
             </div>
-            <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-                <p class="text-sm text-emerald-600 font-medium">Passed</p>
-                <p class="text-3xl font-bold text-emerald-700 mt-2">{{ $qc->total_passed }}</p>
+            <div class="bg-blue-100 rounded-xl p-4 border border-blue-200">
+                <p class="text-sm text-blue-800 font-medium">Passed</p>
+                <p class="text-3xl font-bold text-blue-900 mt-2">{{ $qc->total_passed }}</p>
             </div>
             <div class="bg-red-50 rounded-xl p-4 border border-red-100">
                 <p class="text-sm text-red-600 font-medium">Rejected</p>
