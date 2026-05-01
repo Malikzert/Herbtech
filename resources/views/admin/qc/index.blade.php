@@ -15,11 +15,11 @@
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari batch..." 
-                        class="input-glass w-full h-11 pl-10 pr-4 border border-white/30 rounded-lg text-sm text-slate-900 placeholder-gray-400 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none">
+                        class="input-glass w-full h-11 pl-10 pr-4 border border-white/30 rounded-lg text-sm text-black placeholder-gray-400 focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none">
                 </div>
                 
                 <!-- Filter Dropdown - Status -->
-                <select name="status" class="modern-select input-glass h-11 px-4 py-2 border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none cursor-pointer">
+                <select name="status" class="modern-select input-glass h-11 px-4 py-2 border border-white/30 rounded-lg text-sm text-black focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none cursor-pointer">
                     <option value="">Semua Hasil</option>
                     <option value="passed" {{ request('status') === 'passed' ? 'selected' : '' }}>Passed</option>
                     <option value="partial_reject" {{ request('status') === 'partial_reject' ? 'selected' : '' }}>Partial Reject</option>
@@ -27,7 +27,7 @@
                 </select>
                 
                 <!-- Filter Dropdown - Action -->
-                <select name="action" class="modern-select input-glass h-11 px-4 py-2 border border-white/30 rounded-lg text-sm text-slate-900 focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none cursor-pointer">
+                <select name="action" class="modern-select input-glass h-11 px-4 py-2 border border-white/30 rounded-lg text-sm text-black focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none cursor-pointer">
                     <option value="">Semua Action</option>
                     <option value="release" {{ request('action') === 'release' ? 'selected' : '' }}>Release</option>
                     <option value="rework" {{ request('action') === 'rework' ? 'selected' : '' }}>Rework</option>
@@ -35,7 +35,7 @@
                 </select>
                 
                 <!-- Filter Button -->
-                <button type="submit" class="btn-glass h-11 px-5 font-medium rounded-lg transition flex items-center gap-2">
+                <button type="submit" class="h-11 px-5 bg-emerald-700 hover:bg-emerald-800 text-white font-medium rounded-lg transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2H4V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6H3v-6zM12 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
                     Filter
                 </button>
@@ -54,56 +54,56 @@
     <div class="bg-glass rounded-xl border border-white/50 overflow-hidden shadow-sm glass-card">
         <div class="overflow-x-auto">
             <table class="w-full glass-table">
-                <thead class="bg-emerald-600 text-white text-xs uppercase">
+                <thead class="bg-emerald-800 text-white text-xs uppercase">
                     <tr>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">ID QC</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Batch</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Inspector</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Inspeksi</th>
-                        <th class="px-6 py-3.5 font-bold text-center text-white text-shadow-sm">Passed</th>
-                        <th class="px-6 py-3.5 font-bold text-center text-white text-shadow-sm">Rejected</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Hasil</th>
-                        <th class="px-6 py-3.5 font-bold text-left text-white text-shadow-sm">Action</th>
-                        <th class="px-6 py-3.5 font-bold text-right text-white text-shadow-sm">Aksi</th>
+                        <th class="px-6 py-3.5 font-bold text-left text-white">ID QC</th>
+                        <th class="px-6 py-3.5 font-bold text-left text-white">Batch</th>
+                        <th class="px-6 py-3.5 font-bold text-left text-white">Inspector</th>
+                        <th class="px-6 py-3.5 font-bold text-left text-white">Inspeksi</th>
+                        <th class="px-6 py-3.5 font-bold text-center text-white">Passed</th>
+                        <th class="px-6 py-3.5 font-bold text-center text-white">Rejected</th>
+                        <th class="px-6 py-3.5 font-bold text-left text-white">Hasil</th>
+                        <th class="px-6 py-3.5 font-bold text-left text-white">Action</th>
+                        <th class="px-6 py-3.5 font-bold text-right text-white">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/20">
                     @forelse($qualityControls as $qc)
                     <tr class="hover:bg-white/10 transition">
-                        <td class="px-6 py-4 text-sm font-bold text-slate-900">#{{ $qc->id }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $qc->production->batch_number ?? '-' }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $qc->inspector_name }}</td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-800">{{ $qc->inspected_at->format('d M Y, H:i') }}</td>
-                        <td class="px-6 py-4 text-sm text-center text-emerald-600 font-bold">{{ $qc->total_passed }}</td>
-                        <td class="px-6 py-4 text-sm text-center text-red-600 font-bold">{{ $qc->total_rejected }}</td>
+                        <td class="px-6 py-4 text-sm font-bold text-black">#{{ $qc->id }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-black">{{ $qc->production->batch_number ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-black">{{ $qc->inspector_name }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-black">{{ $qc->inspected_at->format('d M Y, H:i') }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-emerald-700 font-bold">{{ $qc->total_passed }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-red-700 font-bold">{{ $qc->total_rejected }}</td>
                         <td class="px-6 py-4">
                             @switch($qc->status)
                                 @case('passed')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/40 text-white border border-emerald-400/50">Passed</span>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">Passed</span>
                                     @break
                                 @case('partial_reject')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-500/40 text-white border border-amber-400/50">Partial</span>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800 border border-amber-300">Partial</span>
                                     @break
                                 @case('full_reject')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-500/40 text-white border border-red-400/50">Full Reject</span>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800 border border-red-300">Full Reject</span>
                                     @break
                             @endswitch
                         </td>
                         <td class="px-6 py-4">
                             @switch($qc->action)
                                 @case('release')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-500/40 text-white border border-blue-400/50">Release</span>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800 border border-blue-300">Release</span>
                                     @break
                                 @case('rework')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-purple-500/40 text-white border border-purple-400/50">Rework</span>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-purple-100 text-purple-800 border border-purple-300">Rework</span>
                                     @break
                                 @case('reject')
-                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-gray-500/40 text-white border border-gray-400/50">Reject</span>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-gray-200 text-gray-800 border border-gray-300">Reject</span>
                                     @break
                             @endswitch
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <a href="{{ route('admin.qc.show', $qc->id) }}" class="text-emerald-600 hover:text-emerald-700 text-sm font-bold">Detail</a>
+                            <a href="{{ route('admin.qc.show', $qc->id) }}" class="text-emerald-700 hover:text-emerald-900 text-sm font-bold">Detail</a>
                         </td>
                     </tr>
                     @empty
@@ -111,7 +111,7 @@
                         <td colspan="9" class="px-6 py-16 text-center">
                             <div class="flex flex-col items-center">
                                 <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <p class="text-slate-600 font-medium">Belum ada data QC</p>
+                                <p class="text-black font-medium">Belum ada data QC</p>
                             </div>
                         </td>
                     </tr>

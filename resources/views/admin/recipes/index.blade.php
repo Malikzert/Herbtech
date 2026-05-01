@@ -55,7 +55,7 @@
                 </button>
                 
                 @if(request('search'))
-                <a href="{{ route('admin.recipes.index') }}" class="h-11 px-5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+                <a href="{{ route('admin.recipes.index') }}" class="h-11 px-5 bg-gray-100 black font-medium rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     Reset
                 </a>
@@ -70,7 +70,7 @@
         <div class="bg-glass rounded-xl border border-white/50 overflow-hidden shadow-sm">
             <div class="flex items-center justify-between px-6 py-4 bg-gray-50/50 border-b border-gray-100/50">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-800">{{ $product->name }}</h3>
+                    <h3 class="text-lg font-bold black">{{ $product->name }}</h3>
                     <p class="text-sm text-gray-500">{{ $product->recipes->count() }} bahan baku</p>
                 </div>
                 <button @click="selectedProductId = '{{ $product->id }}'; selectedProductName = '{{ $product->name }}'; loadRecipes(); showModal = true" type="button" class="px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition flex items-center gap-2">
@@ -95,7 +95,7 @@
                         @foreach($product->recipes as $index => $recipe)
                         <tr class="hover:bg-gray-50/30 transition">
                             <td class="px-6 py-3 text-sm text-gray-500">{{ $index + 1 }}</td>
-                            <td class="px-6 py-3 text-sm font-medium text-gray-800">{{ $recipe->rawMaterial->name ?? '-' }}</td>
+                            <td class="px-6 py-3 text-sm font-medium black">{{ $recipe->rawMaterial->name ?? '-' }}</td>
                             <td class="px-6 py-3 text-sm text-gray-500 font-mono">{{ $recipe->rawMaterial->sku ?? '-' }}</td>
                             <td class="px-6 py-3">
                                 <span class="text-sm font-semibold text-emerald-600">{{ number_format($recipe->quantity_needed, 2) }}</span>
@@ -139,7 +139,7 @@
             <div x-show="showModal" @click.stop class="relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-2xl border border-white/50 max-h-[90vh] flex flex-col">
                 <div class="flex justify-between items-center px-6 py-4 border-b border-gray-100/50 shrink-0">
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800">Kelola Resep</h3>
+                        <h3 class="text-lg font-bold black">Kelola Resep</h3>
                         <p class="text-sm text-gray-500">Produk: <span x-text="selectedProductName" class="font-medium"></span></p>
                     </div>
                     <button @click="showModal = false" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100/50 rounded-lg transition">
@@ -177,7 +177,7 @@
                                                 class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
                                         </td>
                                         <td class="px-4 py-3">
-                                            <label :for="'material_' + material.id" class="text-sm font-medium text-gray-800 cursor-pointer" x-text="material.name"></label>
+                                            <label :for="'material_' + material.id" class="text-sm font-medium black cursor-pointer" x-text="material.name"></label>
                                             <div class="text-xs text-gray-400" x-text="material.sku"></div>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-gray-600">
@@ -203,7 +203,7 @@
                     </div>
                     
                     <div class="flex justify-end gap-3 pt-4 mt-4 border-t border-gray-100">
-                        <button type="button" @click="showModal = false" class="px-5 py-2.5 bg-gray-100/80 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition">Batal</button>
+                        <button type="button" @click="showModal = false" class="px-5 py-2.5 bg-gray-100/80 black font-medium rounded-lg hover:bg-gray-200 transition">Batal</button>
                         <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition shadow-lg shadow-emerald-600/20">Simpan Resep</button>
                     </div>
                 </form>

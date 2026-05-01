@@ -9,7 +9,7 @@
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
         <div class="flex items-start justify-between">
             <div>
-                <h3 class="text-xl font-bold text-white">{{ $production->batch_number }}</h3>
+                <h3 class="text-xl font-bold black">{{ $production->batch_number }}</h3>
                 <p class="text-gray-400 mt-1">{{ $production->product->name ?? '-' }}</p>
             </div>
             <div>
@@ -36,19 +36,19 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
             <div>
                 <p class="text-xs text-gray-400 uppercase">Tanggal Mulai</p>
-                <p class="text-sm font-medium text-white">{{ $production->start_date ? $production->start_date->format('d M Y H:i') : '-' }}</p>
+                <p class="text-sm font-medium black">{{ $production->start_date ? $production->start_date->format('d M Y H:i') : '-' }}</p>
             </div>
             <div>
                 <p class="text-xs text-gray-400 uppercase">Tanggal Selesai</p>
-                <p class="text-sm font-medium text-white">{{ $production->end_date ? $production->end_date->format('d M Y H:i') : '-' }}</p>
+                <p class="text-sm font-medium black">{{ $production->end_date ? $production->end_date->format('d M Y H:i') : '-' }}</p>
             </div>
             <div>
                 <p class="text-xs text-gray-400 uppercase">Operator</p>
-                <p class="text-sm font-medium text-white">{{ $production->user->name ?? '-' }}</p>
+                <p class="text-sm font-medium black">{{ $production->user->name ?? '-' }}</p>
             </div>
             <div>
                 <p class="text-xs text-gray-400 uppercase">PIC</p>
-                <p class="text-sm font-medium text-white">{{ $production->pic_name ?? '-' }}</p>
+                <p class="text-sm font-medium black">{{ $production->pic_name ?? '-' }}</p>
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
     @if($production->status === 'draft')
     <!-- Start Production with Target Quantity -->
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
-        <h4 class="text-lg font-bold text-white mb-4">Mulai Produksi</h4>
+        <h4 class="text-lg font-bold black mb-4">Mulai Produksi</h4>
         <form action="{{ route('admin.productions.update-status', $production->id) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
@@ -65,7 +65,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-300 mb-1">Jumlah Produksi (unit)</label>
                 <input type="number" name="target_quantity" value="1" min="1" required
-                    class="input-glass w-full max-w-xs h-11 px-4 border border-white/30 rounded-lg text-sm text-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none">
+                    class="input-glass w-full max-w-xs h-11 px-4 border border-white/30 rounded-lg text-sm black focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 focus:outline-none">
                 <p class="text-xs text-gray-400 mt-1">Masukkan jumlah unit yang akan diproduksi</p>
             </div>
             
@@ -86,7 +86,7 @@
             </div>
             @endif
             
-            <button type="submit" class="px-5 py-2.5 bg-blue-500/80 text-white font-medium rounded-lg hover:bg-blue-500 transition flex items-center gap-2">
+            <button type="submit" class="px-5 py-2.5 bg-blue-500/80 black font-medium rounded-lg hover:bg-blue-500 transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 Mulai Produksi
             </button>
@@ -97,12 +97,12 @@
     @if($production->status === 'in_progress')
     <!-- Move to QC -->
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
-        <h4 class="text-lg font-bold text-white mb-4">Kirim ke QC</h4>
+        <h4 class="text-lg font-bold black mb-4">Kirim ke QC</h4>
         <form action="{{ route('admin.productions.update-status', $production->id) }}" method="POST">
             @csrf
             @method('PUT')
             <input type="hidden" name="status" value="qc_check">
-            <button type="submit" class="px-5 py-2.5 bg-amber-500/80 text-white font-medium rounded-lg hover:bg-amber-500 transition flex items-center gap-2">
+            <button type="submit" class="px-5 py-2.5 bg-amber-500/80 black font-medium rounded-lg hover:bg-amber-500 transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 Kirim ke Quality Control
             </button>
@@ -113,7 +113,7 @@
     @if($production->status === 'qc_check')
     <!-- Complete Production -->
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
-        <h4 class="text-lg font-bold text-white mb-4">Selesaikan Produksi</h4>
+        <h4 class="text-lg font-bold black mb-4">Selesaikan Produksi</h4>
         <form action="{{ route('admin.productions.update-status', $production->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -129,7 +129,7 @@
     <!-- Production Materials History -->
     @if($production->productionMaterials->count() > 0)
     <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm">
-        <h4 class="text-lg font-bold text-white mb-4">Riwayat Penggunaan Bahan</h4>
+        <h4 class="text-lg font-bold black mb-4">Riwayat Penggunaan Bahan</h4>
         <div class="overflow-x-auto">
             <table class="w-full glass-table">
                 <thead class="glass-table text-gray-300 text-xs uppercase">
