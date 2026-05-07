@@ -4,7 +4,7 @@
 @section('header', 'Quality Control')
 
 @section('content')
-<div class="max-w-4xl mx-auto" x-data="qcForm()">
+<div class="max-w-4xl mx-auto" x-data="qcForm()" x-init="if(selectedProductionId) { updateProductionInfo(); }">
     <div class="mb-4">
         <a href="{{ route('operator.qc.index') }}" class="text-blue-800 hover:text-blue-900 font-medium flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -51,7 +51,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Total Barang Diproduksi</label>
                         <div class="relative">
-                            <input type="number" x-model.number="totalInspected" name="total_inspected" required min="1" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 text-lg font-bold">
+                            <input type="number" x-model.number="totalInspected" name="total_inspected" required min="1" readonly class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed text-lg font-bold">
                             <span class="absolute right-4 top-3 text-gray-400 font-medium">Botol</span>
                         </div>
                     </div>
@@ -114,25 +114,28 @@
                 </div>
 
                 <!-- Final Result -->
-                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <span class="font-bold text-gray-700">Hasil Akhir:</span>
-                        <div class="flex gap-4">
-                            <label class="flex items-center gap-2 cursor-not-allowed opacity-80">
-                                <input type="radio" :checked="finalResult === 'release'" disabled class="w-4 h-4 text-blue-800 border-gray-300">
-                                <span class="text-sm font-bold" :class="finalResult === 'release' ? 'text-blue-900' : 'text-gray-500'">Release</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-not-allowed opacity-80">
-                                <input type="radio" :checked="finalResult === 'rework'" disabled class="w-4 h-4 text-amber-600 border-gray-300">
-                                <span class="text-sm font-bold" :class="finalResult === 'rework' ? 'text-amber-700' : 'text-gray-500'">Rework</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-not-allowed opacity-80">
-                                <input type="radio" :checked="finalResult === 'reject'" disabled class="w-4 h-4 text-red-600 border-gray-300">
-                                <span class="text-sm font-bold" :class="finalResult === 'reject' ? 'text-red-700' : 'text-gray-500'">Reject</span>
-                            </label>
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <span class="font-bold text-gray-700">Hasil Akhir:</span>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 transition" :class="disableRelease ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'">
+                                    <input type="radio" name="final_status" value="release" x-model="finalResult" :disabled="disableRelease" class="w-4 h-4 text-blue-800 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span class="text-sm font-bold" :class="finalResult === 'release' ? 'text-blue-900' : 'text-gray-500'">Release</span>
+                                </label>
+                                <label class="flex items-center gap-2 transition" :class="disableRework ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'">
+                                    <input type="radio" name="final_status" value="rework" x-model="finalResult" :disabled="disableRework" class="w-4 h-4 text-amber-600 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span class="text-sm font-bold" :class="finalResult === 'rework' ? 'text-amber-700' : 'text-gray-500'">Rework</span>
+                                </label>
+                                <label class="flex items-center gap-2 transition" :class="disableReject ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'">
+                                    <input type="radio" name="final_status" value="reject" x-model="finalResult" :disabled="disableReject" class="w-4 h-4 text-red-600 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span class="text-sm font-bold" :class="finalResult === 'reject' ? 'text-red-700' : 'text-gray-500'">Reject</span>
+                                </label>
+                            </div>
                         </div>
+                        <div class="text-xs text-gray-500 italic">(Dihitung otomatis)</div>
                     </div>
-                    <div class="text-xs text-gray-500 italic">(Dihitung otomatis)</div>
+                    <p x-show="qcMessage" x-text="qcMessage" :class="qcMessageType" class="mt-3 text-sm font-medium"></p>
                 </div>
 
                 <div class="flex justify-end pt-2">
@@ -149,7 +152,8 @@
     const productionsData = {!! json_encode($productions->mapWithKeys(function ($item) {
         return [$item->id => [
             'batch_number' => $item->batch_number,
-            'product_name' => $item->product ? $item->product->name : 'Produk'
+            'product_name' => $item->product ? $item->product->name : 'Produk',
+            'target_quantity' => $item->target_quantity
         ]];
     })) !!};
     
@@ -159,10 +163,16 @@
     function qcForm() {
         return {
             selectedProductionId: defaultProductionId,
-            totalInspected: 100,
-            totalPassed: 100,
+            totalInspected: 0,
+            totalPassed: 0,
             totalRejected: 0,
             defects: [],
+            qcMessage: '',
+            qcMessageType: '',
+            disableRelease: false,
+            disableRework: false,
+            disableReject: false,
+            finalResult: 'release',
             
             getBatchNumber() {
                 return this.selectedProductionId && productionsData[this.selectedProductionId] 
@@ -174,8 +184,17 @@
                     ? productionsData[this.selectedProductionId].product_name : '';
             },
             
+            getTargetQuantity() {
+                return this.selectedProductionId && productionsData[this.selectedProductionId] 
+                    ? parseInt(productionsData[this.selectedProductionId].target_quantity) || 0 : 0;
+            },
+            
             updateProductionInfo() {
-                // Trigger Alpine reactivity
+                let target = this.getTargetQuantity();
+                this.totalInspected = target;
+                this.totalPassed = target;
+                this.totalRejected = 0;
+                this.evaluateSOP();
             },
 
             calculateRejected() {
@@ -187,6 +206,7 @@
                     }
                     this.totalRejected = Math.max(0, this.totalInspected - passed);
                 }
+                this.evaluateSOP();
             },
 
             calculatePassed() {
@@ -198,6 +218,53 @@
                     }
                     this.totalPassed = Math.max(0, this.totalInspected - rejected);
                 }
+                this.evaluateSOP();
+            },
+
+            evaluateSOP() {
+                let inspected = parseInt(this.totalInspected) || 0;
+                let passed = parseInt(this.totalPassed) || 0;
+
+                if (inspected === 0) {
+                    this.disableRelease = false;
+                    this.disableRework = false;
+                    this.disableReject = false;
+                    this.finalResult = 'release';
+                    this.qcMessage = '';
+                    this.qcMessageType = '';
+                    return;
+                }
+
+                let percentage = (passed / inspected) * 100;
+
+                if (percentage === 100) {
+                    this.finalResult = 'release';
+                    this.disableRelease = false;
+                    this.disableRework = true;
+                    this.disableReject = true;
+                    this.qcMessage = 'Kualitas Sempurna (100%). Batch siap di-release.';
+                    this.qcMessageType = 'text-green-700';
+                } else if (percentage >= 90) {
+                    this.disableRelease = false;
+                    this.disableRework = false;
+                    this.disableReject = true;
+                    this.qcMessage = 'Persentase lolos ' + percentage.toFixed(1) + '%. Pertimbangkan untuk Rework atau tetap Release.';
+                    this.qcMessageType = 'text-amber-600';
+                } else if (percentage >= 40) {
+                    this.finalResult = 'rework';
+                    this.disableRelease = true;
+                    this.disableRework = false;
+                    this.disableReject = false;
+                    this.qcMessage = 'Persentase lolos ' + percentage.toFixed(1) + '%. Kualitas di bawah standar, wajib Rework.';
+                    this.qcMessageType = 'text-red-600';
+                } else {
+                    this.finalResult = 'reject';
+                    this.disableRelease = true;
+                    this.disableRework = true;
+                    this.disableReject = false;
+                    this.qcMessage = 'Fatal Error (Lolos ' + percentage.toFixed(1) + '%). Batch gagal total dan wajib di-Reject.';
+                    this.qcMessageType = 'text-red-700 font-bold';
+                }
             },
 
             addDefect() {
@@ -206,16 +273,6 @@
 
             removeDefect(index) {
                 this.defects.splice(index, 1);
-            },
-
-            get finalResult() {
-                let passed = parseInt(this.totalPassed) || 0;
-                let rejected = parseInt(this.totalRejected) || 0;
-                let inspected = parseInt(this.totalInspected) || 1;
-                
-                if (rejected === 0) return 'release';
-                if (passed > 0 && rejected < inspected) return 'rework';
-                return 'reject';
             }
         }
     }

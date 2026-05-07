@@ -84,7 +84,7 @@
                             <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800 border border-blue-300">Operator</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-sm font-medium text-black">{{ $user->created_at->format('d M Y') }}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-black">{{ $user->created_at?->format('d M Y') ?? '-' }}</td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-1.5">
                                 <button @click="selectedUser = {{ Js::from($user) }}; showModal = true; modalMode = 'edit'" class="p-2 text-black hover:text-blue-700 hover:bg-blue-100 rounded-lg transition" title="Edit">

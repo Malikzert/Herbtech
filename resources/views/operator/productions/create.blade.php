@@ -37,7 +37,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Produk</label>
-                    <select name="product_id" required class="modern-select w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition">
+                    <select name="product_id" x-model="selectedProductId" @change="loadRecipe()" required class="modern-select w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition">
                         <option value="">-- Pilih Jamu --</option>
                         @foreach($products as $product)
                             <option value="{{ $product->id }}">{{ $product->name }}</option>
@@ -47,7 +47,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Target Produksi (Qty)</label>
-                    <input type="number" name="target_quantity" required min="1" value="{{ old('target_quantity', 1) }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition" placeholder="Contoh: 100">
+                    <input type="number" name="target_quantity" x-model="targetQty" @input="recalculateTotals()" required min="1" value="{{ old('target_quantity', 1) }}" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition" placeholder="Contoh: 100">
                 </div>
 
                 <div>
@@ -83,20 +83,35 @@
                         
                         <div class="flex-1">
                             <label class="block text-xs font-medium text-gray-500 mb-1">Bahan Baku</label>
-                            <select x-model="material.raw_material_id" :name="`materials[${index}][raw_material_id]`" required class="modern-select w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 focus:border-blue-700">
-                                <option value="">-- Pilih Bahan --</option>
-                                @foreach($rawMaterials as $rm)
-                                    <option value="{{ $rm->id }}">{{ $rm->name }} (Stok: {{ $rm->current_stock }} {{ $rm->unit }})</option>
-                                @endforeach
-                            </select>
+                            <div class="px-3 py-2 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-700 font-medium" x-text="material.name"></div>
+                            <input type="hidden" :name="`materials[${index}][raw_material_id]`" :value="material.raw_material_id">
+                        </div>
+                        
+                        <div class="w-28">
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Kebutuhan/Unit</label>
+                            <div class="px-3 py-2 text-sm bg-gray-100 border border-gray-200 rounded-lg text-gray-700 text-center">
+                                <span x-text="material.quantity_needed"></span>
+                                <span class="text-gray-400" x-text="material.unit"></span>
+                            </div>
+                        </div>
+
+                        <div class="w-24">
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Stok</label>
+                            <div class="px-3 py-2 text-sm border border-gray-200 rounded-lg text-center" :class="material.current_stock < (material.quantity_needed * targetQty) ? 'bg-red-50 text-red-700 border-red-300' : 'bg-green-50 text-green-700 border-green-300'">
+                                <span x-text="material.current_stock"></span>
+                                <span class="text-gray-400" x-text="material.unit"></span>
+                            </div>
                         </div>
                         
                         <div class="w-32">
-                            <label class="block text-xs font-medium text-gray-500 mb-1">Jumlah</label>
+                            <label class="block text-xs font-medium text-gray-500 mb-1">Kebutuhan Total</label>
                             <div class="relative">
-                                <input type="number" step="0.1" min="0.1" x-model="material.quantity" :name="`materials[${index}][quantity]`" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700 focus:border-blue-700 text-right pr-12">
-                                <span class="absolute right-3 top-2 text-sm text-gray-400" x-text="getUnit(material.raw_material_id)"></span>
+                                <div class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg text-right pr-12 bg-blue-50 text-blue-800 font-semibold">
+                                    <span x-text="(material.quantity_needed * targetQty).toFixed(2)"></span>
+                                </div>
+                                <span class="absolute right-3 top-2 text-sm text-gray-400" x-text="material.unit"></span>
                             </div>
+                            <input type="hidden" :name="`materials[${index}][quantity]`" :value="(material.quantity_needed * targetQty).toFixed(2)">
                         </div>
 
                         <button type="button" @click="removeMaterial(index)" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Hapus">
@@ -106,8 +121,16 @@
                 </template>
                 
                 <div x-show="materials.length === 0" class="text-center py-6 text-gray-500 text-sm border-2 border-dashed border-gray-200 rounded-xl">
-                    Belum ada bahan baku yang ditambahkan.<br>
-                    Klik "Tambah Bahan" untuk memilih bahan yang digunakan.
+                    <template x-if="!loadingRecipe">
+                        <div>Belum ada bahan baku yang ditambahkan.<br>
+                        Klik "Tambah Bahan" untuk memilih bahan yang digunakan.</div>
+                    </template>
+                    <template x-if="loadingRecipe">
+                        <div class="flex items-center justify-center gap-2">
+                            <svg class="animate-spin h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            Memuat resep produk...
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -131,9 +154,42 @@
 
     function productionForm() {
         return {
+            selectedProductId: '',
+            targetQty: {{ old('target_quantity', 1) }},
+            loadingRecipe: false,
             materials: [
                 { raw_material_id: '', quantity: '' }
             ],
+            loadRecipe() {
+                if (!this.selectedProductId) {
+                    this.materials = [{ raw_material_id: '', quantity: '' }];
+                    return;
+                }
+                this.loadingRecipe = true;
+                fetch(`/operator/productions/${this.selectedProductId}/recipe`)
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success && res.data.length > 0) {
+                            this.materials = res.data.map(item => ({
+                                raw_material_id: item.raw_material_id,
+                                name: item.name,
+                                quantity_needed: parseFloat(item.quantity_needed),
+                                unit: item.unit,
+                                current_stock: parseFloat(item.current_stock),
+                            }));
+                        } else {
+                            this.materials = [{ raw_material_id: '', quantity: '' }];
+                        }
+                        this.loadingRecipe = false;
+                    })
+                    .catch(() => {
+                        this.materials = [{ raw_material_id: '', quantity: '' }];
+                        this.loadingRecipe = false;
+                    });
+            },
+            recalculateTotals() {
+                this.materials = this.materials.map(m => ({ ...m }));
+            },
             addMaterial() {
                 this.materials.push({ raw_material_id: '', quantity: '' });
             },
