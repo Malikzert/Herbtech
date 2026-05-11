@@ -41,7 +41,7 @@
                 </button>
                 
                 @if(request()->hasAny(['search', 'status', 'start_date', 'end_date']))
-                <a href="{{ route('admin.productions.index') }}" class="h-11 px-5 bg-white/10 text-white font-medium rounded-lg hover:bg-white/20 transition flex items-center gap-2 border border-white/30">
+                <a href="{{ route('admin.productions.index') }}" class="h-11 px-5 bg-white/10 text-gray-800 font-medium rounded-lg hover:bg-white/20 transition flex items-center gap-2 border border-white/30">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     Reset
                 </a>

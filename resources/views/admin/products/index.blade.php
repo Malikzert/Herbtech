@@ -12,7 +12,7 @@
                 <!-- Search Input -->
                 <div class="relative flex-1 min-w-[200px]">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <svg class="w-5 h-5 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk..." 
                         class="w-full h-11 pl-10 pr-4 input-glass border border-white/30 rounded-lg text-sm text-black placeholder-gray-400 focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none transition">
@@ -33,7 +33,7 @@
                 </button>
                 
                 @if(request('search') || request('category'))
-                <a href="{{ route('admin.products.index') }}" class="h-11 px-5 bg-white/20 backdrop-blur-sm text-white font-medium rounded-lg hover:bg-white/30 transition flex items-center gap-2 border border-white/30">
+                <a href="{{ route('admin.products.index') }}" class="h-11 px-5 bg-white/20 backdrop-blur-sm text-gray-700 font-medium rounded-lg hover:bg-white/30 transition flex items-center gap-2 border border-white/30">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     Reset
                 </a>
@@ -99,7 +99,7 @@
                     <tr>
                         <td colspan="6" class="px-6 py-16 text-center">
                             <div class="flex flex-col items-center">
-                                <svg class="w-16 h-16 text-white/30 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                                <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                                 <p class="text-black font-medium">Belum ada produk</p>
                                 <p class="text-black text-sm mt-1">Klik tombol "Tambah Produk" untuk memulai</p>
                             </div>

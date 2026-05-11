@@ -12,7 +12,7 @@
                     {{ substr($user->name, 0, 1) }}
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold black">{{ $user->name }}</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h2>
                     <p class="text-gray-500">{{ $user->email }}</p>
                     @if($user->role === 'admin')
                     <span class="inline-block mt-2 px-3 py-1 text-xs font-medium rounded-full bg-purple-100/60 text-purple-700 border border-purple-200">Admin</span>
@@ -25,19 +25,19 @@
             <div class="space-y-4">
                 <div class="flex justify-between py-3 border-b border-gray-100/50">
                     <span class="text-gray-500">ID User</span>
-                    <span class="font-medium black">#{{ $user->id }}</span>
+                    <span class="font-medium text-gray-800">#{{ $user->id }}</span>
                 </div>
                 <div class="flex justify-between py-3 border-b border-gray-100/50">
                     <span class="text-gray-500">Email</span>
-                    <span class="font-medium black">{{ $user->email }}</span>
+                    <span class="font-medium text-gray-800">{{ $user->email }}</span>
                 </div>
                 <div class="flex justify-between py-3 border-b border-gray-100/50">
                     <span class="text-gray-500">Role</span>
-                    <span class="font-medium black">{{ ucfirst($user->role) }}</span>
+                    <span class="font-medium text-gray-800">{{ ucfirst($user->role) }}</span>
                 </div>
                 <div class="flex justify-between py-3 border-b border-gray-100/50">
                     <span class="text-gray-500">Terdaftar</span>
-                    <span class="font-medium black">{{ $user->created_at->format('d M Y, H:i') }}</span>
+                    <span class="font-medium text-gray-800">{{ $user->created_at->format('d M Y, H:i') }}</span>
                 </div>
             </div>
             

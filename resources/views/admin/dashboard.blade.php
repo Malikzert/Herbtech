@@ -11,9 +11,9 @@
         <div class="bg-glass rounded-xl border border-white/50 p-5 shadow-sm glass-card">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-white/90 text-sm font-medium drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.8)]">Total Produksi</p>
+                    <p class="text-gray-800 text-sm font-medium">Total Produksi</p>
                     <h3 class="text-black text-3xl font-extrabold mt-1 drop-shadow-md">{{ $totalProductions ?? 0 }}</h3>
-                    <p class="text-white/70 text-xs mt-1">Semua batch</p>
+                    <p class="text-gray-500 text-xs mt-1">Semua batch</p>
                 </div>
                 <div class="p-3 bg-emerald-700/50 rounded-lg border border-emerald-500/50">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
@@ -25,7 +25,7 @@
         <div class="bg-glass rounded-xl border border-white/50 p-5 shadow-sm glass-card">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-white/90 text-sm font-medium drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.8)]">Stok Bahan Rendah</p>
+                    <p class="text-gray-800 text-sm font-medium">Stok Bahan Rendah</p>
                     <h3 class="text-black text-3xl font-extrabold mt-1 drop-shadow-md">{{ $lowStockCount ?? 0 }}</h3>
                     <p class="text-red-300 text-xs mt-1">Perlu pengadaan</p>
                 </div>
@@ -39,7 +39,7 @@
         <div class="bg-glass rounded-xl border border-white/50 p-5 shadow-sm glass-card">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-white/90 text-sm font-medium drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.8)]">Menunggu QC</p>
+                    <p class="text-gray-800 text-sm font-medium">Menunggu QC</p>
                     <h3 class="text-black text-3xl font-extrabold mt-1 drop-shadow-md">{{ $pendingQcCount ?? 0 }}</h3>
                     <p class="text-amber-300 text-xs mt-1">Dalam antrian</p>
                 </div>
@@ -53,9 +53,9 @@
         <div class="bg-glass rounded-xl border border-white/50 p-5 shadow-sm glass-card">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-white/90 text-sm font-medium drop-shadow-[0_1.2px_1.2px_rgba(255,255,255,0.8)]">Total Produk</p>
+                    <p class="text-gray-800 text-sm font-medium">Total Produk</p>
                     <h3 class="text-black text-3xl font-extrabold mt-1 drop-shadow-md">{{ $totalProducts ?? 0 }}</h3>
-                    <p class="text-white/70 text-xs mt-1">Aktif di sistem</p>
+                    <p class="text-gray-500 text-xs mt-1">Aktif di sistem</p>
                 </div>
                 <div class="p-3 bg-blue-600/50 rounded-lg border border-blue-400/50">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
@@ -125,8 +125,8 @@
         <!-- QC Summary -->
         <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm glass-card">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-white text-shadow-sm">Ringkasan QC</h3>
-                <a href="{{ route('admin.qc.index') }}" class="text-sm text-emerald-200 hover:text-white font-medium">Lihat Semua</a>
+                <h3 class="font-bold text-gray-800">Ringkasan QC</h3>
+                <a href="{{ route('admin.qc.index') }}" class="text-sm text-emerald-200 hover:text-gray-800 font-medium">Lihat Semua</a>
             </div>
             <div class="space-y-4">
                 <div class="flex items-center justify-between p-3 bg-emerald-500/20 rounded-lg border border-emerald-400/30">
@@ -134,32 +134,32 @@
                         <div class="p-2 bg-emerald-700/50 rounded-lg">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                         </div>
-                        <span class="text-sm font-bold text-white">Passed</span>
+                        <span class="text-sm font-bold text-gray-800">Passed</span>
                     </div>
-                    <span class="text-lg font-bold text-white">{{ $passedQcCount ?? 0 }}</span>
+                    <span class="text-lg font-bold text-gray-800">{{ $passedQcCount ?? 0 }}</span>
                 </div>
                 <div class="flex items-center justify-between p-3 bg-amber-500/20 rounded-lg border border-amber-400/30">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-amber-600/50 rounded-lg">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         </div>
-                        <span class="text-sm font-bold text-white">Rework</span>
+                        <span class="text-sm font-bold text-gray-800">Rework</span>
                     </div>
-                    <span class="text-lg font-bold text-white">{{ $reworkQcCount ?? 0 }}</span>
+                    <span class="text-lg font-bold text-gray-800">{{ $reworkQcCount ?? 0 }}</span>
                 </div>
                 <div class="flex items-center justify-between p-3 bg-red-500/20 rounded-lg border border-red-400/30">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-red-600/50 rounded-lg">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </div>
-                        <span class="text-sm font-bold text-white">Rejected</span>
+                        <span class="text-sm font-bold text-gray-800">Rejected</span>
                     </div>
-                    <span class="text-lg font-bold text-white">{{ $rejectedQcCount ?? 0 }}</span>
+                    <span class="text-lg font-bold text-gray-800">{{ $rejectedQcCount ?? 0 }}</span>
                 </div>
             </div>
             <div class="mt-6 pt-4 border-t border-white/30">
                 <div class="flex justify-between items-center">
-                    <span class="text-sm font-medium text-white">Pass Rate</span>
+                    <span class="text-sm font-medium text-gray-600">Pass Rate</span>
                     <span class="text-xl font-bold text-emerald-300">{{ $qcPassRate ?? 0 }}%</span>
                 </div>
                 <div class="w-full bg-white/20 rounded-full h-2 mt-2">

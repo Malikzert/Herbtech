@@ -24,10 +24,12 @@
         .bg-cream { background-color: #FDFBF7; }
         
         .bg-wallpaper {
-            background-image: url('{{ asset("image/rempahwall.jpeg") }}');
+            background-image: url('{{ asset("image/p.avif") }}');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #0f172a;
         }
         
         .glass-sidebar {
@@ -37,15 +39,17 @@
         }
         
         .glass-sidebar-operator {
-            background-color: rgba(30, 58, 138, 0.95); /* Blue 900 (Navy) */
+            background-color: rgba(101, 67, 33, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+            transition: background 0.5s ease;
         }
         
         .glass-topbar {
-            background-color: rgba(253, 251, 247, 0.85);
+            background: linear-gradient(to right, rgba(101,67,33,0.85), rgba(180,130,80,0.3) 50%, rgba(255,255,255,0.15));
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
+            transition: background 0.5s ease;
         }
     </style>
     @stack('styles')
@@ -53,12 +57,12 @@
 <body class="bg-wallpaper text-gray-800 antialiased relative" x-data="{ sidebarOpen: false }">
 
     <!-- Global Subtle Overlay -->
-    <div class="fixed inset-0 bg-cream opacity-90 backdrop-blur-sm z-0 pointer-events-none"></div>
+    <div class="fixed inset-0 bg-[#0f172a] opacity-10 backdrop-blur-sm z-0 pointer-events-none"></div>
 
     <div class="flex h-screen overflow-hidden relative z-10">
 
         <!-- Sidebar -->
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-50 w-64 {{ (auth()->check() && auth()->user()->role == 'operator') ? 'glass-sidebar-operator border-blue-950/30' : 'glass-sidebar border-emerald-800/30' }} text-white transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 shadow-2xl border-r">
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-50 w-64 {{ (auth()->check() && auth()->user()->role == 'operator') ? 'glass-sidebar-operator' : 'glass-sidebar border-emerald-800/30' }} text-white transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 shadow-xl">
             <div class="flex items-center justify-center h-20 border-b border-white/10">
                 <div class="flex items-center gap-3">
                     <img src="{{ asset('image/logoht.png') }}" alt="Logo" class="w-8 h-8 object-contain filter brightness-0 invert">
@@ -150,10 +154,10 @@
             <!-- Topbar -->
             <header class="h-20 glass-topbar shadow-sm border-b border-gray-200/50 flex items-center justify-between px-6 z-20">
                 <div class="flex items-center">
-                    <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 focus:outline-none lg:hidden">
+                    <button @click="sidebarOpen = !sidebarOpen" class="text-white/70 focus:outline-none lg:hidden">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                    <h2 class="text-2xl font-bold text-gray-800 ml-4 lg:ml-0 tracking-tight">@yield('header')</h2>
+                    <h2 class="text-2xl font-bold text-white ml-4 lg:ml-0 tracking-tight">@yield('header')</h2>
                 </div>
                 
                 <div class="flex items-center gap-4">
@@ -213,5 +217,130 @@
     </div>
 
     @stack('scripts')
+    <script>
+    (function() {
+        function drawLeaf(ctx, x, y, size, rot, color, alpha) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(rot);
+            ctx.scale(size, size);
+            ctx.globalAlpha = alpha;
+
+            ctx.shadowColor = 'rgba(5, 150, 105, 0.3)';
+            ctx.shadowBlur = 6;
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(4, -3, 8, -2, 10, 0);
+            ctx.bezierCurveTo(8, 2, 4, 3, 0, 0);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(8, 0);
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 0.3;
+            ctx.stroke();
+
+            ctx.shadowBlur = 0;
+            ctx.restore();
+        }
+
+        function initHerbEffect(container, opts) {
+            if (!container) return;
+            opts = opts || {};
+
+            var canvas = document.createElement('canvas');
+            canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+            container.style.position = 'relative';
+            container.insertBefore(canvas, container.firstChild);
+            for (var i = 0; i < container.children.length; i++) {
+                var c = container.children[i];
+                if (c !== canvas) { c.style.position = 'relative'; c.style.zIndex = '2'; }
+            }
+
+            var ctx = canvas.getContext('2d');
+            var particles = [];
+            var num = opts.num || 15;
+            var speed = opts.speed || 0.2;
+            var animId;
+
+            var colors = [
+                'rgba(5,150,105,0.6)',
+                'rgba(34,197,94,0.5)',
+                'rgba(22,163,74,0.5)',
+                'rgba(21,128,61,0.4)',
+                'rgba(5,150,105,0.35)',
+            ];
+
+            function resize() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+
+            function init() {
+                particles.length = 0;
+                var w = canvas.width, h = canvas.height;
+                for (var i = 0; i < num; i++) {
+                    particles.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        vx: Math.random() * speed + 0.03,
+                        baseY: Math.random() * h,
+                        amp: Math.random() * 30 + 8,
+                        freq: Math.random() * 0.006 + 0.003,
+                        size: Math.random() * 1.5 + 0.8,
+                        rot: Math.random() * Math.PI * 2,
+                        rotSpeed: (Math.random() - 0.5) * 0.02,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        alpha: Math.random() * 0.35 + 0.08,
+                        phase: Math.random() * Math.PI * 2,
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                var w = canvas.width, h = canvas.height;
+
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    p.phase += p.freq;
+
+                    p.x += p.vx;
+                    p.y = p.baseY + Math.sin(p.phase) * p.amp;
+                    p.rot += p.rotSpeed;
+
+                    if (p.x > w + 30) {
+                        p.x = -15;
+                        p.baseY = Math.random() * h;
+                    }
+
+                    drawLeaf(ctx, p.x, p.y, p.size, p.rot, p.color, p.alpha);
+                }
+
+                animId = requestAnimationFrame(draw);
+            }
+
+            resize();
+            init();
+            draw();
+            window.addEventListener('resize', function() { resize(); init(); });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var sidebar = document.querySelector('.glass-sidebar-operator');
+            if (sidebar) {
+                initHerbEffect(sidebar, { num: 16, speed: 0.2 });
+            }
+
+            var navbar = document.querySelector('.glass-topbar');
+            if (navbar) {
+                initHerbEffect(navbar, { num: 10, speed: 0.12 });
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
