@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class PasswordController extends Controller
 {
@@ -22,6 +23,13 @@ class PasswordController extends Controller
         $request->validate([
             'email' => ['required', 'email', 'exists:users,email'],
         ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && is_null($user->email_verified_at)) {
+            return redirect()->route('verification.notice')
+                ->with('error', 'Akun Anda belum terverifikasi. Silakan verifikasi email Anda terlebih dahulu sebelum dapat merubah password.');
+        }
 
         $status = Password::sendResetLink(
             $request->only('email')

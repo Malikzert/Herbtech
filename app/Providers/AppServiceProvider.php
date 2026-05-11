@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+use App\Models\QualityControl;
+use App\Observers\QualityControlObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('operator', function (User $user) {
             return $user->role === 'operator';
         });
+
+        QualityControl::observe(QualityControlObserver::class);
     }
 }

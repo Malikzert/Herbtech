@@ -132,7 +132,18 @@
     </style>
     @stack('styles')
 </head>
-<body class="text-gray-800 antialiased" x-data="{ sidebarOpen: false, userMenu: false }">
+<body class="text-gray-800 antialiased" x-data="{ sidebarOpen: false, userMenu: false, notif: { show: false, type: 'success', message: '' } }"
+      x-on:notify.window="notif.show = true; notif.type = $event.detail.type; notif.message = $event.detail.message; setTimeout(() => notif.show = false, 5000);"
+      x-init="
+        let n = @json(session('success'));
+        if (n) { notif.show = true; notif.type = 'success'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
+        n = @json(session('error'));
+        if (n) { notif.show = true; notif.type = 'error'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
+        n = @json(session('warning'));
+        if (n) { notif.show = true; notif.type = 'warning'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
+        n = @json(session('info'));
+        if (n) { notif.show = true; notif.type = 'info'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
+      ">
     <!-- Main Background Wrapper -->
     <div class="bg-admin-wall min-h-screen">
         <div class="min-h-screen bg-gray-900/20 backdrop-blur-sm">
@@ -178,6 +189,11 @@
                             <span class="text-shadow-sm">Produksi</span>
                         </a>
                         
+                        <a href="{{ route('admin.scheduling.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.scheduling.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                            <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span class="text-shadow-sm">Penjadwalan</span>
+                        </a>
+                        
                         <a href="{{ route('admin.qc.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.qc.*') ? 'bg-white/20 text-emerald-300' : '' }}">
                             <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span class="text-shadow-sm">Quality Control</span>
@@ -214,11 +230,6 @@
                         </div>
                         
                         <div class="flex items-center gap-4">
-                            <div class="relative hidden md:block">
-                                <input type="text" placeholder="Cari..." class="w-64 pl-10 pr-4 py-2 bg-white/50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none focus:bg-white transition">
-                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            </div>
-                            
                             <div class="relative" x-data>
                                 <button @click="userMenu = !userMenu" class="flex items-center space-x-3 focus:outline-none p-2 rounded-xl hover:bg-white/50 transition">
                                     <div class="text-right hidden md:block">
@@ -240,6 +251,34 @@
                             </div>
                         </div>
                     </header>
+
+                    <!-- Flash Notification Toast -->
+                    <template x-teleport="body">
+                        <div x-show="notif.show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-8 opacity-0" x-transition:enter-end="translate-x-0 opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="translate-x-8 opacity-0" class="fixed top-5 right-5 z-[9999] max-w-md w-full pointer-events-auto" style="display: none;">
+                            <div class="rounded-xl shadow-2xl border overflow-hidden backdrop-blur-xl" :class="notif.type === 'success' ? 'bg-emerald-600/95 border-emerald-400/50' : notif.type === 'error' ? 'bg-red-600/95 border-red-400/50' : notif.type === 'warning' ? 'bg-amber-600/95 border-amber-400/50' : 'bg-blue-600/95 border-blue-400/50'">
+                                <div class="flex items-start gap-3 p-4">
+                                    <template x-if="notif.type === 'success'">
+                                        <svg class="w-6 h-6 text-emerald-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </template>
+                                    <template x-if="notif.type === 'error'">
+                                        <svg class="w-6 h-6 text-red-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </template>
+                                    <template x-if="notif.type === 'warning'">
+                                        <svg class="w-6 h-6 text-amber-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                    </template>
+                                    <template x-if="notif.type === 'info'">
+                                        <svg class="w-6 h-6 text-blue-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </template>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-bold text-white" x-text="notif.message"></p>
+                                    </div>
+                                    <button @click="notif.show = false" class="shrink-0 p-1 rounded-lg hover:bg-white/20 transition">
+                                        <svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
 
                     <!-- Page Content -->
                     <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 md:p-8">

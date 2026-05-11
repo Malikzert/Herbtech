@@ -20,6 +20,11 @@ class RawMaterial extends Model
         return $this->hasMany(ProductionMaterial::class);
     }
 
+    public function recipes()
+    {
+        return $this->hasMany(Recipe::class);
+    }
+
     public function getStockStatusAttribute()
     {
         $minLevel = $this->min_stock_level ?? 10;

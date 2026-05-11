@@ -12,6 +12,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\ScheduleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,6 +52,10 @@ Route::middleware('auth')->group(function () {
         Route::get('productions/{id}', [ProductionController::class, 'show'])->name('admin.productions.show');
         Route::put('productions/{id}/update-status', [ProductionController::class, 'updateStatus'])->name('admin.productions.update-status');
         
+        Route::get('scheduling', [ProductionController::class, 'schedulingIndex'])->name('admin.scheduling.index');
+        Route::post('scheduling/generate', [ProductionController::class, 'generateSchedule'])->name('admin.scheduling.generate');
+        Route::post('scheduling/review', [ProductionController::class, 'reviewSchedule'])->name('admin.scheduling.review');
+        
         Route::get('qc', [QCController::class, 'index'])->name('admin.qc.index');
         Route::get('qc/{id}', [QCController::class, 'show'])->name('admin.qc.show');
 
@@ -67,6 +72,8 @@ Route::middleware('auth')->group(function () {
         Route::get('productions/{id}/recipe', [ProductionController::class, 'getRecipeByProduct'])->name('operator.productions.get-recipe');
         Route::resource('productions', ProductionController::class)->names('operator.productions');
         Route::resource('qc', QCController::class)->names('operator.qc');
+
+        Route::get('schedules', [ScheduleController::class, 'index'])->name('operator.schedules.index');
 
         Route::get('raw-materials', [RawMaterialController::class, 'index'])->name('operator.raw-materials.index');
         Route::get('products', [ProductController::class, 'index'])->name('operator.products.index');

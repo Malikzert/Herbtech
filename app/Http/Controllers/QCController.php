@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Production;
 use App\Models\QualityControl;
-use App\Models\FinishedGoodsInventory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -48,7 +47,7 @@ class QCController extends Controller
 
     public function create()
     {
-        $productions = Production::whereIn('status', ['in_progress', 'qc_check'])
+        $productions = Production::whereIn('status', ['in_progress', 'qc_check', 'rework'])
             ->with('product')
             ->get();
             
@@ -125,11 +124,7 @@ class QCController extends Controller
 
                 $production->update([
                     'actual_quantity' => $totalPassed,
-                    'end_date' => now(),
-                    'status' => $this->mapFinalStatusToProductionStatus($finalStatus),
                 ]);
-
-                $this->processAction($production, $qc);
             });
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat menyimpan QC: ' . $e->getMessage());
@@ -237,60 +232,4 @@ class QCController extends Controller
         }
     }
 
-    private function mapFinalStatusToProductionStatus(string $finalStatus): string
-    {
-        return match ($finalStatus) {
-            'release' => 'completed',
-            'rework' => 'in_progress',
-            'reject' => 'cancelled',
-            default => 'completed',
-        };
-    }
-
-    private function processAction(Production $production, QualityControl $qc): void
-    {
-        switch ($qc->action) {
-            case 'release':
-                $this->addToInventory($production, $qc->total_passed);
-                $production->update(['status' => 'completed', 'end_date' => now()]);
-                break;
-
-            case 'rework':
-                $this->createReworkProduction($production, $qc);
-                $production->update(['end_date' => now()]);
-                break;
-
-            case 'reject':
-                $production->update(['status' => 'cancelled', 'end_date' => now()]);
-                break;
-        }
-    }
-
-    private function addToInventory(Production $production, int $quantity): void
-    {
-        FinishedGoodsInventory::create([
-            'production_id' => $production->id,
-            'product_id' => $production->product_id,
-            'quantity_added' => $quantity,
-            'expired_date' => now()->addMonths(6),
-            'storage_location' => 'warehouse',
-        ]);
-    }
-
-    private function createReworkProduction(Production $originalProduction, QualityControl $qc): void
-    {
-        $newBatchNumber = $originalProduction->batch_number . '-R';
-
-        $reworkProduction = Production::create([
-            'batch_number' => $newBatchNumber,
-            'product_id' => $originalProduction->product_id,
-            'start_date' => now(),
-            'status' => 'draft',
-            'user_id' => $originalProduction->user_id,
-            'rework_of' => $originalProduction->id,
-            'pic_name' => $originalProduction->pic_name,
-        ]);
-
-        $originalProduction->update(['status' => 'completed']);
-    }
 }

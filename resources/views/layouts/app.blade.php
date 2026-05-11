@@ -110,6 +110,10 @@
                         <svg class="w-5 h-5 mr-3 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                         Input Produksi
                     </a>
+                    <a href="{{ route('operator.schedules.index') }}" class="flex items-center px-4 py-2.5 rounded-lg transition {{ request()->routeIs('operator.schedules.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
+                        <svg class="w-5 h-5 mr-3 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                        Jadwal Produksi
+                    </a>
                     <a href="{{ route('operator.qc.index') }}" class="flex items-center px-4 py-2.5 rounded-lg transition {{ request()->routeIs('operator.qc.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                         <svg class="w-5 h-5 mr-3 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Quality Control

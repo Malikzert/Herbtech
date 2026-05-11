@@ -10,7 +10,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Daftar
         </a>
-        @if(in_array($production->status, ['draft', 'in_progress']))
+        @if(in_array($production->status, ['draft', 'pending']))
         <a href="{{ route('operator.productions.edit', $production->id) }}" class="px-4 py-2 bg-amber-500 text-white font-medium rounded-lg hover:bg-amber-600 transition">Edit Produksi</a>
         @endif
     </div>
@@ -49,11 +49,17 @@
                         @case('draft')
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Draft</span>
                             @break
+                        @case('pending')
+                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Pending</span>
+                            @break
                         @case('in_progress')
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">On Progress</span>
                             @break
                         @case('qc_check')
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">QC Check</span>
+                            @break
+                        @case('rework')
+                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">Rework</span>
                             @break
                         @case('completed')
                             <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">Completed</span>
@@ -70,21 +76,30 @@
             </div>
         </div>
 
+        @if(auth()->user()->can('admin') || in_array($production->status, ['draft', 'pending']))
         <form action="{{ route('operator.productions.updateStatus', $production->id) }}" method="POST" class="mt-8 border-t border-gray-100 pt-6">
             @csrf
             @method('PATCH')
             <div class="flex items-center gap-4">
                 <label class="text-sm font-medium text-gray-700">Ubah Status:</label>
                 <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700">
+                    @if(auth()->user()->can('admin'))
                     <option value="draft" {{ $production->status == 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="pending" {{ $production->status == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="in_progress" {{ $production->status == 'in_progress' ? 'selected' : '' }}>On Progress</option>
                     <option value="qc_check" {{ $production->status == 'qc_check' ? 'selected' : '' }}>QC Check</option>
+                    <option value="rework" {{ $production->status == 'rework' ? 'selected' : '' }}>Rework</option>
                     <option value="completed" {{ $production->status == 'completed' ? 'selected' : '' }}>Completed</option>
                     <option value="cancelled" {{ $production->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    @else
+                    <option value="draft" {{ $production->status == 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="pending" {{ $production->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                    @endif
                 </select>
                 <button type="submit" class="px-4 py-2 bg-blue-800 text-white rounded-lg hover:bg-blue-900">Update Status</button>
             </div>
         </form>
+        @endif
     </div>
 
     <!-- Bahan Baku Digunakan (if we implement it) -->
