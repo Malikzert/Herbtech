@@ -1,18 +1,10 @@
 ﻿@extends('layouts.admin')
 
 @section('title', 'Penjadwalan Produksi')
-@section('header', 'Penjadwalan Produksi Otomatis')
+@section('header', 'PENJADWALAN')
 
 @section('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
-    .text-shadow-sm { text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-    .stat-icon {
-        width: 48px; height: 48px;
-        border-radius: 14px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 20px; flex-shrink: 0;
-    }
     @keyframes progress-indeterminate {
         0% { transform: translateX(-100%); }
         100% { transform: translateX(400%); }
@@ -29,38 +21,51 @@
         animation: spin 0.8s linear infinite;
         display: inline-block;
     }
-    .checkbox-glass {
+    .hybrid-checkbox {
         width: 18px; height: 18px;
-        border-radius: 6px;
-        border: 2px solid rgba(0,0,0,0.15);
+        border: 1.5px solid rgba(5, 150, 105, 0.3);
         cursor: pointer; transition: all 0.2s;
-        appearance: none; background: rgba(255,255,255,0.5);
+        appearance: none; background: rgba(6, 78, 59, 0.6);
     }
-    .checkbox-glass:checked {
-        background: #065f46;
-        border-color: #065f46;
+    .hybrid-checkbox:checked {
+        background: #059669;
+        border-color: #059669;
         background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
     }
-    .modal-overlay {
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(4px);
+    .hybrid-table thead {
+        background: rgba(5, 150, 105, 0.15);
     }
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(5, 150, 105, 0.3); border-radius: 2px; }
+    .hybrid-table thead th {
+        color: #34D399;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 10px;
+    }
+    .hybrid-table tbody tr {
+        border-bottom: 1px solid rgba(5, 150, 105, 0.08);
+        transition: all 0.2s ease;
+    }
+    .hybrid-table tbody tr:hover {
+        background: rgba(5, 150, 105, 0.05);
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(6, 78, 59, 0.3); }
+    ::-webkit-scrollbar-thumb { background: rgba(5, 150, 105, 0.3); border-radius: 0; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(5, 150, 105, 0.5); }
 </style>
 @endsection
 
 @section('content')
 <div class="space-y-6">
 
-    {{-- Inline validation / error messages (fallback if Alpine toast fails) --}}
+    {{-- Flash Messages --}}
     @if($errors->any())
-    <div class="bg-red-100/80 backdrop-blur border border-red-300 text-red-800 px-5 py-4 rounded-xl shadow-sm flex items-start gap-3" role="alert">
-        <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div class="relative overflow-hidden rounded-sm border border-red-500/30 bg-red-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
+        <svg class="w-5 h-5 shrink-0 mt-0.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <div>
-            <p class="font-semibold text-sm">Terjadi kesalahan validasi:</p>
-            <ul class="list-disc list-inside text-sm mt-1">
+            <p class="font-bold text-xs uppercase tracking-wider text-red-300">Terjadi kesalahan validasi:</p>
+            <ul class="list-disc list-inside text-sm text-red-200/80 mt-1">
                 @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
                 @endforeach
@@ -70,418 +75,462 @@
     @endif
 
     @if(session('error'))
-    <div class="bg-red-100/80 backdrop-blur border border-red-300 text-red-800 px-5 py-4 rounded-xl shadow-sm flex items-start gap-3" role="alert">
-        <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <div>
-            <p class="font-semibold text-sm">{{ session('error') }}</p>
-        </div>
+    <div class="relative overflow-hidden rounded-sm border border-red-500/30 bg-red-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
+        <svg class="w-5 h-5 shrink-0 mt-0.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <p class="font-bold text-xs uppercase tracking-wider text-red-300">{{ session('error') }}</p>
     </div>
     @endif
 
     @if(session('warning'))
-    <div class="bg-amber-100/80 backdrop-blur border border-amber-300 text-amber-800 px-5 py-4 rounded-xl shadow-sm flex items-start gap-3" role="alert">
-        <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-        <div>
-            <p class="font-semibold text-sm">{{ session('warning') }}</p>
-        </div>
+    <div class="relative overflow-hidden rounded-sm border border-amber-500/30 bg-amber-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
+        <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        <p class="font-bold text-xs uppercase tracking-wider text-amber-300">{{ session('warning') }}</p>
     </div>
     @endif
 
     @if(session('success'))
-    <div class="bg-emerald-100/80 backdrop-blur border border-emerald-300 text-emerald-800 px-5 py-4 rounded-xl shadow-sm flex items-start gap-3" role="alert">
-        <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <div>
-            <p class="font-semibold text-sm">{{ session('success') }}</p>
-        </div>
+    <div class="relative overflow-hidden rounded-sm border border-emerald-500/30 bg-emerald-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
+        <svg class="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <p class="font-bold text-xs uppercase tracking-wider text-emerald-300">{{ session('success') }}</p>
     </div>
     @endif
 
-    {{-- STATS SECTION -- 3-COLUMN GRID WITH GLASS CARDS --}}
+    {{-- STATS --}}
+    @php
+        $queueCount = $statusCounts['pending'] ?? $productions->whereIn('status', ['pending','draft'])->count();
+    @endphp
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {{-- Total Antrean Batch --}}
-        <div class="bg-glass rounded-xl border border-white/50 shadow-sm glass-card p-6">
-            <div class="flex items-center gap-4">
-                <div class="stat-icon" style="background: rgba(251, 191, 36, 0.2);">
-                    <i class="bi bi-clock text-amber-500"></i>
+        <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+            <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+            <div class="flex items-center gap-4 mt-3">
+                <div class="w-12 h-12 flex items-center justify-center bg-amber-500/15 border border-amber-500/30" style="border-radius: 0;">
+                    <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-black/50">Total Antrean Batch</p>
-                    <p class="text-3xl font-bold text-gray-800 mt-0.5">{{ $statusCounts['pending'] ?? $productions->whereIn('status', ['pending','draft'])->count() }}</p>
-                    <p class="text-xs text-amber-600/70 mt-0.5">Menunggu penjadwalan</p>
+                    <p class="text-[10px] uppercase tracking-[0.15em] text-emerald-400/60 font-bold">Total Antrean Batch</p>
+                    <p class="text-2xl font-black text-emerald-50 mt-0.5">{{ $queueCount }}</p>
+                    <p class="text-[10px] text-amber-400/80 mt-0.5 font-bold uppercase tracking-wider">Menunggu penjadwalan</p>
                 </div>
             </div>
+            <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+            <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
         </div>
 
-        {{-- Kapasitas Produksi Harian --}}
-        <div class="bg-glass rounded-xl border border-white/50 shadow-sm glass-card p-6">
-            <div class="flex items-center gap-4">
-                <div class="stat-icon" style="background: rgba(5, 150, 105, 0.2);">
-                    <i class="bi bi-buildings text-emerald-600"></i>
+        <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+            <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+            <div class="flex items-center gap-4 mt-3">
+                <div class="w-12 h-12 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-black/50">Kapasitas Produksi Harian</p>
-                    <p class="text-3xl font-bold text-gray-800 mt-0.5">{{ number_format($dailyCapacity ?? 5000) }}</p>
-                    <p class="text-xs text-emerald-600/70 mt-0.5">unit / hari</p>
+                    <p class="text-[10px] uppercase tracking-[0.15em] text-emerald-400/60 font-bold">Kapasitas Produksi Harian</p>
+                    <p class="text-2xl font-black text-emerald-50 mt-0.5">{{ number_format($dailyCapacity ?? 5000) }}</p>
+                    <p class="text-[10px] text-emerald-400/80 mt-0.5 font-bold uppercase tracking-wider">Unit / hari</p>
                 </div>
             </div>
+            <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+            <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
         </div>
 
-        {{-- Estimasi Waktu Selesai --}}
-        <div class="bg-glass rounded-xl border border-white/50 shadow-sm glass-card p-6">
-            <div class="flex items-center gap-4">
-                <div class="stat-icon" style="background: rgba(99, 102, 241, 0.2);">
-                    <i class="bi bi-calendar-event text-indigo-500"></i>
+        <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+            <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+            <div class="flex items-center gap-4 mt-3">
+                <div class="w-12 h-12 flex items-center justify-center bg-blue-500/15 border border-blue-500/30" style="border-radius: 0;">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-black/50">Estimasi Waktu Selesai</p>
-                    <p class="text-2xl font-bold text-gray-800 mt-0.5">{{ $estimatedCompletion ?? '-' }}</p>
-                    <p class="text-xs text-indigo-600/70 mt-0.5">Berdasarkan antrean saat ini</p>
+                    <p class="text-[10px] uppercase tracking-[0.15em] text-emerald-400/60 font-bold">Estimasi Waktu Selesai</p>
+                    <p class="text-xl font-black text-emerald-50 mt-0.5">{{ $estimatedCompletion ?? '-' }}</p>
+                    <p class="text-[10px] text-blue-400/80 mt-0.5 font-bold uppercase tracking-wider">Berdasarkan antrean</p>
                 </div>
             </div>
+            <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+            <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
         </div>
     </div>
 
-    {{-- MAIN CONTENT -- TABLE (LEFT) + GA CONFIG (RIGHT) --}}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+    {{-- MAIN CONTENT --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {{-- LEFT COLUMN: Production Queue Table --}}
-        <div class="lg:col-span-2 space-y-5">
-
-            {{-- Table Card --}}
-            <div class="bg-glass rounded-xl border border-white/50 overflow-hidden shadow-sm glass-card">
-                <div class="p-5 border-b border-white/50">
-                    <div class="flex flex-wrap items-center justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(5, 150, 105, 0.2);">
-                                <i class="bi bi-list-ul text-emerald-700"></i>
-                            </div>
-                            <div>
-                                <h5 class="font-bold text-gray-800 text-shadow-sm">Antrean Produksi</h5>
-                                <p class="text-xs text-black/50">Daftar batch yang belum dijadwalkan</p>
-                            </div>
+        {{-- LEFT: Production Queue --}}
+        <div class="lg:col-span-2 space-y-6">
+            <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
+                <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+                <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
                         </div>
-                        <div class="flex gap-2">
-                            <a href="{{ route('admin.scheduling.index') }}"
-                               class="px-3 py-1.5 rounded-lg text-xs font-medium transition border {{ !$filter || $filter === 'all' ? 'bg-emerald-700 text-white border-transparent' : 'bg-white/30 text-gray-700 border-white/50 hover:bg-white/50' }}">
-                                Semua
-                            </a>
-                            <a href="{{ route('admin.scheduling.index', ['filter' => 'scheduled']) }}"
-                               class="px-3 py-1.5 rounded-lg text-xs font-medium transition border {{ $filter === 'scheduled' ? 'bg-emerald-700 text-white border-transparent' : 'bg-white/30 text-gray-700 border-white/50 hover:bg-white/50' }}">
-                                Terjadwal
-                            </a>
-                            <a href="{{ route('admin.scheduling.index', ['filter' => 'unscheduled']) }}"
-                               class="px-3 py-1.5 rounded-lg text-xs font-medium transition border {{ $filter === 'unscheduled' ? 'bg-emerald-700 text-white border-transparent' : 'bg-white/30 text-gray-700 border-white/50 hover:bg-white/50' }}">
-                                Belum
-                            </a>
+                        <div>
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Antrean Produksi</h3>
+                            <p class="text-xs text-emerald-200/40">Daftar batch yang belum dijadwalkan</p>
                         </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ route('admin.scheduling.index') }}"
+                           class="h-8 px-3 text-[10px] font-bold uppercase tracking-wider flex items-center rounded-sm transition-all duration-200 {{ !$filter || $filter === 'all' ? 'bg-emerald-600 text-white' : 'border border-emerald-500/25 text-emerald-200/60 hover:text-emerald-300 hover:border-emerald-400/50' }}">
+                            Semua
+                        </a>
+                        <a href="{{ route('admin.scheduling.index', ['filter' => 'scheduled']) }}"
+                           class="h-8 px-3 text-[10px] font-bold uppercase tracking-wider flex items-center rounded-sm transition-all duration-200 {{ $filter === 'scheduled' ? 'bg-emerald-600 text-white' : 'border border-emerald-500/25 text-emerald-200/60 hover:text-emerald-300 hover:border-emerald-400/50' }}">
+                            Terjadwal
+                        </a>
+                        <a href="{{ route('admin.scheduling.index', ['filter' => 'unscheduled']) }}"
+                           class="h-8 px-3 text-[10px] font-bold uppercase tracking-wider flex items-center rounded-sm transition-all duration-200 {{ $filter === 'unscheduled' ? 'bg-emerald-600 text-white' : 'border border-emerald-500/25 text-emerald-200/60 hover:text-emerald-300 hover:border-emerald-400/50' }}">
+                            Belum
+                        </a>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
-                    @if($productions->isNotEmpty())
-                    <form id="bulkActionForm" method="POST" action="{{ route('admin.scheduling.review') }}">
-                        @csrf
-                        <table class="w-full glass-table">
-                            <thead class="bg-emerald-800 text-white text-xs uppercase">
+                @if($productions->isNotEmpty())
+                <form id="bulkActionForm" method="POST" action="{{ route('admin.scheduling.review') }}">
+                    @csrf
+                    <div class="overflow-x-auto">
+                        <table class="w-full hybrid-table">
+                            <thead>
                                 <tr>
-                                    <th class="px-5 py-3.5 font-bold text-left text-white text-shadow-sm w-12">
-                                        <input type="checkbox" id="selectAll" class="checkbox-glass">
+                                    <th class="px-5 py-4 text-left w-12">
+                                        <input type="checkbox" id="selectAll" class="hybrid-checkbox">
                                     </th>
-                                    <th class="px-5 py-3.5 font-bold text-left text-white text-shadow-sm">Batch ID</th>
-                                    <th class="px-5 py-3.5 font-bold text-left text-white text-shadow-sm">Nama Produk</th>
-                                    <th class="px-5 py-3.5 font-bold text-left text-white text-shadow-sm">Target Qty</th>
-                                    <th class="px-5 py-3.5 font-bold text-left text-white text-shadow-sm">Prioritas</th>
-                                    <th class="px-5 py-3.5 font-bold text-left text-white text-shadow-sm">Jadwal</th>
-                                    <th class="px-5 py-3.5 font-bold text-left text-white text-shadow-sm">Status</th>
-                                    <th class="px-5 py-3.5 font-bold text-right text-white text-shadow-sm">Aksi</th>
+                                    <th class="px-5 py-4 text-left">Batch ID</th>
+                                    <th class="px-5 py-4 text-left">Produk</th>
+                                    <th class="px-5 py-4 text-left">Target Qty</th>
+                                    <th class="px-5 py-4 text-left">Prioritas</th>
+                                    <th class="px-5 py-4 text-left">Jadwal</th>
+                                    <th class="px-5 py-4 text-left">Status</th>
+                                    <th class="px-5 py-4 text-right">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-white/30">
+                            <tbody class="divide-y divide-emerald-500/10">
                                 @foreach($productions as $production)
-                                <tr class="hover:bg-white/10 transition">
+                                <tr class="group">
                                     <td class="px-5 py-4">
-                                        <input type="checkbox" name="production_ids[]" value="{{ $production->id }}" class="production-checkbox checkbox-glass">
+                                        <input type="checkbox" name="production_ids[]" value="{{ $production->id }}" class="production-checkbox hybrid-checkbox">
                                     </td>
                                     <td class="px-5 py-4">
-                                        <div class="flex items-center gap-2.5">
-                                            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style="background: rgba(5, 150, 105, 0.15);">
-                                                <i class="bi bi-box-seam text-emerald-700 text-xs"></i>
-                                            </div>
-                                            <span class="font-semibold text-gray-800 text-sm">{{ $production->batch_number }}</span>
-                                        </div>
+                                        <span class="text-sm font-bold text-emerald-50/90 group-hover:text-emerald-50 transition-colors">{{ $production->batch_number }}</span>
                                     </td>
-                                    <td class="px-5 py-4 text-sm text-gray-700">{{ $production->product->name ?? $production->product_id }}</td>
+                                    <td class="px-5 py-4 text-sm text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">{{ $production->product->name ?? $production->product_id }}</td>
                                     <td class="px-5 py-4">
-                                        <span class="text-sm font-medium text-gray-700">{{ number_format($production->target_quantity ?? 0) }}</span>
-                                        <span class="text-xs text-gray-500">unit</span>
+                                        <span class="text-sm font-bold text-emerald-50/90">{{ number_format($production->target_quantity ?? 0) }}</span>
+                                        <span class="text-xs text-emerald-200/40">unit</span>
                                     </td>
                                     <td class="px-5 py-4">
-                                        @php
-                                            $priority = $production->priority_level ?? 50;
-                                            $pColor = $priority >= 80 ? 'bg-red-100 text-red-800 border-red-300' : ($priority >= 60 ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-gray-100 text-gray-800 border-gray-300');
-                                        @endphp
-                                        <span class="px-2.5 py-1 text-xs font-bold rounded-full inline-flex items-center gap-1 border {{ $pColor }}">
-                                            <i class="bi bi-star-fill" style="font-size: 8px;"></i>
+                                        @php $priority = $production->priority_level ?? 50; @endphp
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider
+                                            {{ $priority >= 80 ? 'bg-red-500/10 text-red-300 border border-red-500/20' : ($priority >= 60 ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20' : 'bg-gray-500/10 text-gray-300 border border-gray-500/20') }}" style="border-radius: 0;">
+                                            <span class="w-1.5 h-1.5" style="background: currentColor; border-radius: 0;"></span>
                                             {{ $priority }}
                                         </span>
                                     </td>
                                     <td class="px-5 py-4 text-sm">
                                         @if($production->scheduled_start)
-                                            <span class="font-medium text-gray-800">{{ $production->scheduled_start->format('d/m H:i') }}</span>
+                                            <span class="font-bold text-emerald-50/90">{{ $production->scheduled_start->format('d/m H:i') }}</span>
                                         @else
-                                            <span class="text-gray-400">-</span>
+                                            <span class="text-emerald-200/30">-</span>
                                         @endif
                                     </td>
                                     <td class="px-5 py-4">
                                         @if($production->algorithm_generated)
-                                            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800 border border-blue-300">
-                                                <i class="bi bi-check-circle-fill me-0.5"></i> Terjadwal
-                                            </span>
-                                        @elseif($production->status === 'draft')
-                                            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-gray-100 text-gray-800 border border-gray-300">Draft</span>
-                                        @elseif($production->status === 'in_progress')
-                                            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800 border border-blue-300">In Progress</span>
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-300 border border-blue-500/20" style="border-radius: 0;">
+                                            <span class="w-1.5 h-1.5" style="background: #60A5FA; border-radius: 0;"></span>
+                                            Terjadwal
+                                        </span>
                                         @else
-                                            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-100 text-amber-800 border border-amber-300">
-                                                <i class="bi bi-clock me-0.5"></i> Pending
-                                            </span>
+                                            @switch($production->status)
+                                                @case('draft')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-500/10 text-gray-300 border border-gray-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #9CA3AF; border-radius: 0;"></span>
+                                                    Draft
+                                                </span>
+                                                @break
+                                                @case('pending')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #F59E0B; border-radius: 0;"></span>
+                                                    Pending
+                                                </span>
+                                                @break
+                                                @case('in_progress')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-300 border border-blue-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #60A5FA; border-radius: 0;"></span>
+                                                    In Progress
+                                                </span>
+                                                @break
+                                                @case('qc_check')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #F59E0B; border-radius: 0;"></span>
+                                                    QC Check
+                                                </span>
+                                                @break
+                                                @case('rework')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-300 border border-purple-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #A78BFA; border-radius: 0;"></span>
+                                                    Rework
+                                                </span>
+                                                @break
+                                                @case('completed')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #34D399; border-radius: 0;"></span>
+                                                    Completed
+                                                </span>
+                                                @break
+                                                @case('cancelled')
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-300 border border-red-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #EF4444; border-radius: 0;"></span>
+                                                    Cancelled
+                                                </span>
+                                                @break
+                                                @default
+                                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20" style="border-radius: 0;">
+                                                    <span class="w-1.5 h-1.5" style="background: #F59E0B; border-radius: 0;"></span>
+                                                    Pending
+                                                </span>
+                                            @endswitch
                                         @endif
                                     </td>
                                     <td class="px-5 py-4 text-right">
                                         <a href="{{ route('admin.productions.show', $production->id) }}"
-                                           class="w-8 h-8 rounded-lg inline-flex items-center justify-center hover:bg-emerald-100 transition" title="Detail">
-                                            <i class="bi bi-eye text-emerald-700 text-sm"></i>
+                                           class="inline-flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400/60 hover:text-emerald-300 border border-emerald-500/20 hover:border-emerald-500/40 transition-all duration-200" style="border-radius: 0;">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                            Detail
                                         </a>
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
 
-                        {{-- Bulk Actions --}}
-                        <div class="p-5 border-t border-white/50 bg-white/10">
-                            <div class="flex flex-wrap items-center justify-between gap-3">
-                                <div class="text-sm text-gray-600">
-                                    <span class="font-semibold text-gray-800" id="selectedCount">0</span> item dipilih
-                                </div>
-                                <div class="flex gap-2.5">
-                                    <button type="button" onclick="openPreviewModal()"
-                                            class="px-4 py-2 rounded-lg text-sm font-medium transition border bg-white/40 text-gray-700 border-white/50 hover:bg-white/60">
-                                        <i class="bi bi-eye me-1.5"></i>Preview
-                                    </button>
-                                    <button type="submit" name="action" value="approve"
-                                            onclick="return confirm('Setujui jadwal yang dipilih?')"
-                                            class="px-4 py-2 rounded-lg text-sm font-medium transition text-white shadow-sm"
-                                            style="background: linear-gradient(135deg, #059669, #047857);">
-                                        <i class="bi bi-check-lg me-1.5"></i>Approve
-                                    </button>
-                                    <button type="submit" name="action" value="reset"
-                                            onclick="return confirm('Reset jadwal untuk batch terpilih?')"
-                                            class="px-4 py-2 rounded-lg text-sm font-medium transition border bg-white/30 text-gray-700 border-white/50 hover:bg-white/50">
-                                        <i class="bi bi-arrow-counterclockwise me-1.5"></i>Reset
-                                    </button>
-                                </div>
+                    {{-- Bulk Actions --}}
+                    <div class="px-6 py-4 border-t border-emerald-500/10 bg-emerald-500/5">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <div class="text-sm text-emerald-200/60">
+                                <span class="font-bold text-emerald-50" id="selectedCount">0</span> item dipilih
+                            </div>
+                            <div class="flex gap-2.5">
+                                <button type="button" onclick="openPreviewModal()"
+                                        class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/25 text-emerald-200/60 hover:text-emerald-300 hover:border-emerald-400/50 rounded-sm transition-all duration-200 flex items-center gap-2">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    Preview
+                                </button>
+                                <button type="submit" name="action" value="approve"
+                                        onclick="return confirm('Setujui jadwal yang dipilih?')"
+                                        class="px-5 py-2.5 rounded-sm text-[10px] font-bold uppercase tracking-wider flex items-center gap-2"
+                                        style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; transition: all 0.2s ease; border: none;"
+                                        onmouseover="this.style.background='linear-gradient(135deg, #10B981 0%, #059669 100%)'; this.style.boxShadow='0 0 20px rgba(5,150,105,0.4)'"
+                                        onmouseout="this.style.background='linear-gradient(135deg, #059669 0%, #047857 100%)'; this.style.boxShadow='none'">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Approve
+                                </button>
+                                <button type="submit" name="action" value="reset"
+                                        onclick="return confirm('Reset jadwal untuk batch terpilih?')"
+                                        class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/25 text-emerald-200/60 hover:text-red-400 hover:border-red-500/30 rounded-sm transition-all duration-200 flex items-center gap-2">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    Reset
+                                </button>
                             </div>
                         </div>
-                    </form>
-                    @else
-                    <div class="text-center py-16">
-                        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-white/30">
-                            <i class="bi bi-inbox text-gray-400 text-2xl"></i>
-                        </div>
-                        <h5 class="text-gray-600 font-medium mb-1">Tidak ada batch pending</h5>
-                        <p class="text-gray-400 text-sm">Semua batch sudah dijadwalkan.</p>
                     </div>
-                    @endif
+                </form>
+                @else
+                <div class="px-6 py-16 text-center">
+                    <div class="flex flex-col items-center">
+                        <p class="text-emerald-200/60 font-bold text-xs uppercase tracking-wider">Tidak Ada Batch Pending</p>
+                        <p class="text-emerald-200/30 text-xs mt-1">Semua batch sudah dijadwalkan.</p>
+                    </div>
                 </div>
+                @endif
+                <div class="absolute bottom-0 right-0 w-16 h-[2px] bg-emerald-500/25"></div>
+                <div class="absolute bottom-0 right-0 w-[2px] h-16 bg-emerald-500/25"></div>
             </div>
         </div>
 
-        {{-- RIGHT COLUMN: GA Config + Actions --}}
-        <div class="space-y-5">
-
-            {{-- Genetic Algorithm Configuration Card --}}
-            <div class="bg-glass rounded-xl border border-white/50 shadow-sm glass-card p-5">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(5, 150, 105, 0.2);">
-                        <i class="bi bi-cpu text-emerald-700"></i>
+        {{-- RIGHT: GA Config + Low Stock --}}
+        <div class="space-y-6">
+            {{-- GA Config --}}
+            <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+                <div class="flex items-center gap-3 mt-3 mb-5">
+                    <div class="w-10 h-10 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
                     </div>
                     <div>
-                        <h5 class="font-bold text-gray-800 text-shadow-sm">Algoritma Genetika</h5>
-                        <p class="text-xs text-black/50">Parameter optimasi produksi</p>
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Algoritma Genetika</h3>
+                        <p class="text-xs text-emerald-200/40">Parameter optimasi produksi</p>
                     </div>
                 </div>
 
                 <div class="space-y-3">
-                    {{-- FEFO --}}
-                    <div class="flex items-center justify-between p-3 bg-white/10 rounded-lg border border-white/20">
+                    <div class="flex items-center justify-between p-3 border border-emerald-500/15 bg-emerald-500/5" style="border-radius: 0;">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(239, 68, 68, 0.15);">
-                                <i class="bi bi-hourglass-split text-red-500 text-sm"></i>
+                            <div class="w-8 h-8 flex items-center justify-center bg-red-500/15 border border-red-500/30" style="border-radius: 0;">
+                                <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </div>
                             <div>
-                                <span class="text-sm font-semibold text-gray-800">Kriteria FEFO</span>
-                                <p class="text-xs text-gray-500">First Expiry First Out</p>
+                                <span class="text-xs font-bold uppercase tracking-wider text-emerald-50/80">Kriteria FEFO</span>
+                                <p class="text-[10px] text-emerald-200/40">First Expiry First Out</p>
                             </div>
                         </div>
-                        <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">Aktif</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5" style="border-radius: 0;">Aktif</span>
                     </div>
 
-                    {{-- Kapasitas Mesin --}}
-                    <div class="flex items-center justify-between p-3 bg-white/10 rounded-lg border border-white/20">
+                    <div class="flex items-center justify-between p-3 border border-emerald-500/15 bg-emerald-500/5" style="border-radius: 0;">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(59, 130, 246, 0.15);">
-                                <i class="bi bi-gear-wide-connected text-blue-500 text-sm"></i>
+                            <div class="w-8 h-8 flex items-center justify-center bg-blue-500/15 border border-blue-500/30" style="border-radius: 0;">
+                                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             </div>
                             <div>
-                                <span class="text-sm font-semibold text-gray-800">Kapasitas Mesin</span>
-                                <p class="text-xs text-gray-500">Efisiensi alat produksi</p>
+                                <span class="text-xs font-bold uppercase tracking-wider text-emerald-50/80">Kapasitas Mesin</span>
+                                <p class="text-[10px] text-emerald-200/40">Efisiensi alat produksi</p>
                             </div>
                         </div>
-                        <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">Aktif</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5" style="border-radius: 0;">Aktif</span>
                     </div>
 
-                    {{-- Prioritas Produk --}}
-                    <div class="flex items-center justify-between p-3 bg-white/10 rounded-lg border border-white/20">
+                    <div class="flex items-center justify-between p-3 border border-emerald-500/15 bg-emerald-500/5" style="border-radius: 0;">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(251, 191, 36, 0.15);">
-                                <i class="bi bi-star text-amber-500 text-sm"></i>
+                            <div class="w-8 h-8 flex items-center justify-center bg-amber-500/15 border border-amber-500/30" style="border-radius: 0;">
+                                <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
                             </div>
                             <div>
-                                <span class="text-sm font-semibold text-gray-800">Prioritas Produk</span>
-                                <p class="text-xs text-gray-500">Skala prioritas pelanggan</p>
+                                <span class="text-xs font-bold uppercase tracking-wider text-emerald-50/80">Prioritas Produk</span>
+                                <p class="text-[10px] text-emerald-200/40">Skala prioritas pelanggan</p>
                             </div>
                         </div>
-                        <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-200">Aktif</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5" style="border-radius: 0;">Aktif</span>
                     </div>
                 </div>
 
-                <hr class="my-4 border-white/30">
+                <div class="border-t border-emerald-500/15 my-4"></div>
 
-                {{-- Generate Schedule Form --}}
                 <form method="POST" action="{{ route('admin.scheduling.generate') }}" id="generateForm">
                     @csrf
                     <div class="mb-4">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-black/50 block mb-2">Pilih Batch</label>
+                        <label class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 block mb-2">Pilih Batch</label>
                         <select name="production_ids[]" multiple
-                                class="w-full rounded-lg border px-3 py-2.5 text-sm bg-white/50 border-white/50 text-gray-800 focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none"
+                                class="hybrid-input w-full rounded-sm px-3 py-2.5 text-sm"
                                 style="height: 110px;">
                             @forelse(\App\Models\Production::whereIn('status', ['pending', 'draft'])->with('product:id,name')->get() as $p)
-                                <option value="{{ $p->id }}">{{ $p->batch_number }} - {{ $p->product->name ?? '' }}</option>
+                                <option value="{{ $p->id }}" class="bg-emerald-900 text-emerald-50">{{ $p->batch_number }} - {{ $p->product->name ?? '' }}</option>
                             @empty
-                                <option disabled>Tidak ada batch</option>
+                                <option disabled class="bg-emerald-900 text-emerald-50">Tidak ada batch</option>
                             @endforelse
                         </select>
-                        <p class="text-xs text-gray-400 mt-1.5">Tahan Ctrl/Cmd untuk pilih banyak</p>
+                        <p class="text-[10px] text-emerald-200/30 mt-1.5">Tahan Ctrl/Cmd untuk pilih banyak</p>
                     </div>
 
                     <button type="submit" id="generateBtn"
-                            class="w-full py-3 px-5 rounded-xl font-bold text-white text-sm shadow-lg transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                            style="background: linear-gradient(135deg, #059669, #047857, #065f46);">
+                            class="w-full py-3 px-5 rounded-sm text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; transition: all 0.2s ease; border: none;"
+                            onmouseover="this.style.background='linear-gradient(135deg, #10B981 0%, #059669 100%)'; this.style.boxShadow='0 0 20px rgba(5,150,105,0.4)'"
+                            onmouseout="this.style.background='linear-gradient(135deg, #059669 0%, #047857 100%)'; this.style.boxShadow='none'">
                         <span class="spinner hidden" id="spinner"></span>
-                        <i class="bi bi-lightning-charge-fill" id="btnIcon"></i>
+                        <svg class="w-4 h-4" id="btnIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                         <span id="btnText">Jalankan Algoritma Genetika</span>
                     </button>
                 </form>
 
-                {{-- Progress Bar --}}
                 <div id="progressWrapper" class="hidden mt-4">
                     <div class="flex items-center justify-between mb-1.5">
-                        <span class="text-xs font-medium text-gray-600">Menjadwalkan...</span>
-                        <span class="text-xs font-medium text-gray-600" id="progressPercent">0%</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-200/60">Menjadwalkan...</span>
+                        <span class="text-[10px] font-bold text-emerald-200/60" id="progressPercent">0%</span>
                     </div>
-                    <div class="w-full h-2.5 bg-white/40 rounded-full overflow-hidden">
-                        <div id="progressBar" class="h-full rounded-full progress-bar-indeterminate" style="background: linear-gradient(90deg, #10b981, #059669, #047857); width: 30%;"></div>
+                    <div class="w-full h-2.5 bg-emerald-900/40 overflow-hidden" style="border-radius: 0;">
+                        <div id="progressBar" class="h-full progress-bar-indeterminate" style="background: linear-gradient(90deg, #10b981, #059669, #047857); width: 30%; border-radius: 0;"></div>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1.5">Mengoptimasi urutan produksi dengan genetic algorithm...</p>
+                    <p class="text-[10px] text-emerald-200/30 mt-1.5">Mengoptimasi urutan produksi dengan genetic algorithm...</p>
                 </div>
+                <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+                <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
             </div>
 
             {{-- Low Stock Alerts --}}
             @if(isset($lowStockMaterials) && $lowStockMaterials->isNotEmpty())
-            <div class="bg-glass rounded-xl border border-white/50 shadow-sm glass-card p-5">
-                <div class="flex items-center justify-between mb-4">
+            <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+                <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+                <div class="flex items-center justify-between mt-3 mb-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(239, 68, 68, 0.15);">
-                            <i class="bi bi-exclamation-triangle text-red-500"></i>
+                        <div class="w-10 h-10 flex items-center justify-center bg-red-500/15 border border-red-500/30" style="border-radius: 0;">
+                            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         </div>
                         <div>
-                            <h5 class="font-bold text-gray-800 text-shadow-sm text-sm">Peringatan Stok</h5>
-                            <p class="text-xs text-black/50">Bahan perlu perhatian</p>
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Peringatan Stok</h3>
+                            <p class="text-xs text-emerald-200/40">Bahan perlu perhatian</p>
                         </div>
                     </div>
-                    <span class="px-2 py-1 rounded-lg text-xs font-bold bg-red-100 text-red-800 border border-red-300">{{ $lowStockMaterials->count() }}</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-red-300 bg-red-500/10 border border-red-500/20 px-2.5 py-1" style="border-radius: 0;">{{ $lowStockMaterials->count() }}</span>
                 </div>
 
                 <div class="space-y-2.5">
                     @foreach($lowStockMaterials as $material)
-                    <div class="p-3 rounded-lg flex items-start gap-3 border-l-4 {{ $material->current_stock <= $material->min_stock_level ? 'border-amber-400' : 'border-red-400' }}" style="background: rgba(255,255,255,0.2);">
-                        <div class="min-w-0 flex-1">
-                            <p class="text-sm font-semibold text-gray-800 truncate">{{ $material->name }}</p>
-                            @if($material->current_stock <= $material->min_stock_level)
-                            <p class="text-xs text-amber-700 mt-0.5">
-                                <i class="bi bi-box-seam me-1"></i>{{ $material->current_stock }} {{ $material->unit }}
-                            </p>
-                            @endif
-                            @if($material->expired_date && $material->expired_date <= now()->addDays(14))
-                            <p class="text-xs text-red-600 mt-0.5">
-                                <i class="bi bi-calendar-x me-1"></i>{{ $material->expired_date->format('d/m/Y') }}
-                            </p>
-                            @endif
-                        </div>
+                    <div class="p-3 border-l-4 {{ $material->current_stock <= $material->min_stock_level ? 'border-amber-500' : 'border-red-500' }} border border-emerald-500/15 bg-emerald-500/5" style="border-radius: 0;">
+                        <p class="text-xs font-bold uppercase tracking-wider text-emerald-50/80 truncate">{{ $material->name }}</p>
+                        @if($material->current_stock <= $material->min_stock_level)
+                        <p class="text-[10px] text-amber-400/80 mt-0.5">{{ $material->current_stock }} {{ $material->unit }}</p>
+                        @endif
+                        @if($material->expired_date && $material->expired_date <= now()->addDays(14))
+                        <p class="text-[10px] text-red-400/80 mt-0.5">Exp: {{ $material->expired_date->format('d/m/Y') }}</p>
+                        @endif
                     </div>
                     @endforeach
                 </div>
 
-                <div class="mt-4 pt-4 border-t border-white/30 text-center">
-                    <a href="{{ route('admin.raw-materials.index') }}" class="text-emerald-700 hover:text-emerald-800 text-sm font-medium transition">
-                        Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                <div class="mt-4 pt-4 border-t border-emerald-500/15 text-center">
+                    <a href="{{ route('admin.raw-materials.index') }}" class="text-[10px] font-bold uppercase tracking-wider text-emerald-400/60 hover:text-emerald-300 transition">
+                        Lihat Semua
+                        <svg class="w-3 h-3 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
                 </div>
+                <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+                <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
             </div>
             @endif
         </div>
     </div>
 </div>
 
-{{-- Preview Modal (Alpine.js) --}}
+{{-- Preview Modal --}}
 <div x-data="{ previewOpen: false }"
      @toggle-preview.window="previewOpen = $event.detail.open"
      x-show="previewOpen"
      @keydown.escape.window="previewOpen = false"
      class="fixed inset-0 z-50 flex items-center justify-center p-4"
      style="display: none;">
-    <div x-show="previewOpen" x-transition.opacity class="fixed inset-0 modal-overlay" @@click="previewOpen = false"></div>
+    <div x-show="previewOpen" x-transition.opacity class="fixed inset-0 bg-black/80 backdrop-blur-sm" @@click="previewOpen = false"></div>
     <div x-show="previewOpen" x-transition
-         class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col border border-emerald-200">
-        <div class="flex items-center justify-between p-6 border-b border-emerald-100">
+         class="relative w-full max-w-2xl rounded-sm border border-emerald-500/30 bg-emerald-900/95 backdrop-blur-xl shadow-[0_0_60px_rgba(5,150,105,0.15)] max-h-[80vh] flex flex-col">
+        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent shrink-0"></div>
+        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15 shrink-0">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(5, 150, 105, 0.15);">
-                    <i class="bi bi-calendar-check text-emerald-700"></i>
+                <div class="w-10 h-10 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
                 <div>
-                    <h5 class="font-bold text-gray-800">Preview Jadwal</h5>
-                    <p class="text-xs text-gray-500">Optimasi urutan batch terpilih</p>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Preview Jadwal</h3>
+                    <p class="text-xs text-emerald-200/40">Optimasi urutan batch terpilih</p>
                 </div>
             </div>
-            <button @@click="previewOpen = false" class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-emerald-50 transition bg-gray-100">
-                <i class="bi bi-x-lg text-gray-500" style="font-size: 12px;"></i>
+            <button @@click="previewOpen = false" class="w-8 h-8 flex items-center justify-center text-emerald-200/30 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
-        <div class="p-6 overflow-y-auto" id="previewContent">
+        <div class="p-6 overflow-y-auto flex-1" id="previewContent">
             <div class="text-center py-8">
-                <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-emerald-50">
-                    <i class="bi bi-calendar text-emerald-300 text-2xl"></i>
+                <div class="w-16 h-16 flex items-center justify-center mx-auto mb-4 border border-emerald-500/20 bg-emerald-500/5" style="border-radius: 0;">
+                    <svg class="w-8 h-8 text-emerald-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
-                <p class="text-gray-500">Pilih batch untuk melihat preview.</p>
+                <p class="text-emerald-200/60 font-bold text-xs uppercase tracking-wider">Pilih Batch</p>
+                <p class="text-emerald-200/30 text-xs mt-1">Pilih batch untuk melihat preview.</p>
             </div>
         </div>
-        <div class="p-6 border-t border-emerald-100 flex justify-end">
+        <div class="px-6 py-4 border-t border-emerald-500/15 flex justify-end shrink-0">
             <button @@click="previewOpen = false"
-                    class="px-4 py-2 rounded-lg text-sm font-medium transition border bg-white/40 text-gray-700 border-emerald-200 hover:bg-emerald-50">
+                    class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/25 text-emerald-200/60 hover:text-emerald-300 hover:border-emerald-400/50 rounded-sm transition-all duration-200">
                 Tutup
             </button>
         </div>
+        <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+        <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
     </div>
 </div>
 @endsection
@@ -500,7 +549,7 @@ document.getElementById('generateForm')?.addEventListener('submit', function(e) 
 
     btn.disabled = true;
     spinner.classList.remove('hidden');
-    icon.className = '';
+    icon.style.display = 'none';
     text.textContent = 'Memproses...';
 
     progressWrapper.classList.remove('hidden');
@@ -535,7 +584,7 @@ document.getElementById('generateForm')?.addEventListener('submit', function(e) 
             showNotification('warning', data.message);
             btn.disabled = false;
             spinner.classList.add('hidden');
-            icon.className = 'bi bi-lightning-charge-fill';
+            icon.style.display = '';
             text.textContent = 'Jalankan Algoritma Genetika';
             progressWrapper.classList.add('hidden');
         }
@@ -545,7 +594,7 @@ document.getElementById('generateForm')?.addEventListener('submit', function(e) 
         showNotification('error', 'Terjadi kesalahan saat menjalankan algoritma.');
         btn.disabled = false;
         spinner.classList.add('hidden');
-        icon.className = 'bi bi-lightning-charge-fill';
+        icon.style.display = '';
         text.textContent = 'Jalankan Algoritma Genetika';
         progressWrapper.classList.add('hidden');
     });
@@ -570,20 +619,20 @@ function openPreviewModal() {
     const content = document.getElementById('previewContent');
 
     if (checked.length === 0) {
-        content.innerHTML = '<div class="text-center py-8"><div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background: rgba(251, 191, 36, 0.15);"><i class="bi bi-exclamation-triangle text-amber-500 text-2xl"></i></div><p class="text-gray-500">Pilih setidaknya satu batch.</p></div>';
+        content.innerHTML = '<div class="text-center py-8"><div class="w-16 h-16 flex items-center justify-center mx-auto mb-4 border border-amber-500/20 bg-amber-500/5" style="border-radius: 0;"><svg class="w-8 h-8 text-amber-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><p class="text-emerald-200/60 font-bold text-xs uppercase tracking-wider">Pilih Batch</p><p class="text-emerald-200/30 text-xs mt-1">Pilih setidaknya satu batch.</p></div>';
     } else {
         const rows = Array.from(checked).map(function(cb) { return cb.closest('tr'); });
-        const batches = rows.map(function(row) { return row.querySelector('td:nth-child(2) span').textContent.trim(); });
+        const batches = rows.map(function(row) { return row.querySelector('td:nth-child(2) .text-sm').textContent.trim(); });
 
         let html = '<div class="space-y-2">';
-        html += '<div class="p-4 rounded-xl mb-4 border" style="background: rgba(5, 150, 105, 0.08); border-color: rgba(5, 150, 105, 0.2);">';
-        html += '<span class="text-sm text-gray-600">Total Batch:</span>';
-        html += '<span class="text-xl font-bold text-emerald-800 ms-2">' + checked.length + '</span>';
+        html += '<div class="p-4 border border-emerald-500/15 bg-emerald-500/5 mb-4" style="border-radius: 0;">';
+        html += '<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400/60">Total Batch:</span>';
+        html += '<span class="text-xl font-black text-emerald-50 ms-2">' + checked.length + '</span>';
         html += '</div>';
         batches.forEach(function(b, i) {
-            html += '<div class="p-3 rounded-xl flex items-center gap-3" style="background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(0,0,0,0.05);">';
-            html += '<span class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style="background: rgba(5, 150, 105, 0.15); color: #065f46;">' + (i + 1) + '</span>';
-            html += '<span class="text-sm font-medium text-gray-800">' + b + '</span>';
+            html += '<div class="flex items-center gap-3 p-3 border border-emerald-500/10 bg-emerald-500/5" style="border-radius: 0;">';
+            html += '<span class="w-8 h-8 flex items-center justify-center text-xs font-black bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" style="border-radius: 0;">' + (i + 1) + '</span>';
+            html += '<span class="text-sm font-bold text-emerald-50/80">' + b + '</span>';
             html += '</div>';
         });
         html += '</div>';

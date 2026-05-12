@@ -71,11 +71,17 @@
                                 @case('draft')
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Draft</span>
                                     @break
+                                @case('pending')
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">Pending</span>
+                                    @break
                                 @case('in_progress')
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">On Progress</span>
                                     @break
                                 @case('qc_check')
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">QC Check</span>
+                                    @break
+                                @case('rework')
+                                    <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">Rework</span>
                                     @break
                                 @case('completed')
                                     <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">Completed</span>

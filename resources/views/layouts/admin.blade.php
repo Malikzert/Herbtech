@@ -6,8 +6,9 @@
     <title>@yield('title', 'SIP Jamu Madura')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -254,12 +255,34 @@
                                         </div>
                                     </button>
                                     
-                                    <div x-show="userMenu" @click.away="userMenu = false" x-transition class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl py-2 border border-gray-100 z-50">
-                                        <a href="{{ route('admin.profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profil Saya</a>
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Keluar</button>
-                                        </form>
+                                    <div x-show="userMenu" @click.away="userMenu = false"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                        x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                        class="absolute right-0 mt-3 w-64 rounded-xl border border-emerald-500/25 bg-emerald-900/95 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-50 overflow-hidden">
+                                        {{-- Top accent --}}
+                                        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+                                        {{-- User preview --}}
+                                        <div class="px-5 py-4 border-b border-emerald-500/15">
+                                            <p class="text-sm font-bold text-emerald-50">{{ auth()->user()->name }}</p>
+                                            <p class="text-xs text-emerald-200/60 mt-0.5">{{ ucfirst(auth()->user()->role) }}</p>
+                                        </div>
+                                        <div class="py-2">
+                                            <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-5 py-2.5 text-sm text-emerald-200/70 hover:text-emerald-50 hover:bg-emerald-500/10 transition-all duration-150">
+                                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                                <span class="font-medium">Profil Saya</span>
+                                            </a>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="flex items-center gap-3 w-full text-left px-5 py-2.5 text-sm text-red-400/80 hover:text-red-300 hover:bg-red-500/10 transition-all duration-150">
+                                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                                    <span class="font-medium">Keluar</span>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

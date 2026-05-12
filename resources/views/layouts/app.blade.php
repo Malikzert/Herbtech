@@ -39,14 +39,14 @@
         }
         
         .glass-sidebar-operator {
-            background-color: rgba(101, 67, 33, 0.85);
+            background-color: rgba(51, 30, 12, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             transition: background 0.5s ease;
         }
         
         .glass-topbar {
-            background: linear-gradient(to right, rgba(101,67,33,0.85), rgba(180,130,80,0.3) 50%, rgba(255,255,255,0.15));
+            background: linear-gradient(to right, rgba(51,30,12,0.92), rgba(70,40,20,0.55) 50%, rgba(255,255,255,0.10));
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             transition: background 0.5s ease;
@@ -164,8 +164,8 @@
                     <div class="relative" x-data="{ userMenu: false }">
                         <button @click="userMenu = !userMenu" class="flex items-center space-x-3 focus:outline-none p-2 rounded-xl hover:bg-gray-100/50 transition">
                             <div class="text-right hidden md:block">
-                                <p class="text-sm font-bold text-gray-800 leading-tight">{{ auth()->check() ? auth()->user()->name : 'User' }}</p>
-                                <p class="text-xs {{ (auth()->check() && auth()->user()->role == 'operator') ? 'text-blue-800' : 'text-emerald-600' }} font-medium">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Role' }}</p>
+                                <p class="text-sm font-bold text-white leading-tight">{{ auth()->check() ? auth()->user()->name : 'User' }}</p>
+                                <p class="text-xs {{ (auth()->check() && auth()->user()->role == 'operator') ? 'text-blue-200' : 'text-emerald-200' }} font-medium">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Role' }}</p>
                             </div>
                             <div class="w-10 h-10 rounded-full bg-gradient-to-br {{ (auth()->check() && auth()->user()->role == 'operator') ? 'from-blue-600 to-blue-800' : 'from-emerald-400 to-emerald-600' }} text-white flex items-center justify-center font-bold shadow-md border-2 border-white">
                                 {{ auth()->check() ? substr(auth()->user()->name, 0, 1) : 'U' }}
