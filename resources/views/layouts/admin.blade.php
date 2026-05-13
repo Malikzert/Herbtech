@@ -136,20 +136,141 @@
         .text-glow-green {
             text-shadow: 0 0 8px rgba(5, 150, 105, 0.6), 0 0 20px rgba(5, 150, 105, 0.3);
         }
+
+        /* ===== VALORANT NOTIFICATION ===== */
+        .v-backdrop {
+            position: fixed; inset: 0; z-index: 99999;
+            background: rgba(0, 0, 0, 0.12);
+            backdrop-filter: blur(16px) saturate(0.6);
+            -webkit-backdrop-filter: blur(16px) saturate(0.6);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .v-box {
+            position: relative; min-width: 560px; padding: 3.5rem 5rem;
+            background: rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-align: center; overflow: hidden;
+        }
+        .v-box.created { border: 2px solid rgba(0,255,65,0.5); }
+        .v-box.updated { border: 2px solid rgba(255,215,0,0.5); }
+        .v-box.deleted { border: 2px solid rgba(255,0,64,0.5); }
+
+        .v-bar { position: absolute; left: 0; right: 0; height: 3px; background: currentColor; }
+        .v-bar--t { top: 0; transform-origin: right; }
+        .v-bar--b { bottom: 0; transform-origin: left; }
+        .v-box.show .v-bar { animation: vBarIn 0.55s cubic-bezier(0.19,1,0.22,1) forwards; }
+        .v-box.show .v-bar--b { animation-delay: 0.1s; }
+        @keyframes vBarIn { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+
+        .v-cnr { position: absolute; width: 16px; height: 16px; border-color: currentColor; }
+        .v-cnr--tl { top: -2px; left: -2px; border-width: 2px 0 0 2px; border-style: solid; }
+        .v-cnr--tr { top: -2px; right: -2px; border-width: 2px 2px 0 0; border-style: solid; }
+        .v-cnr--bl { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; border-style: solid; }
+        .v-cnr--br { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; border-style: solid; }
+
+        .v-scroll { position: absolute; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.025) 2px, rgba(255,255,255,0.025) 4px); }
+        .v-icon { width: 3.5rem; height: 3.5rem; margin: 0 auto 1.25rem; }
+        .v-msg { font-size: 1.75rem; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; line-height: 1.3; }
+        .v-sub { margin-top: 0.85rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; opacity: 0.45; }
+
+        .v-box.created .v-bar, .v-box.created .v-cnr { color: #00ff41; }
+        .v-box.created .v-sub { color: #00ff41; }
+        .v-box.updated .v-bar, .v-box.updated .v-cnr { color: #ffd700; }
+        .v-box.updated .v-sub { color: #ffd700; }
+        .v-box.deleted .v-bar, .v-box.deleted .v-cnr { color: #ff0040; }
+        .v-box.deleted .v-sub { color: #ff0040; }
+
+        @keyframes glitchG { 0%,100%{text-shadow:none} 4%{text-shadow:-2px 0 #00ff41,2px 0 #f0f;clip-path:inset(40% 0 0 0)} 8%{clip-path:inset(20% 0 60% 0)} 12%{clip-path:inset(60% 0 10% 0)} 16%{clip-path:inset(0 0 80% 0)} 20%{text-shadow:2px 0 #00ff41,-2px 0 #f0f;clip-path:inset(30% 0 30% 0)} 24%{clip-path:inset(10% 0 70% 0)} 28%{text-shadow:none;clip-path:inset(0 0 0 0)} }
+        @keyframes glitchY { 0%,100%{text-shadow:none} 4%{text-shadow:-2px 0 #ffd700,2px 0 #f0f;clip-path:inset(40% 0 0 0)} 8%{clip-path:inset(20% 0 60% 0)} 12%{clip-path:inset(60% 0 10% 0)} 16%{clip-path:inset(0 0 80% 0)} 20%{text-shadow:2px 0 #ffd700,-2px 0 #f0f;clip-path:inset(30% 0 30% 0)} 24%{clip-path:inset(10% 0 70% 0)} 28%{text-shadow:none;clip-path:inset(0 0 0 0)} }
+        @keyframes glitchR { 0%,100%{text-shadow:none} 3%{text-shadow:-3px 0 #ff0040,3px 0 #0ff;clip-path:inset(60% 0 0 0)} 6%{clip-path:inset(10% 0 70% 0)} 9%{clip-path:inset(40% 0 30% 0)} 12%{clip-path:inset(0 0 80% 0)} 15%{text-shadow:3px 0 #ff0040,-3px 0 #0ff;clip-path:inset(20% 0 50% 0)} 18%{clip-path:inset(70% 0 0 0)} 21%{clip-path:inset(0 0 40% 0)} 24%{text-shadow:none;clip-path:inset(0 0 0 0)} }
+
+        .v-glitch.created .v-msg { animation: glitchG 1.4s ease forwards; }
+        .v-glitch.updated .v-msg { animation: glitchY 1.4s ease forwards; }
+        .v-glitch.deleted .v-msg { animation: glitchR 2s ease forwards; }
+
+        /* ===== SIDEBAR VALORANT HOVER ===== */
+        .sidebar-link {
+            position: relative; overflow: hidden;
+            transition: color 0.25s ease;
+        }
+        .sidebar-link::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(5,150,105,0.3), rgba(5,150,105,0.1));
+            opacity: 0; transition: opacity 0.3s ease;
+            pointer-events: none; border-radius: inherit;
+        }
+        .sidebar-link:hover::before { opacity: 1; }
+        .sidebar-link::after {
+            content: ''; position: absolute;
+            left: 0; top: 4px; bottom: 4px; width: 3px;
+            background: currentColor;
+            transform: scaleY(0);
+            transition: transform 0.3s cubic-bezier(0.19,1,0.22,1);
+            transform-origin: center top;
+            border-radius: 0 2px 2px 0;
+        }
+        .sidebar-link:hover::after { transform: scaleY(1); }
+        .sidebar-link > * { position: relative; z-index: 1; }
+
+        /* Active state - permanent accent bar + glow */
+        .sidebar-link.text-emerald-300::after {
+            transform: scaleY(1);
+            color: #6ee7b7;
+            box-shadow: 0 0 6px currentColor;
+        }
+        .sidebar-link.text-emerald-300::before {
+            opacity: 1;
+            background: linear-gradient(135deg, rgba(5,150,105,0.45), rgba(5,150,105,0.2));
+        }
+        .sidebar-link.text-emerald-300 span {
+            text-shadow: 0 0 12px rgba(110,231,183,0.3);
+        }
+
+        .sidebar-link:hover span { animation: sideGlitch 0.7s ease forwards; }
+        @keyframes sideGlitch {
+            0%,100%{text-shadow:none}
+            12%{text-shadow:-2px 0 #00ff41,2px 0 #f0f}
+            24%{text-shadow:2px 0 #00ff41,-2px 0 #f0f}
+            36%{text-shadow:-1px 0 #00ff41,1px 0 #f0f}
+            48%{text-shadow:1px 0 #00ff41,-1px 0 #f0f}
+            60%{text-shadow:none}
+        }
     </style>
     @stack('styles')
 </head>
-<body class="text-gray-800 antialiased" x-data="{ sidebarOpen: false, userMenu: false, notif: { show: false, type: 'success', message: '' } }"
-      x-on:notify.window="notif.show = true; notif.type = $event.detail.type; notif.message = $event.detail.message; setTimeout(() => notif.show = false, 5000);"
+@php
+    $__flash = session()->only(['success','error','warning','info']);
+    $__flash['_flavor'] = '';
+    if ($__flash['success'] ?? null) {
+        $m = $__flash['success'];
+        if (str_contains($m, 'dibuat') || str_contains($m, 'ditambahkan') || str_contains($m, 'disimpan')) $__flash['_flavor'] = 'created';
+        elseif (str_contains($m, 'diperbarui') || str_contains($m, 'disetujui')) $__flash['_flavor'] = 'updated';
+        elseif (str_contains($m, 'dihapus')) $__flash['_flavor'] = 'deleted';
+        else $__flash['_flavor'] = 'created';
+    } elseif ($__flash['error'] ?? null) {
+        $__flash['_flavor'] = 'deleted';
+    } elseif ($__flash['warning'] ?? null) {
+        $__flash['_flavor'] = 'updated';
+    } elseif ($__flash['info'] ?? null) {
+        $__flash['_flavor'] = 'created';
+    }
+@endphp
+<script>window.__flash=@json($__flash);</script>
+<body class="text-gray-800 antialiased" x-data="{ sidebarOpen: false, userMenu: false, notif: { show: false, flavor: 'created', message: '' } }"
+      x-on:notify.window="notif.show = true; notif.flavor = $event.detail.flavor || 'created'; notif.message = $event.detail.message; setTimeout(function(){ notif.show = false; }, 5000);"
       x-init="
-        let n = @json(session('success'));
-        if (n) { notif.show = true; notif.type = 'success'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
-        n = @json(session('error'));
-        if (n) { notif.show = true; notif.type = 'error'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
-        n = @json(session('warning'));
-        if (n) { notif.show = true; notif.type = 'warning'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
-        n = @json(session('info'));
-        if (n) { notif.show = true; notif.type = 'info'; notif.message = n; setTimeout(() => notif.show = false, 5000); }
+        (function() {
+            var f = window.__flash || {};
+            if (f.success || f.error || f.warning || f.info) {
+                notif.flavor = f._flavor || 'created';
+                notif.message = f.success || f.error || f.warning || f.info;
+                notif.show = true;
+                setTimeout(function(){ notif.show = false; }, 5000);
+            }
+        })();
       ">
     <!-- Main Background Wrapper -->
     <div class="bg-admin-wall min-h-screen">
@@ -170,58 +291,58 @@
                             <nav class="mt-3 px-4 space-y-1">
                                 <p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Menu Utama</p>
                                 
-                                <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.dashboard') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.dashboard') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2H4V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6H4v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6h-4v-6z"></path></svg>
                                     <span class="text-shadow-sm">Dashboard</span>
                                 </a>
 
                                 <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Master Data</p></div>
                                 
-                                <a href="{{ route('admin.products.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.products.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.products.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                                     <span class="text-shadow-sm">Produk</span>
                                 </a>
                                 
-                                <a href="{{ route('admin.raw-materials.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.raw-materials.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.raw-materials.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.raw-materials.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
                                     <span class="text-shadow-sm">Bahan Baku</span>
                                 </a>
 
-                                <a href="{{ route('admin.recipes.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.recipes.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.recipes.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.recipes.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                     <span class="text-shadow-sm">Resep</span>
                                 </a>
 
                                 <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Monitoring</p></div>
                                 
-                                <a href="{{ route('admin.productions.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.productions.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.productions.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.productions.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
                                     <span class="text-shadow-sm">Produksi</span>
                                 </a>
                                 
-                                <a href="{{ route('admin.scheduling.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.scheduling.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.scheduling.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.scheduling.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     <span class="text-shadow-sm">Penjadwalan</span>
                                 </a>
                                 
-                                <a href="{{ route('admin.qc.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.qc.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.qc.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.qc.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <span class="text-shadow-sm">Quality Control</span>
                                 </a>
                                 
-                                <a href="{{ route('admin.reports.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.reports.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.reports.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.reports.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                     <span class="text-shadow-sm">Laporan</span>
                                 </a>
 
                                 <div class="pt-4 pb-2"><p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Pengaturan</p></div>
                                 
-                                <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.users.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.users.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                                     <span class="text-shadow-sm">Manajemen User</span>
                                 </a>
                                 
-                                <a href="{{ route('admin.profile.edit') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-white/10 transition text-white {{ request()->routeIs('admin.profile.*') ? 'bg-white/20 text-emerald-300' : '' }}">
+                                <a href="{{ route('admin.profile.edit') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.profile.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                     <span class="text-shadow-sm">Profil Saya</span>
                                 </a>
@@ -289,33 +410,41 @@
                         </div>
                     </header>
 
-                    <!-- Flash Notification Toast -->
-                    <template x-teleport="body">
-                        <div x-show="notif.show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-8 opacity-0" x-transition:enter-end="translate-x-0 opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="translate-x-8 opacity-0" class="fixed top-5 right-5 z-[9999] max-w-md w-full pointer-events-auto" style="display: none;">
-                            <div class="rounded-xl shadow-2xl border overflow-hidden backdrop-blur-xl" :class="notif.type === 'success' ? 'bg-emerald-600/95 border-emerald-400/50' : notif.type === 'error' ? 'bg-red-600/95 border-red-400/50' : notif.type === 'warning' ? 'bg-amber-600/95 border-amber-400/50' : 'bg-blue-600/95 border-blue-400/50'">
-                                <div class="flex items-start gap-3 p-4">
-                                    <template x-if="notif.type === 'success'">
-                                        <svg class="w-6 h-6 text-emerald-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    </template>
-                                    <template x-if="notif.type === 'error'">
-                                        <svg class="w-6 h-6 text-red-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    </template>
-                                    <template x-if="notif.type === 'warning'">
-                                        <svg class="w-6 h-6 text-amber-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                    </template>
-                                    <template x-if="notif.type === 'info'">
-                                        <svg class="w-6 h-6 text-blue-200 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    </template>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-bold text-white" x-text="notif.message"></p>
-                                    </div>
-                                    <button @click="notif.show = false" class="shrink-0 p-1 rounded-lg hover:bg-white/20 transition">
-                                        <svg class="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    </button>
-                                </div>
+                    <!-- ===== VALORANT NOTIFICATION ===== -->
+                     <div x-show="notif.show"
+                          x-transition:enter="transition ease-out duration-300"
+                          x-transition:enter-start="opacity-0"
+                          x-transition:enter-end="opacity-100"
+                          x-transition:leave="transition ease-in duration-200"
+                          x-transition:leave-start="opacity-100"
+                          x-transition:leave-end="opacity-0"
+                          class="v-backdrop" @click="notif.show = false" style="display: none;">
+                         <div class="v-box" :class="notif.flavor + (notif.show ? ' show' : '')">
+                            <div class="v-bar v-bar--t"></div>
+                            <div class="v-bar v-bar--b"></div>
+                            <div class="v-cnr v-cnr--tl"></div>
+                            <div class="v-cnr v-cnr--tr"></div>
+                            <div class="v-cnr v-cnr--bl"></div>
+                            <div class="v-cnr v-cnr--br"></div>
+                            <div class="v-scroll"></div>
+                            <div :class="'v-glitch ' + notif.flavor">
+                                <svg class="v-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     x-show="notif.flavor === 'created'" style="display:none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                <svg class="v-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     x-show="notif.flavor === 'updated'" style="display:none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                <svg class="v-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     x-show="notif.flavor === 'deleted'" style="display:none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                <p class="v-msg" x-text="notif.message"></p>
+                                <p class="v-sub" x-text="notif.flavor === 'created' ? 'BERHASIL' : (notif.flavor === 'updated' ? 'TERPERBARUI' : 'TERHAPUS')"></p>
                             </div>
                         </div>
-                    </template>
+                    </div>
 
                     <!-- Page Content -->
                     <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 md:p-8 bg-white/5 text-gray-800">

@@ -60,6 +60,9 @@ Route::middleware('auth')->group(function () {
         Route::get('qc/{id}', [QCController::class, 'show'])->name('admin.qc.show');
 
         Route::get('/reports', [ReportController::class, 'index'])->name('admin.reports.index');
+        Route::get('/reports/export-csv', [ReportController::class, 'exportCsv'])->name('admin.reports.export-csv');
+        Route::get('/reports/export-excel', [ReportController::class, 'exportExcel'])->name('admin.reports.export-excel');
+        Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('admin.reports.export-pdf');
     });
 
     Route::prefix('operator')->middleware(['can:operator', 'verified'])->group(function () {

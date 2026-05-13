@@ -74,26 +74,7 @@
     </div>
     @endif
 
-    @if(session('error'))
-    <div class="relative overflow-hidden rounded-sm border border-red-500/30 bg-red-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
-        <svg class="w-5 h-5 shrink-0 mt-0.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <p class="font-bold text-xs uppercase tracking-wider text-red-300">{{ session('error') }}</p>
-    </div>
-    @endif
 
-    @if(session('warning'))
-    <div class="relative overflow-hidden rounded-sm border border-amber-500/30 bg-amber-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
-        <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-        <p class="font-bold text-xs uppercase tracking-wider text-amber-300">{{ session('warning') }}</p>
-    </div>
-    @endif
-
-    @if(session('success'))
-    <div class="relative overflow-hidden rounded-sm border border-emerald-500/30 bg-emerald-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
-        <svg class="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <p class="font-bold text-xs uppercase tracking-wider text-emerald-300">{{ session('success') }}</p>
-    </div>
-    @endif
 
     {{-- STATS --}}
     @php

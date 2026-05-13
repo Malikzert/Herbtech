@@ -120,11 +120,11 @@
                         <input type="date" name="end_date" value="{{ request('end_date', now()->endOfMonth()->toDateString()) }}"
                             class="hybrid-input h-11 px-4 rounded-sm text-sm">
                     </div>
-                    <button type="submit" class="h-11 px-6 rounded-sm text-xs font-bold uppercase tracking-wider"
+                    <button type="submit" class="inline-flex items-center gap-1.5 h-11 px-6 rounded-sm text-xs font-bold uppercase tracking-wider"
                             style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; transition: all 0.2s ease; border: none;"
                             onmouseover="this.style.background='linear-gradient(135deg, #10B981 0%, #059669 100%)'; this.style.boxShadow='0 0 20px rgba(5,150,105,0.4)'"
                             onmouseout="this.style.background='linear-gradient(135deg, #059669 0%, #047857 100%)'; this.style.boxShadow='none'">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         Tampilkan
                     </button>
                 </form>
@@ -138,17 +138,39 @@
     @if($reportType === 'production')
     <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
         <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                </div>
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Laporan Produksi</h3>
-                    <p class="text-xs text-emerald-200/40">{{ $startDate }} - {{ $endDate }}</p>
-                </div>
-            </div>
-        </div>
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Laporan Produksi</h3>
+                                    <p class="text-xs text-emerald-200/40">{{ $startDate }} - {{ $endDate }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div x-data="{ format: 'csv' }" class="flex items-center">
+                                    <a :href="format === 'csv' ? '{{ route('admin.reports.export-csv', ['type' => 'production', 'start_date' => $startDate, 'end_date' => $endDate]) }}' : '{{ route('admin.reports.export-excel', ['type' => 'production', 'start_date' => $startDate, 'end_date' => $endDate]) }}'"
+                                       class="h-9 px-3 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600/30 transition-all duration-200 flex items-center gap-1">
+                                        <span :class="format === 'csv' ? 'text-blue-300 font-bold' : 'text-blue-300/40'">CSV</span>
+                                        <span class="text-blue-300/30">/</span>
+                                        <span :class="format === 'xlsx' ? 'text-blue-300 font-bold' : 'text-blue-300/40'">XLSX</span>
+                                    </a>
+                                    <button @click="format = format === 'csv' ? 'xlsx' : 'csv'"
+                                            class="h-7 px-1.5 rounded-sm text-[9px] font-bold bg-blue-600/10 border border-blue-500/20 text-blue-300 hover:bg-blue-600/20 transition-all duration-200 ml-1">↕</button>
+                                </div>
+                                <div x-data="{ orient: 'landscape' }" class="flex items-center">
+                                    <a :href="'{{ route('admin.reports.export-pdf', ['type' => 'production', 'start_date' => $startDate, 'end_date' => $endDate]) }}&orientation=' + orient"
+                                       class="h-9 px-3 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-red-600/20 border border-red-500/40 text-red-300 hover:bg-red-600/30 transition-all duration-200 flex items-center gap-1">
+                                        <span :class="orient === 'landscape' ? 'text-red-300 font-bold' : 'text-red-300/40'">PDF L</span>
+                                        <span class="text-red-300/30">/</span>
+                                        <span :class="orient === 'portrait' ? 'text-red-300 font-bold' : 'text-red-300/40'">PDF P</span>
+                                    </a>
+                                    <button @click="orient = orient === 'landscape' ? 'portrait' : 'landscape'"
+                                            class="h-7 px-1.5 rounded-sm text-[9px] font-bold bg-red-600/10 border border-red-500/20 text-red-300 hover:bg-red-600/20 transition-all duration-200 ml-1">↕</button>
+                                </div>
+                            </div>
+                        </div>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 border-b border-emerald-500/10">
             <div class="text-center p-4 border border-emerald-500/15 bg-emerald-500/5 rounded-sm">
@@ -267,17 +289,39 @@
     @if($reportType === 'qc')
     <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
         <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Laporan Quality Control</h3>
-                    <p class="text-xs text-emerald-200/40">{{ $startDate }} - {{ $endDate }}</p>
-                </div>
-            </div>
-        </div>
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Laporan Quality Control</h3>
+                                    <p class="text-xs text-emerald-200/40">{{ $startDate }} - {{ $endDate }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div x-data="{ format: 'csv' }" class="flex items-center">
+                                    <a :href="format === 'csv' ? '{{ route('admin.reports.export-csv', ['type' => 'qc', 'start_date' => $startDate, 'end_date' => $endDate]) }}' : '{{ route('admin.reports.export-excel', ['type' => 'qc', 'start_date' => $startDate, 'end_date' => $endDate]) }}'"
+                                       class="h-9 px-3 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600/30 transition-all duration-200 flex items-center gap-1">
+                                        <span :class="format === 'csv' ? 'text-blue-300 font-bold' : 'text-blue-300/40'">CSV</span>
+                                        <span class="text-blue-300/30">/</span>
+                                        <span :class="format === 'xlsx' ? 'text-blue-300 font-bold' : 'text-blue-300/40'">XLSX</span>
+                                    </a>
+                                    <button @click="format = format === 'csv' ? 'xlsx' : 'csv'"
+                                            class="h-7 px-1.5 rounded-sm text-[9px] font-bold bg-blue-600/10 border border-blue-500/20 text-blue-300 hover:bg-blue-600/20 transition-all duration-200 ml-1">↕</button>
+                                </div>
+                                <div x-data="{ orient: 'landscape' }" class="flex items-center">
+                                    <a :href="'{{ route('admin.reports.export-pdf', ['type' => 'qc', 'start_date' => $startDate, 'end_date' => $endDate]) }}&orientation=' + orient"
+                                       class="h-9 px-3 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-red-600/20 border border-red-500/40 text-red-300 hover:bg-red-600/30 transition-all duration-200 flex items-center gap-1">
+                                        <span :class="orient === 'landscape' ? 'text-red-300 font-bold' : 'text-red-300/40'">L</span>
+                                        <span class="text-red-300/30">/</span>
+                                        <span :class="orient === 'portrait' ? 'text-red-300 font-bold' : 'text-red-300/40'">P</span>
+                                    </a>
+                                    <button @click="orient = orient === 'landscape' ? 'portrait' : 'landscape'"
+                                            class="h-7 px-1.5 rounded-sm text-[9px] font-bold bg-red-600/10 border border-red-500/20 text-red-300 hover:bg-red-600/20 transition-all duration-200 ml-1">↕</button>
+                                </div>
+                            </div>
+                        </div>
 
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 p-6 border-b border-emerald-500/10">
             <div class="text-center p-4 border border-emerald-500/15 bg-emerald-500/5 rounded-sm">
@@ -399,17 +443,35 @@
     @if($reportType === 'raw_material')
     <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
         <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                </div>
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Laporan Bahan Baku</h3>
-                    <p class="text-xs text-emerald-200/40">{{ $startDate }} - {{ $endDate }}</p>
-                </div>
-            </div>
-        </div>
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Laporan Bahan Baku</h3>
+                                    <p class="text-xs text-emerald-200/40">{{ $startDate }} - {{ $endDate }}</p>
+                                </div>
+                            </div>
+                            <div x-data="{ orient: 'landscape' }" class="flex items-center gap-2">
+                                <a href="{{ route('admin.reports.export-excel', ['type' => 'raw_material', 'start_date' => $startDate, 'end_date' => $endDate]) }}"
+                                   class="h-9 px-4 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 hover:text-emerald-200 transition-all duration-200 flex items-center gap-2">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    XLSX
+                                </a>
+                                <a :href="'{{ route('admin.reports.export-pdf', ['type' => 'raw_material', 'start_date' => $startDate, 'end_date' => $endDate]) }}&orientation=' + orient"
+                                   class="h-9 px-3 rounded-sm text-[10px] font-bold uppercase tracking-wider bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 hover:text-emerald-200 transition-all duration-200 flex items-center gap-1.5">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                    PDF
+                                </a>
+                                <button @click="orient = orient === 'landscape' ? 'portrait' : 'landscape'"
+                                        class="h-7 px-2 rounded-sm text-[9px] font-bold uppercase tracking-wider bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/20 transition-all duration-200 flex items-center gap-1">
+                                    <span :class="orient === 'landscape' ? 'text-emerald-300 font-bold' : 'text-emerald-200/40'">L</span>
+                                    <span class="text-emerald-200/20">/</span>
+                                    <span :class="orient === 'portrait' ? 'text-emerald-300 font-bold' : 'text-emerald-200/40'">P</span>
+                                </button>
+                            </div>
+                        </div>
 
         <div class="p-6">
             <div class="inline-flex items-center gap-3 p-4 border border-emerald-500/15 bg-emerald-500/5 rounded-sm mb-6">

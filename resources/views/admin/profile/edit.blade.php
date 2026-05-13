@@ -78,13 +78,6 @@
                     </div>
                     </div>
 
-                    @if(session('success'))
-                    <div class="mx-6 mt-4 p-3 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center gap-2.5">
-                        <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="text-sm font-medium text-emerald-300">{{ session('success') }}</span>
-                    </div>
-                    @endif
-
                     <form action="{{ route('admin.profile.update') }}" method="POST" class="p-6 space-y-5">
                         @csrf
                         @method('PUT')
