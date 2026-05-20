@@ -43,6 +43,9 @@
 
     <form action="{{ route('operator.productions.store') }}" method="POST">
         @csrf
+        @if($scheduling)
+        <input type="hidden" name="scheduling_id" value="{{ $scheduling->id }}">
+        @endif
         <div class="mb-8">
             <h3 class="text-lg font-bold text-[#93C5FD] border-b border-[#334155] pb-2 mb-4 uppercase tracking-[0.05em]">INFORMASI UTAMA</h3>
 

@@ -71,7 +71,7 @@
                                     <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#1DA1F2]/20 text-[#93C5FD] border border-[#1DA1F2]/30">Rework</span>
                                     @break
                                 @case('reject')
-                                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#334155] text-[#64748B] border border-[#334155]">Rejected</span>
+                                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#1e3a5f] text-[#93C5FD] border border-[#1e3a5f]">Rejected</span>
                                     @break
                             @endswitch
                         </td>

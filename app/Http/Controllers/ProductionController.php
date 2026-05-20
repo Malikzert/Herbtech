@@ -90,7 +90,13 @@ class ProductionController extends Controller
         ]);
 
         $isOperator = !auth()->user()->can('admin');
-        $status = $isOperator ? 'pending' : ($request->input('action') === 'start' ? 'in_progress' : 'draft');
+        $fromScheduling = $request->has('scheduling_id') && $request->input('scheduling_id');
+
+        if ($isOperator) {
+            $status = $fromScheduling ? 'in_progress' : 'pending';
+        } else {
+            $status = $request->input('action') === 'start' ? 'in_progress' : 'draft';
+        }
 
         $production = Production::create([
             'batch_number' => $validated['batch_number'],
@@ -112,9 +118,21 @@ class ProductionController extends Controller
             }
         }
 
+        if ($status === 'in_progress') {
+            $production->loadMissing('productionMaterials.rawMaterial');
+            $this->deductStock($production);
+        }
+
+        if ($fromScheduling) {
+            Scheduling::where('id', $request->input('scheduling_id'))->update(['status' => 'converted_to_production']);
+        }
+
         if ($isOperator) {
+            $message = $fromScheduling
+                ? 'Batch produksi dari rekomendasi jadwal berhasil dimulai!'
+                : 'Batch produksi dibuat dan menunggu penjadwalan oleh admin.';
             return redirect()->route('operator.productions.show', $production->id)
-                ->with('success', 'Batch produksi dibuat dan menunggu penjadwalan oleh admin.');
+                ->with('success', $message);
         }
 
         return redirect()->route('operator.productions.show', $production->id)
@@ -220,6 +238,10 @@ class ProductionController extends Controller
             }
         }
 
+        if ($newStatus === 'in_progress') {
+            $this->deductStock($production);
+        }
+
         $updateData = ['status' => $newStatus];
 
         if ($newStatus === 'in_progress' && $oldStatus === 'draft') {
@@ -276,6 +298,17 @@ class ProductionController extends Controller
         }
 
         return ['passed' => true, 'message' => ''];
+    }
+
+    private function deductStock(Production $production): void
+    {
+        foreach ($production->productionMaterials as $pm) {
+            $material = $pm->rawMaterial;
+            if (!$material) {
+                continue;
+            }
+            $material->decrement('current_stock', $pm->quantity_used);
+        }
     }
 
     public function getRecipeByProduct(string $productId)

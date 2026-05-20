@@ -85,7 +85,7 @@
                                     <span class="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#3B82F6]/20 text-[#DBEAFE] border border-[#3B82F6]/30">Completed</span>
                                     @break
                                 @case('cancelled')
-                                    <span class="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#334155] text-[#64748B] border border-[#334155]">Cancelled</span>
+                                    <span class="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#1e3a5f] text-[#93C5FD] border border-[#1e3a5f]">Cancelled</span>
                                     @break
                             @endswitch
                         </td>

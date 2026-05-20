@@ -13,12 +13,9 @@ class ScheduleController extends Controller
 
         $query = Scheduling::with('product:id,name')
             ->where('is_recommended', true)
+            ->whereIn('status', $status ? [$status] : ['draft', 'approved'])
             ->orderBy('recom_date', 'desc')
             ->orderBy('priority_order');
-
-        if ($status) {
-            $query->where('status', $status);
-        }
 
         $schedules = $query->get();
 

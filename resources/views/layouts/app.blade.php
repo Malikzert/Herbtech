@@ -448,13 +448,86 @@
         .theme-light .active\:bg-\[\#1DA1F2\] {
             background-color: #1DA1F2 !important;
         }
+
+        /* ===== VALORANT NOTIFICATION (Operator) ===== */
+        .v-backdrop {
+            position: fixed; inset: 0; z-index: 99999;
+            background: rgba(0, 0, 0, 0.12);
+            backdrop-filter: blur(16px) saturate(0.6);
+            -webkit-backdrop-filter: blur(16px) saturate(0.6);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .v-box {
+            position: relative; min-width: 480px; padding: 3rem 4rem;
+            background: rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-align: center; overflow: hidden;
+        }
+        .v-box.created { border: 2px solid rgba(0,255,65,0.5); }
+        .v-box.updated { border: 2px solid rgba(56,189,248,0.5); }
+        .v-box.deleted { border: 2px solid rgba(255,0,64,0.5); }
+
+        .v-bar { position: absolute; left: 0; right: 0; height: 3px; background: currentColor; }
+        .v-bar--t { top: 0; transform-origin: right; }
+        .v-bar--b { bottom: 0; transform-origin: left; }
+        .v-box.show .v-bar { animation: vBarIn 0.55s cubic-bezier(0.19,1,0.22,1) forwards; }
+        .v-box.show .v-bar--b { animation-delay: 0.1s; }
+        @keyframes vBarIn { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+
+        .v-cnr { position: absolute; width: 14px; height: 14px; border-color: currentColor; }
+        .v-cnr--tl { top: -2px; left: -2px; border-width: 2px 0 0 2px; border-style: solid; }
+        .v-cnr--tr { top: -2px; right: -2px; border-width: 2px 2px 0 0; border-style: solid; }
+        .v-cnr--bl { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; border-style: solid; }
+        .v-cnr--br { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; border-style: solid; }
+
+        .v-scroll { position: absolute; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.025) 2px, rgba(255,255,255,0.025) 4px); }
+        .v-icon { width: 3rem; height: 3rem; margin: 0 auto 1rem; }
+        .v-msg { font-size: 1.5rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; line-height: 1.3; }
+        .v-sub { margin-top: 0.75rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; opacity: 0.45; }
+
+        .v-box.created .v-bar, .v-box.created .v-cnr { color: #00ff41; }
+        .v-box.created .v-sub { color: #00ff41; }
+        .v-box.updated .v-bar, .v-box.updated .v-cnr { color: #38bdf8; }
+        .v-box.updated .v-sub { color: #38bdf8; }
+        .v-box.deleted .v-bar, .v-box.deleted .v-cnr { color: #ff0040; }
+        .v-box.deleted .v-sub { color: #ff0040; }
+
+        @keyframes glitchG { 0%,100%{text-shadow:none} 4%{text-shadow:-2px 0 #00ff41,2px 0 #f0f;clip-path:inset(40% 0 0 0)} 8%{clip-path:inset(20% 0 60% 0)} 12%{clip-path:inset(60% 0 10% 0)} 16%{clip-path:inset(0 0 80% 0)} 20%{text-shadow:2px 0 #00ff41,-2px 0 #f0f;clip-path:inset(30% 0 30% 0)} 24%{clip-path:inset(10% 0 70% 0)} 28%{text-shadow:none;clip-path:inset(0 0 0 0)} }
+        @keyframes glitchB { 0%,100%{text-shadow:none} 4%{text-shadow:-2px 0 #38bdf8,2px 0 #f0f;clip-path:inset(40% 0 0 0)} 8%{clip-path:inset(20% 0 60% 0)} 12%{clip-path:inset(60% 0 10% 0)} 16%{clip-path:inset(0 0 80% 0)} 20%{text-shadow:2px 0 #38bdf8,-2px 0 #f0f;clip-path:inset(30% 0 30% 0)} 24%{clip-path:inset(10% 0 70% 0)} 28%{text-shadow:none;clip-path:inset(0 0 0 0)} }
+        @keyframes glitchR { 0%,100%{text-shadow:none} 3%{text-shadow:-3px 0 #ff0040,3px 0 #0ff;clip-path:inset(60% 0 0 0)} 6%{clip-path:inset(10% 0 70% 0)} 9%{clip-path:inset(40% 0 30% 0)} 12%{clip-path:inset(0 0 80% 0)} 15%{text-shadow:3px 0 #ff0040,-3px 0 #0ff;clip-path:inset(20% 0 50% 0)} 18%{clip-path:inset(70% 0 0 0)} 21%{clip-path:inset(0 0 40% 0)} 24%{text-shadow:none;clip-path:inset(0 0 0 0)} }
+
+        .v-glitch.created .v-msg { animation: glitchG 1.4s ease forwards; }
+        .v-glitch.updated .v-msg { animation: glitchB 1.4s ease forwards; }
+        .v-glitch.deleted .v-msg { animation: glitchR 2s ease forwards; }
     </style>
+    @php
+        $__flash = session()->only(['success','error','warning','info']);
+        $__flash['_flavor'] = '';
+        if ($__flash['success'] ?? null) {
+            $m = $__flash['success'];
+            if (str_contains($m, 'dibuat') || str_contains($m, 'ditambahkan') || str_contains($m, 'disimpan') || str_contains($m, 'dimulai')) $__flash['_flavor'] = 'created';
+            elseif (str_contains($m, 'diperbarui') || str_contains($m, 'disetujui')) $__flash['_flavor'] = 'updated';
+            elseif (str_contains($m, 'dihapus')) $__flash['_flavor'] = 'deleted';
+            else $__flash['_flavor'] = 'created';
+        } elseif ($__flash['error'] ?? null) {
+            $__flash['_flavor'] = 'deleted';
+        } elseif ($__flash['warning'] ?? null) {
+            $__flash['_flavor'] = 'updated';
+        } elseif ($__flash['info'] ?? null) {
+            $__flash['_flavor'] = 'created';
+        }
+    @endphp
+    <script>window.__flash=@json($__flash);</script>
     <script>
         window.adminViewMode = localStorage.getItem('adminViewMode') || 'list';
     </script>
     @stack('styles')
 </head>
-<body :class="darkMode ? 'theme-dark' : 'theme-light'" class="bg-wallpaper text-gray-800 antialiased relative" x-data="{ sidebarOpen: false, viewMode: (localStorage.getItem('adminViewMode') || 'list'), darkMode: localStorage.getItem('operatorDarkMode') !== 'false' }"
+<body :class="darkMode ? 'theme-dark' : 'theme-light'" class="bg-wallpaper text-gray-800 antialiased relative" x-data="{ sidebarOpen: false, viewMode: (localStorage.getItem('adminViewMode') || 'list'), darkMode: localStorage.getItem('operatorDarkMode') !== 'false', notif: { show: false, flavor: 'created', message: '' } }"
+      x-on:notify.window="notif.show = true; notif.flavor = $event.detail.flavor || 'created'; notif.message = $event.detail.message; setTimeout(function(){ notif.show = false; }, 5000);"
       x-init="
         $watch('viewMode', val => {
             localStorage.setItem('adminViewMode', val);
@@ -462,6 +535,15 @@
             window.dispatchEvent(new CustomEvent('admin-view-change', { detail: val }));
         });
         $watch('darkMode', val => localStorage.setItem('operatorDarkMode', val));
+        (function() {
+            var f = window.__flash || {};
+            if (f.success || f.error || f.warning || f.info) {
+                notif.flavor = f._flavor || 'created';
+                notif.message = f.success || f.error || f.warning || f.info;
+                notif.show = true;
+                setTimeout(function(){ notif.show = false; }, 5000);
+            }
+        })();
       ">
 
     <!-- Global Subtle Overlay -->
@@ -656,32 +738,44 @@
                 </div>
             </header>
 
+            <!-- ===== VALORANT NOTIFICATION ===== -->
+            <div x-show="notif.show"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="v-backdrop" @click="notif.show = false" style="display: none;">
+                <div class="v-box" :class="notif.flavor + (notif.show ? ' show' : '')">
+                    <div class="v-bar v-bar--t"></div>
+                    <div class="v-bar v-bar--b"></div>
+                    <div class="v-cnr v-cnr--tl"></div>
+                    <div class="v-cnr v-cnr--tr"></div>
+                    <div class="v-cnr v-cnr--bl"></div>
+                    <div class="v-cnr v-cnr--br"></div>
+                    <div class="v-scroll"></div>
+                    <div :class="'v-glitch ' + notif.flavor">
+                        <svg class="v-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             x-show="notif.flavor === 'created'" style="display:none">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        <svg class="v-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             x-show="notif.flavor === 'updated'" style="display:none">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        <svg class="v-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             x-show="notif.flavor === 'deleted'" style="display:none">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        <p class="v-msg" x-text="notif.message"></p>
+                        <p class="v-sub" x-text="notif.flavor === 'created' ? 'BERHASIL' : (notif.flavor === 'updated' ? 'TERPERBARUI' : 'TERHAPUS')"></p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Page Content -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 md:p-8 z-10">
-                @if(session('success'))
-                    <div class="mb-6 p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-lg flex items-center justify-between" x-data="{ show: true }" x-show="show">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 text-emerald-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <p class="text-sm font-medium text-emerald-800">{{ session('success') }}</p>
-                        </div>
-                        <button @click="show = false" class="text-emerald-600 hover:text-emerald-800 focus:outline-none">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg flex items-center justify-between" x-data="{ show: true }" x-show="show">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                            <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
-                        </div>
-                        <button @click="show = false" class="text-red-600 hover:text-red-800 focus:outline-none">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                    </div>
-                @endif
-
                 @yield('content')
             </main>
         </div>

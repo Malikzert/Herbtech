@@ -257,8 +257,8 @@
                                 </span>
                                 @break
                                 @case('cancelled')
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-300 border border-red-500/20" style="border-radius: 0;">
-                                    <span class="w-1.5 h-1.5" style="background: #EF4444; border-radius: 0;"></span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-900/30 text-blue-300 border border-blue-500/30" style="border-radius: 0;">
+                                    <span class="w-1.5 h-1.5" style="background: #3B82F6; border-radius: 0;"></span>
                                     Cancelled
                                 </span>
                                 @break
@@ -389,8 +389,8 @@
                                 </span>
                                 @break
                                 @case('full_reject')
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-300 border border-red-500/20" style="border-radius: 0;">
-                                    <span class="w-1.5 h-1.5" style="background: #EF4444; border-radius: 0;"></span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-900/30 text-blue-300 border border-blue-500/30" style="border-radius: 0;">
+                                    <span class="w-1.5 h-1.5" style="background: #3B82F6; border-radius: 0;"></span>
                                     Full Reject
                                 </span>
                                 @break
@@ -411,8 +411,8 @@
                                 </span>
                                 @break
                                 @case('reject')
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-500/10 text-gray-300 border border-gray-500/20" style="border-radius: 0;">
-                                    <span class="w-1.5 h-1.5" style="background: #9CA3AF; border-radius: 0;"></span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-900/30 text-blue-300 border border-blue-500/30" style="border-radius: 0;">
+                                    <span class="w-1.5 h-1.5" style="background: #3B82F6; border-radius: 0;"></span>
                                     Reject
                                 </span>
                                 @break
