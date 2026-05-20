@@ -52,7 +52,7 @@
         
         /* Background Image */
         .bg-admin-wall {
-            background-image: url('{{ asset("image/bgadmin.png") }}');
+            background-image: white;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -385,6 +385,272 @@
             color: #ef4444 !important;
             background: rgba(239, 68, 68, 0.15) !important;
         }
+
+        /* ===== SETTINGS GEAR SPIN ===== */
+        @keyframes spinSettings {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .settings-gear-icon {
+            animation: spinSettings 0.8s ease-in-out;
+        }
+
+        /* ===== THEME-DARK: Malam (hitam + putih) ===== */
+        .theme-dark .bg-admin-wall,
+        .theme-dark .bg-wallpaper {
+            background: #000000 !important;
+            background-image: none !important;
+            filter: none !important;
+        }
+        .theme-dark .glass-sidebar {
+            background: rgba(0, 0, 0, 0.92) !important;
+            backdrop-filter: blur(16px);
+        }
+        .theme-dark .glass-sidebar span,
+        .theme-dark .glass-sidebar a {
+            color: #ffffff !important;
+        }
+        .theme-dark .glass-topbar {
+            background: rgba(0, 0, 0, 0.85) !important;
+            backdrop-filter: blur(12px);
+        }
+        .theme-dark .glass-topbar h2 {
+            color: #ffffff !important;
+            text-shadow: none !important;
+        }
+        .theme-dark .glass-topbar button svg {
+            color: rgba(255,255,255,0.8) !important;
+        }
+        .theme-dark main {
+            background: #000000 !important;
+            color: #ffffff !important;
+        }
+        .theme-dark .glass-card {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        .theme-dark .glass-card:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        .theme-dark .glass-table {
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+        .theme-dark .glass-table thead th {
+            color: #ffffff !important;
+        }
+        .theme-dark .glass-table tbody td {
+            color: rgba(255,255,255,0.85) !important;
+        }
+        .theme-dark .glass-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.08) !important;
+        }
+        .theme-dark .input-glass {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+        }
+        .theme-dark .input-glass:focus {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: #059669 !important;
+        }
+        .theme-dark .widget-card {
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+        .theme-dark .widget-card-title {
+            color: #ffffff !important;
+        }
+        .theme-dark .widget-card-subtitle {
+            color: rgba(255,255,255,0.5) !important;
+        }
+        .theme-dark .sidebar-link span {
+            color: #ffffff !important;
+        }
+        .theme-dark canvas {
+            opacity: 0.9;
+        }
+        .theme-dark .glass-topbar p.text-white {
+            color: #ffffff !important;
+        }
+        .theme-dark .glass-topbar .text-white\/80 {
+            color: rgba(255,255,255,0.8) !important;
+        }
+        .theme-dark .glass-topbar .text-white\/60 {
+            color: rgba(255,255,255,0.6) !important;
+        }
+        .theme-dark .glass-topbar .text-white\/50 {
+            color: rgba(255,255,255,0.5) !important;
+        }
+        .theme-dark [class*="bg-emerald-900\/95"] {
+            background: rgba(0, 0, 0, 0.95) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* ===== THEME-LIGHT: Pagi (putih + hijau tua) ===== */
+        .theme-light .bg-wallpaper {
+            filter: brightness(1.1) saturate(0.5);
+        }
+        .theme-light .glass-sidebar {
+            background: #ffffff !important;
+            border-right: 1px solid rgba(5, 150, 105, 0.15) !important;
+        }
+        .theme-light .glass-sidebar img {
+            filter: none !important;
+        }
+        .theme-light .glass-sidebar .text-emerald-200 {
+            color: #000000 !important;
+        }
+        .theme-light .glass-sidebar span:not(.text-emerald-200) {
+            color: #000000 !important;
+        }
+        .theme-light .glass-sidebar a {
+            color: #000000 !important;
+        }
+        .theme-light .glass-sidebar a:hover {
+            color: #000000 !important;
+        }
+        .theme-light .sidebar-link.text-emerald-300 span {
+            color: #000000 !important;
+        }
+        .theme-light .sidebar-link.text-emerald-300::after {
+            background: #065f46 !important;
+        }
+        .theme-light .sidebar-link:hover span {
+            animation: sideGlitchLight 0.9s ease forwards !important;
+        }
+        @keyframes sideGlitchLight {
+            0%,100%{text-shadow:none;clip-path:inset(0 0 0 0)}
+            4%{text-shadow:-3px 0 #065f46,3px 0 #fbbf24;clip-path:inset(40% 0 0 0)}
+            8%{clip-path:inset(20% 0 60% 0)}
+            12%{clip-path:inset(60% 0 10% 0)}
+            16%{clip-path:inset(0 0 80% 0)}
+            20%{text-shadow:3px 0 #065f46,-3px 0 #fbbf24;clip-path:inset(30% 0 30% 0)}
+            24%{clip-path:inset(10% 0 70% 0)}
+            28%{text-shadow:none;clip-path:inset(0 0 0 0)}
+        }
+        .theme-light .glass-topbar {
+            background: #ffffff !important;
+            border-bottom: 1px solid rgba(5, 150, 105, 0.12) !important;
+        }
+        .theme-light .glass-topbar h2 {
+            color: #000000 !important;
+            text-shadow: none !important;
+        }
+        .theme-light .glass-topbar button svg {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar button:hover svg {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar p.text-white {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar .text-emerald-200 {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar .text-white\/80 {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar .text-white\/60 {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar .text-white\/50 {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar .hover\:bg-white\/10:hover {
+            background-color: rgba(5, 150, 105, 0.06) !important;
+        }
+        .theme-light main {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+        .theme-light main * {
+            color: #000000 !important;
+        }
+        .theme-light main .btn-glass,
+        .theme-light main .btn-glass * {
+            color: #ffffff !important;
+        }
+        .theme-light main .glass-table thead th {
+            color: #ffffff !important;
+        }
+        .theme-light .btn-glass {
+            background: #065f46 !important;
+            border-color: rgba(5, 150, 105, 0.3) !important;
+            color: #ffffff !important;
+        }
+        .theme-light .btn-glass:hover {
+            background: #047857 !important;
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.3) !important;
+        }
+        .theme-light .glass-card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(5, 150, 105, 0.15) !important;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+        }
+        .theme-light .glass-card:hover {
+            background: #ffffff !important;
+            border-color: rgba(5, 150, 105, 0.3) !important;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important;
+        }
+        .theme-light .glass-table {
+            background: #f0fdf4 !important;
+        }
+        .theme-light .glass-table thead {
+            background: #065f46 !important;
+        }
+        .theme-light .glass-table thead th {
+            color: #ffffff !important;
+        }
+        .theme-light .glass-table tbody td {
+            color: #000000 !important;
+        }
+        .theme-light .glass-table tbody tr:hover {
+            background: rgba(5, 150, 105, 0.08) !important;
+        }
+        .theme-light .input-glass {
+            background: #f8fafc !important;
+            border-color: rgba(5, 150, 105, 0.2) !important;
+            color: #000000 !important;
+        }
+        .theme-light .input-glass:focus {
+            background: #ffffff !important;
+            border-color: #065f46 !important;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1) !important;
+        }
+        .theme-light .widget-card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(5, 150, 105, 0.15) !important;
+        }
+        .theme-light .widget-card-title {
+            color: #000000 !important;
+        }
+        .theme-light .widget-card-subtitle {
+            color: #000000 !important;
+        }
+        .theme-light .text-glow-green {
+            text-shadow: none !important;
+        }
+        .theme-light [class*="bg-emerald-900\/95"] {
+            background: #ffffff !important;
+            border-color: rgba(5, 150, 105, 0.15) !important;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important;
+        }
+        .theme-light [class*="bg-emerald-900\/95"] .text-emerald-50 {
+            color: #000000 !important;
+        }
+        .theme-light [class*="bg-emerald-900\/95"] .text-emerald-200\/70 {
+            color: #000000 !important;
+        }
+        .theme-light [class*="bg-emerald-900\/95"] .text-emerald-200\/70:hover {
+            color: #000000 !important;
+        }
+        .theme-light [class*="bg-emerald-900\/95"] .text-red-400\/80 {
+            color: #000000 !important;
+        }
+        .theme-light .text-shadow,
+        .theme-light .text-shadow-sm {
+            text-shadow: none !important;
+        }
     </style>
     @stack('styles')
 </head>
@@ -406,11 +672,12 @@
     }
 @endphp
 <script>window.__flash=@json($__flash);</script>
-<body class="text-gray-800 antialiased" x-data="{ 
+<body :class="darkMode ? 'theme-dark' : 'theme-light'" class="text-gray-800 antialiased" x-data="{ 
     sidebarOpen: false, 
     userMenu: false, 
     notif: { show: false, flavor: 'created', message: '' },
-    viewMode: localStorage.getItem('adminViewMode') || 'list'
+    viewMode: localStorage.getItem('adminViewMode') || 'list',
+    darkMode: localStorage.getItem('adminDarkMode') !== 'false'
 }"
       x-on:notify.window="notif.show = true; notif.flavor = $event.detail.flavor || 'created'; notif.message = $event.detail.message; setTimeout(function(){ notif.show = false; }, 5000);"
       x-init="
@@ -420,6 +687,7 @@
             window.adminViewMode = val;
             window.dispatchEvent(new CustomEvent('admin-view-change', { detail: val }));
         });
+        $watch('darkMode', val => localStorage.setItem('adminDarkMode', val));
         (function() {
             var f = window.__flash || {};
             if (f.success || f.error || f.warning || f.info) {
@@ -524,25 +792,68 @@
                             </div>
                             
                             <div class="flex items-center gap-2">
-                                {{-- View Toggle --}}
-                                <button @click="viewMode = viewMode === 'list' ? 'widget' : 'list'"
-                                    class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all duration-200 group"
-                                    title="Ganti tampilan konten">
-                                    <svg x-show="viewMode === 'list'" class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                                    </svg>
-                                    <svg x-show="viewMode === 'widget'" class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
-                                    </svg>
-                                    <div class="relative w-9 h-4 rounded-full transition-colors duration-300" :class="viewMode === 'widget' ? 'bg-emerald-500' : 'bg-white/20'">
-                                        <div x-show="viewMode === 'list'" class="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-md transition-all"></div>
-                                        <div x-show="viewMode === 'widget'" class="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-white shadow-md transition-all" style="display:none"></div>
+                                {{-- Settings Gear with Dropdown --}}
+                                <div class="relative" x-data="{ settingsOpen: false }">
+                                    <button @click="settingsOpen = !settingsOpen"
+                                        class="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-white/10 transition-all duration-200 group"
+                                        title="Pengaturan Tampilan">
+                                        <svg class="w-5 h-5 text-white/60 group-hover:text-white transition-colors settings-gear-icon"
+                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                    </button>
+
+                                    <div x-show="settingsOpen" @click.away="settingsOpen = false"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                        x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                        class="absolute right-0 mt-3 w-64 rounded-xl border border-emerald-500/25 bg-emerald-900/95 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] z-50 overflow-hidden">
+                                        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+                                        <div class="px-5 py-4 border-b border-emerald-500/15">
+                                            <p class="text-sm font-bold text-emerald-50">Pengaturan Tampilan</p>
+                                        </div>
+                                        <div class="py-2 space-y-1">
+                                            {{-- View Toggle --}}
+                                            <button @click="viewMode = viewMode === 'list' ? 'widget' : 'list'"
+                                                class="flex items-center justify-between w-full px-5 py-2.5 text-sm text-emerald-200/70 hover:text-emerald-50 hover:bg-emerald-500/10 transition-all duration-150">
+                                                <span class="flex items-center gap-3">
+                                                    <svg x-show="viewMode === 'list'" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                                    </svg>
+                                                    <svg x-show="viewMode === 'widget'" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                                                    </svg>
+                                                    <span class="font-medium">Tampilan Konten</span>
+                                                </span>
+                                                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-300/60">
+                                                    <span x-show="viewMode === 'list'">Daftar</span>
+                                                    <span x-show="viewMode === 'widget'" style="display:none">Widget</span>
+                                                </span>
+                                            </button>
+                                            {{-- Dark/Light Mode Toggle --}}
+                                            <button @click="darkMode = !darkMode"
+                                                class="flex items-center justify-between w-full px-5 py-2.5 text-sm text-emerald-200/70 hover:text-emerald-50 hover:bg-emerald-500/10 transition-all duration-150">
+                                                <span class="flex items-center gap-3">
+                                                    <svg x-show="darkMode" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                                                    </svg>
+                                                    <svg x-show="!darkMode" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                                    </svg>
+                                                    <span class="font-medium">Mode Tampilan</span>
+                                                </span>
+                                                <span class="text-[10px] font-bold uppercase tracking-wider" :class="darkMode ? 'text-emerald-300' : 'text-amber-300'">
+                                                    <span x-show="darkMode">Gelap</span>
+                                                    <span x-show="!darkMode" style="display:none">Cerah</span>
+                                                </span>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 group-hover:text-white/80 transition-colors hidden sm:inline">
-                                        <span x-show="viewMode === 'list'">Daftar</span>
-                                        <span x-show="viewMode === 'widget'" style="display:none">Widget</span>
-                                    </span>
-                                </button>
+                                </div>
 
                                 <div class="w-px h-6 bg-white/10 mx-1"></div>
 
@@ -638,83 +949,121 @@
     @stack('scripts')
     <script>
     (function() {
-        function initConstellation(canvas, opts) {
-            if (!canvas) return;
-            var ctx = canvas.getContext('2d');
-            var particles = [];
-            var num = opts.num || 25;
-            var maxDist = opts.maxDist || 120;
-            var speed = opts.speed || 0.15;
-            var opacity = opts.opacity || 0.25;
-            var animId;
+            function initConstellation(canvas, opts) {
+                if (!canvas) return;
+                var ctx = canvas.getContext('2d');
+                var particles = [];
+                var num = opts.num || 25;
+                var maxDist = opts.maxDist || 120;
+                var speed = opts.speed || 0.15;
+                var opacity = opts.opacity || 0.25;
+                var animId;
+                var lastDark = null;
 
-            function resize() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-            }
-
-            function init() {
-                particles.length = 0;
-                var w = canvas.width;
-                var h = canvas.height;
-                for (var i = 0; i < num; i++) {
-                    particles.push({
-                        x: Math.random() * w,
-                        y: Math.random() * h,
-                        vx: (Math.random() - 0.5) * speed,
-                        vy: (Math.random() - 0.5) * speed,
-                        r: Math.random() * 1.5 + 0.5,
-                    });
-                }
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                var w = canvas.width, h = canvas.height;
-
-                for (var i = 0; i < particles.length; i++) {
-                    var p = particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    if (p.x < 0) p.x = w;
-                    if (p.x > w) p.x = 0;
-                    if (p.y < 0) p.y = h;
-                    if (p.y > h) p.y = 0;
+                function isDark() {
+                    return document.body.classList.contains('theme-dark');
                 }
 
-                for (var i = 0; i < particles.length; i++) {
-                    for (var j = i + 1; j < particles.length; j++) {
-                        var dx = particles[i].x - particles[j].x;
-                        var dy = particles[i].y - particles[j].y;
-                        var dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < maxDist) {
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = 'rgba(255,255,255,' + (opacity * (1 - dist / maxDist)) + ')';
-                            ctx.lineWidth = 0.5;
-                            ctx.stroke();
-                        }
+                function getColor(alpha) {
+                    return isDark() ? 'rgba(255,215,0,' + alpha + ')' : 'rgba(5,150,105,' + alpha + ')';
+                }
+
+                function resize() {
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+                }
+
+                function init(dark) {
+                    particles.length = 0;
+                    var w = canvas.width;
+                    var h = canvas.height;
+                    var mult = dark ? 1.8 : 1;
+                    for (var i = 0; i < num; i++) {
+                        particles.push({
+                            x: Math.random() * w,
+                            y: Math.random() * h,
+                            vx: (Math.random() - 0.5) * speed,
+                            vy: (Math.random() - 0.5) * speed,
+                            r: Math.random() * 1.5 * mult + 0.5 * mult,
+                        });
                     }
                 }
 
-                for (var i = 0; i < particles.length; i++) {
-                    var p = particles[i];
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(255,255,255,' + (opacity + 0.1) + ')';
-                    ctx.fill();
+                function draw() {
+                    var dark = isDark();
+                    if (dark !== lastDark) {
+                        lastDark = dark;
+                        init(dark);
+                    }
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    var w = canvas.width, h = canvas.height;
+                    var lineW = dark ? 1.2 : 1;
+                    var opMult = dark ? 1.8 : 1.2;
+
+                    for (var i = 0; i < particles.length; i++) {
+                        var p = particles[i];
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        if (p.x < 0) p.x = w;
+                        if (p.x > w) p.x = 0;
+                        if (p.y < 0) p.y = h;
+                        if (p.y > h) p.y = 0;
+                    }
+
+                    for (var i = 0; i < particles.length; i++) {
+                        for (var j = i + 1; j < particles.length; j++) {
+                            var dx = particles[i].x - particles[j].x;
+                            var dy = particles[i].y - particles[j].y;
+                            var dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < maxDist) {
+                                var a = opacity * (1 - dist / maxDist) * opMult;
+                                ctx.beginPath();
+                                ctx.moveTo(particles[i].x, particles[i].y);
+                                ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.strokeStyle = getColor(a);
+                                ctx.lineWidth = lineW;
+                                if (dark) {
+                                    ctx.shadowColor = 'rgba(255,215,0,0.35)';
+                                    ctx.shadowBlur = 8;
+                                } else {
+                                    ctx.shadowColor = 'rgba(5,150,105,0.35)';
+                                    ctx.shadowBlur = 6;
+                                }
+                                ctx.stroke();
+                                ctx.shadowColor = 'transparent';
+                                ctx.shadowBlur = 0;
+                            }
+                        }
+                    }
+
+                    for (var i = 0; i < particles.length; i++) {
+                        var p = particles[i];
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.fillStyle = getColor(opacity + 0.15);
+                        if (dark) {
+                            ctx.shadowColor = 'rgba(255,215,0,0.7)';
+                            ctx.shadowBlur = 14;
+                        } else {
+                            ctx.shadowColor = 'rgba(5,150,105,0.5)';
+                            ctx.shadowBlur = 8;
+                        }
+                        ctx.fill();
+                        ctx.shadowColor = 'transparent';
+                        ctx.shadowBlur = 0;
+                    }
+
+                    animId = requestAnimationFrame(draw);
                 }
 
-                animId = requestAnimationFrame(draw);
+                lastDark = isDark();
+                resize();
+                init(lastDark);
+                draw();
+
+                window.addEventListener('resize', function() { resize(); init(lastDark); });
             }
-
-            resize();
-            init();
-            draw();
-
-            window.addEventListener('resize', function() { resize(); init(); });
-        }
 
         document.addEventListener('DOMContentLoaded', function() {
             initConstellation(document.getElementById('sidebarStars'), { num: 22, opacity: 0.2, maxDist: 130 });

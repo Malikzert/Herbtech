@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Production;
 use App\Models\Product;
+use App\Models\Scheduling;
 use App\Services\ProductionSchedulerService;
+use App\Services\GeneticBatchRecommender;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
@@ -54,11 +56,17 @@ class ProductionController extends Controller
         return view($view, compact('productions'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $products = Product::all();
         $rawMaterials = \App\Models\RawMaterial::all();
-        return view('operator.productions.create', compact('products', 'rawMaterials'));
+        $scheduling = null;
+
+        if ($request->has('scheduling_id')) {
+            $scheduling = Scheduling::with('product')->find($request->input('scheduling_id'));
+        }
+
+        return view('operator.productions.create', compact('products', 'rawMaterials', 'scheduling'));
     }
 
     public function store(Request $request)
@@ -335,8 +343,46 @@ class ProductionController extends Controller
             ->where('algorithm_generated', false)
             ->count();
 
+        $schedulings = Scheduling::with('product:id,name')
+            ->where('user_id', auth()->id())
+            ->where('status', 'draft')
+            ->latest()
+            ->get();
+
+        $gaResult = null;
+        if ($schedulings->isNotEmpty()) {
+            $recommended = $schedulings->where('is_recommended', true)->sortBy('priority_order');
+            $notRecommended = $schedulings->where('is_recommended', false);
+
+            if ($recommended->isNotEmpty()) {
+                $gaResult = [
+                    'recommended_batches' => $recommended->map(function ($s) {
+                        return [
+                            'product_id'          => $s->product_id,
+                            'product_name'        => $s->product->name ?? 'Unknown',
+                            'priority_order'      => $s->priority_order,
+                            'recommended_quantity' => $s->recommended_quantity,
+                            'critical_material'   => $s->critical_material_name,
+                            'is_recommended'      => true,
+                        ];
+                    })->toArray(),
+                    'not_recommended_batches' => $notRecommended->map(function ($s) {
+                        return [
+                            'product_id'   => $s->product_id,
+                            'product_name' => $s->product->name ?? 'Unknown',
+                            'reason'       => $s->rejection_reason,
+                            'is_recommended' => false,
+                        ];
+                    })->toArray(),
+                    'message' => 'Menampilkan rekomendasi jadwal batch dari hasil Algoritma Genetika.',
+                ];
+            }
+        }
+
         return view('admin.scheduling.index', [
             'productions' => $productions,
+            'schedulings' => $schedulings,
+            'ga_result_from_db' => $gaResult,
             'stats' => $stats,
             'filter' => $request->get('filter', 'all'),
             'statusCounts' => [
@@ -358,90 +404,30 @@ class ProductionController extends Controller
             abort(403);
         }
 
-        $validated = $request->validate([
-            'production_ids' => 'nullable|array',
-            'production_ids.*' => 'exists:productions,id',
-        ]);
+        try {
+            $recommender = app(GeneticBatchRecommender::class);
+            $result = $recommender->recommend();
 
-        $scheduler = app(ProductionSchedulerService::class);
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json($result);
+            }
 
-        $pendingProductions = Production::with('productionMaterials.rawMaterial')
-            ->where('status', 'pending')
-            ->get();
+            if (!$result['success']) {
+                return back()->with('warning', $result['message']);
+            }
 
-        if ($pendingProductions->isEmpty()) {
-            $msg = 'Tidak ada batch dengan status pending yang dapat dijadwalkan.';
+            return redirect()->route('admin.scheduling.index')
+                ->with('success', $result['message'])
+                ->with('ga_result', $result);
+        } catch (\Exception $e) {
+            Log::error('generateSchedule GA error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            $msg = 'Gagal menjalankan algoritma genetika: ' . $e->getMessage();
+
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json(['success' => false, 'message' => $msg]);
             }
-            return back()->with('warning', $msg);
+            return back()->with('error', $msg);
         }
-
-        $preStockIssues = $scheduler->checkStockAvailability($pendingProductions);
-        if (!empty($preStockIssues)) {
-            $warnings = array_slice($preStockIssues, 0, 5);
-            $msg = 'Algoritma dijalankan, namun penjadwalan tertunda karena stok tidak mencukupi: ' . implode('; ', $warnings);
-
-            if (!empty($validated['production_ids'])) {
-                Production::whereIn('id', $validated['production_ids'])
-                    ->where('status', 'pending')
-                    ->update(['algorithm_generated' => false, 'scheduled_start' => null, 'scheduled_end' => null]);
-            }
-
-            try {
-                $result = $scheduler->generateOptimalSchedule();
-                if (!$result['success']) {
-                    $msg = $result['message'];
-                }
-            } catch (\BadMethodCallException $e) {
-                return $this->scheduleRelationshipError($request);
-            } catch (\Exception $e) {
-                return $this->scheduleGenericError($request, $e);
-            }
-
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $msg,
-                    'stock_warnings' => $preStockIssues,
-                    'fitness_score' => $result['fitness_score'] ?? null,
-                    'generations' => $result['generations'] ?? null,
-                ]);
-            }
-            return back()->with('warning', $msg);
-        }
-
-        if (!empty($validated['production_ids'])) {
-            Production::whereIn('id', $validated['production_ids'])
-                ->where('status', 'pending')
-                ->update(['algorithm_generated' => false, 'scheduled_start' => null, 'scheduled_end' => null]);
-        }
-
-        try {
-            $result = $scheduler->generateOptimalSchedule();
-        } catch (\BadMethodCallException $e) {
-            return $this->scheduleRelationshipError($request);
-        } catch (\Exception $e) {
-            return $this->scheduleGenericError($request, $e);
-        }
-
-        if ($request->ajax() || $request->wantsJson()) {
-            $jsonResult = [
-                'success' => $result['success'],
-                'message' => $result['message'],
-                'fitness_score' => $result['fitness_score'] ?? null,
-                'generations' => $result['generations'] ?? null,
-                'stock_warnings' => $result['stock_warnings'] ?? [],
-            ];
-            return response()->json($jsonResult);
-        }
-
-        if (!$result['success']) {
-            return back()->with('warning', $result['message']);
-        }
-
-        return redirect()->route('admin.scheduling.index', ['filter' => 'scheduled'])
-            ->with('success', $result['message']);
     }
 
     public function reviewSchedule(Request $request)

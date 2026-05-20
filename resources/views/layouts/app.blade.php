@@ -24,7 +24,7 @@
         .bg-cream { background-color: #FDFBF7; }
         
         .bg-wallpaper {
-            background-image: url('{{ asset("image/p.avif") }}');
+            background-image: white;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -53,13 +53,13 @@
         }
 
         :root {
-            --valo-brown: #2c1810;
-            --valo-brown-medium: #3d2b1f;
-            --valo-brown-dark: #1a1210;
-            --valo-gold: #8B6914;
-            --valo-tan: #D4B896;
-            --valo-tan-light: #F5EDE0;
-            --valo-accent: #A0845C;
+            --valo-dark: #0f172a;
+            --valo-dark-medium: #1e293b;
+            --valo-dark-dark: #020617;
+            --valo-accent: #1DA1F2;
+            --valo-accent-light: #93C5FD;
+            --valo-accent-lighter: #DBEAFE;
+            --valo-accent: #3B82F6;
         }
 
         /* ===== WIDGET GRID (Operator Theme) ===== */
@@ -72,8 +72,8 @@
         .widget-card {
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(61, 43, 31, 0.6);
-            background: rgba(26, 18, 16, 0.7);
+            border: 1px solid rgba(30, 58, 138, 0.6);
+            background: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
@@ -84,11 +84,11 @@
         .widget-card:hover {
             transform: translateY(-6px);
             box-shadow: 
-                0 0 25px rgba(139, 105, 20, 0.35),
-                0 0 60px rgba(139, 105, 20, 0.1),
-                0 0 100px rgba(139, 105, 20, 0.04),
+                0 0 25px rgba(29, 161, 242, 0.35),
+                0 0 60px rgba(29, 161, 242, 0.1),
+                0 0 100px rgba(29, 161, 242, 0.04),
                 0 12px 48px rgba(0, 0, 0, 0.35);
-            border-color: rgba(139, 105, 20, 0.6);
+            border-color: rgba(29, 161, 242, 0.6);
         }
         .widget-card-header {
             position: relative;
@@ -134,7 +134,7 @@
         .widget-card-subtitle {
             font-family: 'Courier New', monospace;
             font-size: 0.7rem;
-            color: rgba(212,184,150,0.4);
+            color: rgba(147,197,253,0.4);
             margin-bottom: 0.75rem;
         }
         .widget-card-details {
@@ -152,9 +152,9 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            border: 1px solid rgba(61, 43, 31, 0.5);
-            background: rgba(44, 24, 16, 0.4);
-            color: rgba(212,184,150,0.7);
+            border: 1px solid rgba(30, 58, 138, 0.5);
+            background: rgba(15, 23, 42, 0.4);
+            color: rgba(147,197,253,0.7);
             border-radius: 0;
         }
         .widget-card-detail svg {
@@ -181,19 +181,287 @@
         .widget-card-spacer {
             flex: 1;
         }
+
+        /* ===== SETTINGS GEAR SPIN ===== */
+        @keyframes spinSettings {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .settings-gear-icon {
+            animation: spinSettings 0.8s ease-in-out;
+        }
+
+        /* ===== THEME-DARK: Malam (hitam + biru) ===== */
+        .theme-dark .bg-wallpaper {
+            background-color: #000000 !important;
+            background-image: none !important;
+        }
+        .theme-dark .glass-sidebar-operator {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+        }
+        .theme-dark .glass-topbar {
+            background: rgba(0, 0, 0, 0.9) !important;
+        }
+        .theme-dark .glass-topbar h2,
+        .theme-dark .glass-topbar p,
+        .theme-dark .glass-topbar button:not([class*="bg-"]),
+        .theme-dark .glass-topbar div {
+            color: #ffffff !important;
+        }
+        .theme-dark main {
+            background: #000000 !important;
+            color: #ffffff !important;
+        }
+        .theme-dark main * {
+            color: #ffffff !important;
+        }
+        .theme-dark .widget-card {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-color: rgba(29, 161, 242, 0.3) !important;
+        }
+        .theme-dark .widget-card-title {
+            color: #ffffff !important;
+        }
+        .theme-dark .widget-card-subtitle {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+        .theme-dark .widget-card-detail {
+            color: rgba(255, 255, 255, 0.6) !important;
+            border-color: rgba(29, 161, 242, 0.3) !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+        }
+        .theme-dark .fixed.inset-0.bg-\[\#0f172a\] {
+            background: #000000 !important;
+            opacity: 0.3 !important;
+        }
+
+        /* Dark mode - tabel biru tua + teks putih */
+        .theme-dark main table thead {
+            background: #0f172a !important;
+            border-bottom: 1px solid rgba(29, 161, 242, 0.2) !important;
+        }
+        .theme-dark main table thead th span,
+        .theme-dark main table thead th {
+            color: #93C5FD !important;
+        }
+        .theme-dark main table tbody tr {
+            border-bottom: 1px solid rgba(29, 161, 242, 0.1) !important;
+        }
+        .theme-dark main table tbody tr:hover {
+            background: rgba(29, 161, 242, 0.08) !important;
+        }
+        .theme-dark main table tbody td {
+            color: #ffffff !important;
+        }
+        .theme-dark .glass-sidebar-operator {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+        }
+        .theme-dark .glass-topbar {
+            background: rgba(0, 0, 0, 0.9) !important;
+        }
+        .theme-dark .glass-topbar h2,
+        .theme-dark .glass-topbar p,
+        .theme-dark .glass-topbar button:not([class*="bg-"]) {
+            color: #ffffff !important;
+        }
+        .theme-dark main {
+            background: #000000 !important;
+            color: #ffffff !important;
+        }
+        .theme-dark main * {
+            color: #ffffff !important;
+        }
+        .theme-dark .widget-card {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-color: rgba(29, 161, 242, 0.3) !important;
+        }
+        .theme-dark .widget-card-title {
+            color: #ffffff !important;
+        }
+        .theme-dark .widget-card-subtitle {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+        .theme-dark .widget-card-detail {
+            color: rgba(255, 255, 255, 0.6) !important;
+            border-color: rgba(29, 161, 242, 0.3) !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+        }
+        .theme-dark .fixed.inset-0.bg-\[\#0f172a\] {
+            background: #000000 !important;
+            opacity: 0.3 !important;
+        }
+
+        /* Dark mode - tabel biru tua + teks putih */
+        .theme-dark main table thead {
+            background: #0f172a !important;
+            border-bottom: 1px solid rgba(29, 161, 242, 0.2) !important;
+        }
+        .theme-dark main table thead th span,
+        .theme-dark main table thead th {
+            color: #93C5FD !important;
+        }
+        .theme-dark main table tbody tr {
+            border-bottom: 1px solid rgba(29, 161, 242, 0.1) !important;
+        }
+        .theme-dark main table tbody tr:hover {
+            background: rgba(29, 161, 242, 0.08) !important;
+        }
+        .theme-dark main table tbody td {
+            color: #ffffff !important;
+        }
+
+        /* Light mode containers: putih + biru twitter */
+        .theme-light .bg-wallpaper {
+            background-image: none !important;
+            background-color: #ffffff !important;
+        }
+        .theme-light .fixed.inset-0.bg-\[\#0f172a\] {
+            background: transparent !important;
+        }
+        .theme-light .glass-sidebar-operator {
+            background-color: #ffffff !important;
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(29, 161, 242, 0.15) !important;
+        }
+        .theme-light .glass-sidebar-operator img {
+            filter: none !important;
+        }
+        .theme-light .glass-sidebar-operator span,
+        .theme-light .glass-sidebar-operator a,
+        .theme-light .glass-sidebar-operator div {
+            color: #000000 !important;
+        }
+        .theme-light .glass-sidebar-operator .text-\[#93C5FD\] {
+            color: #1DA1F2 !important;
+        }
+        .theme-light .glass-sidebar-operator .hover\:bg-white\/15:hover {
+            background-color: rgba(29, 161, 242, 0.08) !important;
+        }
+        .theme-light .glass-sidebar-operator .bg-white\/20 {
+            background-color: rgba(29, 161, 242, 0.15) !important;
+        }
+        .theme-light .glass-topbar {
+            background: #ffffff !important;
+            border-bottom: 1px solid rgba(29, 161, 242, 0.12) !important;
+        }
+        .theme-light .glass-topbar h2 {
+            color: #1a8cd8 !important;
+        }
+        .theme-light .glass-topbar button svg {
+            color: rgba(29, 161, 242, 0.6) !important;
+        }
+        .theme-light .glass-topbar button:hover svg {
+            color: #1a8cd8 !important;
+        }
+        .theme-light .glass-topbar p.text-white,
+        .theme-light .glass-topbar p.text-sm,
+        .theme-light .glass-topbar p.text-xs {
+            color: #000000 !important;
+        }
+        .theme-light .glass-topbar .text-\[#93C5FD\] {
+            color: #1DA1F2 !important;
+        }
+        .theme-light .glass-topbar .text-\[#93C5FD\]\/60 {
+            color: rgba(29, 161, 242, 0.6) !important;
+        }
+        .theme-light .glass-topbar .text-\[#93C5FD\]\/50 {
+            color: rgba(29, 161, 242, 0.5) !important;
+        }
+        .theme-light .glass-topbar .hover\:bg-white\/5:hover {
+            background-color: rgba(29, 161, 242, 0.06) !important;
+        }
+        .theme-light .glass-topbar .hover\:bg-gray-100\/50:hover {
+            background-color: rgba(29, 161, 242, 0.06) !important;
+        }
+        .theme-light main {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+        .theme-light main * {
+            color: #000000 !important;
+        }
+        .theme-light main .btn-glass,
+        .theme-light main .btn-glass * {
+            color: #ffffff !important;
+        }
+        .theme-light .widget-card {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(29, 161, 242, 0.2) !important;
+        }
+        .theme-light .widget-card:hover {
+            background: #ffffff !important;
+            border-color: rgba(29, 161, 242, 0.4) !important;
+            box-shadow: 0 0 25px rgba(29, 161, 242, 0.15) !important;
+        }
+        .theme-light .widget-card-title {
+            color: #000000 !important;
+        }
+        .theme-light .widget-card-subtitle {
+            color: rgba(0, 0, 0, 0.4) !important;
+        }
+        .theme-light .widget-card-detail {
+            color: rgba(0, 0, 0, 0.6) !important;
+            border-color: rgba(29, 161, 242, 0.2) !important;
+            background: rgba(29, 161, 242, 0.05) !important;
+        }
+        .theme-light .text-shadow,
+        .theme-light .text-shadow-sm {
+            text-shadow: none !important;
+        }
+        /* Light mode - tabel biru muda + teks gelap */
+        .theme-light [class*="bg-[#0f172a]/80"],
+        .theme-light [class*="bg-[#0f172a]"].overflow-hidden {
+            background: #ffffff !important;
+            border-color: rgba(29, 161, 242, 0.15) !important;
+        }
+        .theme-light [class*="bg-[#1e293b]/"] {
+            background: #ffffff !important;
+            border-color: rgba(29, 161, 242, 0.15) !important;
+        }
+        .theme-light option[class*="bg-[#0f172a]"] {
+            background: #ffffff !important;
+        }
+        .theme-light main table thead {
+            background: #DBEAFE !important;
+            border-bottom: 1px solid rgba(29, 161, 242, 0.2) !important;
+        }
+        .theme-light thead th {
+            color: #1DA1F2 !important;
+        }
+        .theme-light thead th span {
+            color: #1DA1F2 !important;
+        }
+        .theme-light main table tbody tr:hover {
+            background: rgba(219, 234, 254, 0.5) !important;
+        }
+        .theme-light main table tbody td {
+            color: #000000 !important;
+        }
+        .theme-light .btn-glass {
+            background: #1DA1F2 !important;
+            color: #ffffff !important;
+        }
+        .theme-light .btn-glass:hover {
+            background: #1a8cd8 !important;
+            box-shadow: 0 4px 20px rgba(29, 161, 242, 0.3) !important;
+        }
+        .theme-light .active\:bg-\[\#1DA1F2\] {
+            background-color: #1DA1F2 !important;
+        }
     </style>
     <script>
         window.adminViewMode = localStorage.getItem('adminViewMode') || 'list';
     </script>
     @stack('styles')
 </head>
-<body class="bg-wallpaper text-gray-800 antialiased relative" x-data="{ sidebarOpen: false, viewMode: (localStorage.getItem('adminViewMode') || 'list') }"
+<body :class="darkMode ? 'theme-dark' : 'theme-light'" class="bg-wallpaper text-gray-800 antialiased relative" x-data="{ sidebarOpen: false, viewMode: (localStorage.getItem('adminViewMode') || 'list'), darkMode: localStorage.getItem('operatorDarkMode') !== 'false' }"
       x-init="
         $watch('viewMode', val => {
             localStorage.setItem('adminViewMode', val);
             window.adminViewMode = val;
             window.dispatchEvent(new CustomEvent('admin-view-change', { detail: val }));
         });
+        $watch('darkMode', val => localStorage.setItem('operatorDarkMode', val));
       ">
 
     <!-- Global Subtle Overlay -->
@@ -245,7 +513,7 @@
                     </a>
                 @else
                     <!-- OPERATOR ROLE -->
-                    <div class="text-xs font-semibold text-[#D4B896] uppercase tracking-wider mb-1 mt-3 px-2">Operasional</div>
+                    <div class="text-xs font-semibold text-[#93C5FD] uppercase tracking-wider mb-1 mt-3 px-2">Operasional</div>
                     <a href="{{ route('operator.dashboard') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.dashboard') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                         <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         Dashboard
@@ -262,7 +530,7 @@
                         <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Quality Control
                     </a>
-                    <div class="text-xs font-semibold text-[#D4B896] uppercase tracking-wider mb-1 mt-3 px-2">Informasi</div>
+                    <div class="text-xs font-semibold text-[#93C5FD] uppercase tracking-wider mb-1 mt-3 px-2">Informasi</div>
                     <a href="{{ route('operator.raw-materials.index') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.raw-materials.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                         <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                         Monitoring Stok
@@ -272,14 +540,14 @@
                         List Produk
                     </a>
                     <div class="mt-auto pt-3 border-t border-white/10">
-                        <div class="text-xs font-semibold text-[#D4B896] uppercase tracking-wider mb-1 px-2">Akun</div>
+                        <div class="text-xs font-semibold text-[#93C5FD] uppercase tracking-wider mb-1 px-2">Akun</div>
                         <a href="{{ route('operator.profile.index') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.profile.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                             <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             Profil Saya
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full flex items-center px-3 py-1.5 rounded-lg text-[#D4B896]/60 hover:bg-[#D4B896]/10 hover:text-[#D4B896] transition">
+                            <button type="submit" class="w-full flex items-center px-3 py-1.5 rounded-lg text-[#93C5FD]/60 hover:bg-[#93C5FD]/10 hover:text-[#93C5FD] transition">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                                 Keluar
                             </button>
@@ -301,25 +569,66 @@
                 </div>
                 
                 <div class="flex items-center gap-3">
-                    {{-- View Toggle --}}
-                    <button @click="viewMode = viewMode === 'list' ? 'widget' : 'list'"
-                        class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-white/5 transition-all duration-200 group"
-                        title="Ganti tampilan konten">
-                        <svg x-show="viewMode === 'list'" class="w-4 h-4 text-[#D4B896]/60 group-hover:text-[#D4B896] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                        </svg>
-                        <svg x-show="viewMode === 'widget'" class="w-4 h-4 text-[#D4B896]/60 group-hover:text-[#D4B896] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
-                        </svg>
-                        <div class="relative w-8 h-4 rounded-full transition-colors duration-300" :class="viewMode === 'widget' ? 'bg-[#8B6914]' : 'bg-white/15'">
-                            <div x-show="viewMode === 'list'" class="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white/80 shadow-md transition-all"></div>
-                            <div x-show="viewMode === 'widget'" class="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-white/80 shadow-md transition-all" style="display:none"></div>
+                    {{-- Settings Gear with Dropdown --}}
+                    <div class="relative" x-data="{ settingsOpen: false }">
+                        <button @click="settingsOpen = !settingsOpen"
+                            class="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5 transition-all duration-200 group"
+                            title="Pengaturan Tampilan">
+                            <svg class="w-4 h-4 text-[#93C5FD]/60 group-hover:text-[#93C5FD] transition-colors settings-gear-icon"
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </button>
+
+                        <div x-show="settingsOpen" @click.away="settingsOpen = false"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                            x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                            class="absolute right-0 mt-2 w-56 rounded-xl border border-[#1DA1F2]/25 bg-white/95 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.15)] z-50 overflow-hidden">
+                            <div class="h-[2px] bg-gradient-to-r from-[#1DA1F2]/60 via-[#93C5FD]/30 to-transparent"></div>
+                            <div class="px-4 py-3 border-b border-[#1DA1F2]/10">
+                                <p class="text-sm font-bold text-[#1a8cd8]">Pengaturan Tampilan</p>
+                            </div>
+                            <div class="py-1 space-y-0.5">
+                                <button @click="viewMode = viewMode === 'list' ? 'widget' : 'list'"
+                                    class="flex items-center justify-between w-full px-4 py-2 text-sm text-[#1a8cd8]/70 hover:text-[#1a8cd8] hover:bg-[#1DA1F2]/5 transition-all duration-150">
+                                    <span class="flex items-center gap-2.5">
+                                        <svg x-show="viewMode === 'list'" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                        </svg>
+                                        <svg x-show="viewMode === 'widget'" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                                        </svg>
+                                        <span class="font-medium">Tampilan Konten</span>
+                                    </span>
+                                    <span class="text-[9px] font-bold uppercase tracking-wider text-[#1DA1F2]/60">
+                                        <span x-show="viewMode === 'list'">Daftar</span>
+                                        <span x-show="viewMode === 'widget'" style="display:none">Widget</span>
+                                    </span>
+                                </button>
+                                <button @click="darkMode = !darkMode"
+                                    class="flex items-center justify-between w-full px-4 py-2 text-sm text-[#1a8cd8]/70 hover:text-[#1a8cd8] hover:bg-[#1DA1F2]/5 transition-all duration-150">
+                                    <span class="flex items-center gap-2.5">
+                                        <svg x-show="darkMode" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                                        </svg>
+                                        <svg x-show="!darkMode" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                        </svg>
+                                        <span class="font-medium">Mode Tampilan</span>
+                                    </span>
+                                    <span class="text-[9px] font-bold uppercase tracking-wider" :class="darkMode ? 'text-[#1DA1F2]' : 'text-[#1DA1F2]'">
+                                        <span x-show="darkMode">Gelap</span>
+                                        <span x-show="!darkMode" style="display:none">Cerah</span>
+                                    </span>
+                                </button>
+                            </div>
                         </div>
-                        <span class="text-[9px] font-bold uppercase tracking-wider text-[#D4B896]/50 group-hover:text-[#D4B896]/80 transition-colors hidden sm:inline">
-                            <span x-show="viewMode === 'list'">Daftar</span>
-                            <span x-show="viewMode === 'widget'" style="display:none">Widget</span>
-                        </span>
-                    </button>
+                    </div>
 
                     <div class="w-px h-5 bg-white/10"></div>
 
@@ -327,9 +636,9 @@
                         <button @click="userMenu = !userMenu" class="flex items-center space-x-2 focus:outline-none p-1.5 rounded-xl hover:bg-gray-100/50 transition">
                             <div class="text-right hidden md:block">
                                 <p class="text-sm font-bold text-white leading-tight">{{ auth()->check() ? auth()->user()->name : 'User' }}</p>
-                                <p class="text-xs {{ (auth()->check() && auth()->user()->role == 'operator') ? 'text-[#D4B896]' : 'text-emerald-200' }} font-medium">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Role' }}</p>
+                                <p class="text-xs {{ (auth()->check() && auth()->user()->role == 'operator') ? 'text-[#93C5FD]' : 'text-emerald-200' }} font-medium">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Role' }}</p>
                             </div>
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ (auth()->check() && auth()->user()->role == 'operator') ? 'from-[#8B6914] to-[#5C4A1E]' : 'from-emerald-400 to-emerald-600' }} text-white flex items-center justify-center font-bold shadow-md border-2 border-white text-sm">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ (auth()->check() && auth()->user()->role == 'operator') ? 'from-[#1DA1F2] to-[#1a8cd8]' : 'from-emerald-400 to-emerald-600' }} text-white flex items-center justify-center font-bold shadow-md border-2 border-white text-sm">
                                 {{ auth()->check() ? substr(auth()->user()->name, 0, 1) : 'U' }}
                             </div>
                         </button>
@@ -381,15 +690,20 @@
     @stack('scripts')
     <script>
     (function() {
-        function drawLeaf(ctx, x, y, size, rot, color, alpha) {
+        function drawLeaf(ctx, x, y, size, rot, color, alpha, dark) {
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(rot);
             ctx.scale(size, size);
             ctx.globalAlpha = alpha;
 
-            ctx.shadowColor = 'rgba(139, 105, 20, 0.3)';
-            ctx.shadowBlur = 6;
+            if (dark) {
+                ctx.shadowColor = 'rgba(29, 161, 242, 0.3)';
+                ctx.shadowBlur = 6;
+            } else {
+                ctx.shadowColor = 'rgba(29, 161, 242, 0.35)';
+                ctx.shadowBlur = 5;
+            }
 
             ctx.beginPath();
             ctx.moveTo(0, 0);
@@ -401,7 +715,7 @@
             ctx.beginPath();
             ctx.moveTo(0, 0);
             ctx.lineTo(8, 0);
-            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.strokeStyle = dark ? 'rgba(255,255,255,0.15)' : 'rgba(29,161,242,0.4)';
             ctx.lineWidth = 0.3;
             ctx.stroke();
 
@@ -429,20 +743,34 @@
             var animId;
 
             var colors = [
-                'rgba(139,105,20,0.5)',
-                'rgba(212,184,150,0.35)',
-                'rgba(160,132,92,0.45)',
-                'rgba(107,87,64,0.4)',
-                'rgba(245,237,224,0.25)',
-                'rgba(92,74,30,0.35)',
+                'rgba(29,161,242,0.5)',
+                'rgba(147,197,253,0.35)',
+                'rgba(59,130,246,0.45)',
+                'rgba(29,161,242,0.4)',
+                'rgba(219,234,254,0.25)',
+                'rgba(29,161,242,0.35)',
+            ];
+            var lightColors = [
+                'rgba(29,161,242,0.7)',
+                'rgba(147,197,253,0.65)',
+                'rgba(59,130,246,0.65)',
+                'rgba(29,161,242,0.6)',
+                'rgba(96,165,250,0.55)',
+                'rgba(59,130,246,0.5)',
             ];
 
-            function resize() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
+            function isDark() {
+                return document.body.classList.contains('theme-dark');
             }
 
-            function init() {
+            function resize() {
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+                }
+
+                var lastDark = null;
+
+                function init(dark) {
                 particles.length = 0;
                 var w = canvas.width, h = canvas.height;
                 for (var i = 0; i < num; i++) {
@@ -457,15 +785,23 @@
                         rot: Math.random() * Math.PI * 2,
                         rotSpeed: (Math.random() - 0.5) * 0.02,
                         color: colors[Math.floor(Math.random() * colors.length)],
-                        alpha: Math.random() * 0.35 + 0.08,
+                        alpha: Math.random() * 0.4 + 0.25,
                         phase: Math.random() * Math.PI * 2,
+                        color2: lightColors[Math.floor(Math.random() * lightColors.length)],
                     });
                 }
             }
 
             function draw() {
+                var dark = isDark();
+                if (dark !== lastDark) {
+                    lastDark = dark;
+                    init(dark);
+                }
+
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 var w = canvas.width, h = canvas.height;
+                var dark = isDark();
 
                 for (var i = 0; i < particles.length; i++) {
                     var p = particles[i];
@@ -480,27 +816,29 @@
                         p.baseY = Math.random() * h;
                     }
 
-                    drawLeaf(ctx, p.x, p.y, p.size, p.rot, p.color, p.alpha);
+                    var c = dark ? p.color : p.color2;
+                    drawLeaf(ctx, p.x, p.y, p.size, p.rot, c, p.alpha, dark);
                 }
 
                 animId = requestAnimationFrame(draw);
             }
 
+            lastDark = isDark();
             resize();
-            init();
+            init(lastDark);
             draw();
-            window.addEventListener('resize', function() { resize(); init(); });
+            window.addEventListener('resize', function() { resize(); init(lastDark); });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             var sidebar = document.querySelector('.glass-sidebar-operator');
             if (sidebar) {
-                initHerbEffect(sidebar, { num: 16, speed: 0.2 });
+                initHerbEffect(sidebar, { num: 24, speed: 0.2 });
             }
 
             var navbar = document.querySelector('.glass-topbar');
             if (navbar) {
-                initHerbEffect(navbar, { num: 10, speed: 0.12 });
+                initHerbEffect(navbar, { num: 14, speed: 0.12 });
             }
         });
     })();

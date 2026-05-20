@@ -13,6 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\SchedulingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -53,7 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::put('productions/{production}/update-status', [ProductionController::class, 'updateStatus'])->name('admin.productions.update-status');
         
         Route::get('scheduling', [ProductionController::class, 'schedulingIndex'])->name('admin.scheduling.index');
-        Route::post('scheduling/generate', [ProductionController::class, 'generateSchedule'])->name('admin.scheduling.generate');
+        Route::post('scheduling/generate', [SchedulingController::class, 'generate'])->name('admin.scheduling.generate');
         Route::post('scheduling/review', [ProductionController::class, 'reviewSchedule'])->name('admin.scheduling.review');
         
         Route::get('qc', [QCController::class, 'index'])->name('admin.qc.index');

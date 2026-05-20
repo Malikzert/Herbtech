@@ -2,46 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Production;
-use App\Models\Recipe;
-use Carbon\Carbon;
+use App\Models\Scheduling;
+use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $schedules = Production::with([
-            'product:id,name',
-            'productionMaterials.rawMaterial:id,name,current_stock,expired_date,unit',
-        ])
-            ->whereIn('status', ['in_progress', 'qc_check', 'rework'])
-            ->whereNotNull('scheduled_start')
-            ->orderBy('scheduled_start')
-            ->get();
+        $status = $request->get('status');
 
-        $hasExpiryWarnings = false;
+        $query = Scheduling::with('product:id,name')
+            ->where('is_recommended', true)
+            ->orderBy('recom_date', 'desc')
+            ->orderBy('priority_order');
 
-        foreach ($schedules as $production) {
-            $expiringMaterials = collect();
-
-            foreach ($production->productionMaterials as $pm) {
-                $material = $pm->rawMaterial;
-                if ($material && $material->expired_date) {
-                    $daysToExpiry = Carbon::now()->diffInDays($material->expired_date, false);
-                    $material->days_to_expiry = (int) $daysToExpiry;
-                    if ($daysToExpiry >= 0 && $daysToExpiry <= 14) {
-                        $expiringMaterials->push($material);
-                        $hasExpiryWarnings = true;
-                    }
-                }
-            }
-
-            $production->expiring_materials = $expiringMaterials;
+        if ($status) {
+            $query->where('status', $status);
         }
 
-        return view('operator.schedules.index', [
-            'schedules' => $schedules,
-            'hasExpiryWarnings' => $hasExpiryWarnings,
-        ]);
+        $schedules = $query->get();
+
+        return view('operator.schedules.index', compact('schedules'));
     }
 }

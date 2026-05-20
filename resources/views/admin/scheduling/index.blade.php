@@ -76,6 +76,107 @@
 
 
 
+    {{-- GA RESULTS --}}
+    @php $ga = session('ga_result') ?? $ga_result_from_db; @endphp
+    @if($ga)
+    <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+        <div class="flex items-center justify-between mt-3 mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 flex items-center justify-center bg-blue-500/15 border border-blue-500/30" style="border-radius: 0;">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Hasil Rekomendasi Batch</h3>
+                    <p class="text-xs text-emerald-200/40">{{ ($ga['generations'] ?? 0) > 0 ? 'Dioptimalkan dengan Algoritma Genetika (' . $ga['generations'] . ' generasi)' : 'Rekomendasi langsung berdasarkan skor' }}</p>
+                </div>
+            </div>
+            <button onclick="this.closest('.relative').remove()" class="w-8 h-8 flex items-center justify-center text-emerald-200/30 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        {{-- Recommended --}}
+        <div class="mb-4">
+            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 bg-emerald-400" style="border-radius: 0;"></span>
+                Batch Direkomendasikan ({{ count($ga['recommended_batches']) }})
+            </h4>
+            <div class="space-y-2">
+                @foreach($ga['recommended_batches'] as $batch)
+                <div class="flex items-center justify-between p-3 border border-emerald-500/15 bg-emerald-500/5" style="border-radius: 0;">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="w-6 h-6 flex items-center justify-center text-[10px] font-black bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0" style="border-radius: 0;">{{ $loop->iteration }}</span>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-emerald-50/90 truncate">{{ $batch['product_name'] }}</p>
+                            <p class="text-[10px] text-emerald-200/40 truncate">Reject: {{ $batch['reject_rate'] ?? 0 }}%</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 shrink-0">
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-200/40 block">FEFO</span>
+                            <span class="text-xs font-bold text-emerald-50/80">{{ $batch['fefo_score'] ?? '-' }}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-200/40 block">Stok</span>
+                            <span class="text-xs font-bold text-emerald-50/80">{{ $batch['stock_score'] ?? '-' }}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-200/40 block">Fitness</span>
+                            <span class="text-xs font-bold text-emerald-300">{{ $batch['fitness_score'] ?? '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Not Recommended --}}
+        @if(!empty($ga['not_recommended_batches']))
+        <div class="mb-4">
+            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-400/60 mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 bg-amber-400" style="border-radius: 0;"></span>
+                Batch Tidak Direkomendasikan ({{ count($ga['not_recommended_batches']) }})
+            </h4>
+            <div class="space-y-2">
+                @foreach($ga['not_recommended_batches'] as $batch)
+                <div class="p-3 border border-amber-500/15 bg-amber-500/5" style="border-radius: 0;">
+                    <div class="flex items-start gap-3">
+                        <span class="w-6 h-6 flex items-center justify-center text-[10px] font-black bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0 mt-0.5" style="border-radius: 0;">{{ $loop->iteration }}</span>
+                        <div>
+                            <p class="text-sm font-bold text-emerald-50/90">{{ $batch['product_name'] }}</p>
+                            <p class="text-[10px] text-amber-300/80 mt-1">{{ $batch['reason'] }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- Remaining Stock --}}
+        @if(!empty($ga['remaining_stock']))
+        <div>
+            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 bg-blue-400" style="border-radius: 0;"></span>
+                Simulasi Sisa Stok
+            </h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                @foreach($ga['remaining_stock'] as $stock)
+                <div class="p-2 border border-emerald-500/10 bg-emerald-500/5" style="border-radius: 0;">
+                    <p class="text-[10px] font-bold text-emerald-50/70 truncate" title="{{ $stock['name'] }}">{{ $stock['name'] }}</p>
+                    <p class="text-xs font-black {{ $stock['remaining_stock'] <= 0 ? 'text-red-400' : 'text-emerald-300' }}">{{ number_format($stock['remaining_stock'], 2) }} <span class="text-[9px] font-normal text-emerald-200/40">{{ $stock['unit'] }}</span></p>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+        <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
+    </div>
+    @endif
+
     {{-- STATS --}}
     @php
         $queueCount = $statusCounts['pending'] ?? $productions->whereIn('status', ['pending','draft'])->count();
@@ -133,7 +234,7 @@
     {{-- MAIN CONTENT --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {{-- LEFT: Production Queue --}}
+        {{-- LEFT: Production Queue / Schedule Recommendations --}}
         <div class="lg:col-span-2 space-y-6">
             <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
                 <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
@@ -143,8 +244,12 @@
                             <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
                         </div>
                         <div>
-                            <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Antrean Produksi</h3>
-                            <p class="text-xs text-emerald-200/40">Daftar batch yang belum dijadwalkan</p>
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">
+                                @if($productions->isNotEmpty()) Antrean Produksi @else Rekomendasi Jadwal @endif
+                            </h3>
+                            <p class="text-xs text-emerald-200/40">
+                                @if($productions->isNotEmpty()) Daftar batch yang belum dijadwalkan @else Hasil Algoritma Genetika @endif
+                            </p>
                         </div>
                     </div>
                     <div class="flex gap-2">
@@ -313,6 +418,66 @@
                         </div>
                     </div>
                 </form>
+                @elseif(isset($schedulings) && $schedulings->isNotEmpty())
+                @php
+                    $schedRec = $schedulings->where('is_recommended', true)->sortBy('priority_order');
+                    $schedNotRec = $schedulings->where('is_recommended', false);
+                @endphp
+                <div class="overflow-x-auto">
+                    <table class="w-full hybrid-table">
+                        <thead>
+                            <tr>
+                                <th class="px-5 py-4 text-left w-12">#</th>
+                                <th class="px-5 py-4 text-left">Produk</th>
+                                <th class="px-5 py-4 text-left">Qty Rekomendasi</th>
+                                <th class="px-5 py-4 text-left">Tanggal</th>
+                                <th class="px-5 py-4 text-left">Prioritas</th>
+                                <th class="px-5 py-4 text-left">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-emerald-500/10">
+                            @forelse($schedRec as $s)
+                            <tr class="group">
+                                <td class="px-5 py-4">
+                                    <span class="text-sm font-bold text-emerald-50/90">{{ $s->priority_order }}</span>
+                                </td>
+                                <td class="px-5 py-4 text-sm text-emerald-200/60">{{ $s->product->name ?? 'Unknown' }}</td>
+                                <td class="px-5 py-4">
+                                    <span class="text-sm font-bold text-emerald-50/90">{{ $s->recommended_quantity }}</span>
+                                    <span class="text-xs text-emerald-200/40">batch</span>
+                                </td>
+                                <td class="px-5 py-4 text-sm text-emerald-200/60">
+                                    {{ $s->recom_date ? \Carbon\Carbon::parse($s->recom_date)->format('d M Y') : '-' }}
+                                </td>
+                                <td class="px-5 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/20" style="border-radius: 0;">
+                                        <span class="w-1.5 h-1.5" style="background: #34D399; border-radius: 0;"></span>
+                                        Rekomendasi
+                                    </span>
+                                </td>
+                                <td class="px-5 py-4">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-300 border border-blue-500/20" style="border-radius: 0;">
+                                        <span class="w-1.5 h-1.5" style="background: #60A5FA; border-radius: 0;"></span>
+                                        Draft
+                                    </span>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6" class="px-5 py-8 text-center text-emerald-200/40 text-xs">Tidak ada rekomendasi.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                @if($schedNotRec->isNotEmpty())
+                <div class="px-6 py-3 border-t border-amber-500/10 bg-amber-500/5">
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-amber-400/60 mb-2">Tidak Direkomendasikan ({{ $schedNotRec->count() }})</p>
+                    @foreach($schedNotRec as $s)
+                    <p class="text-[10px] text-amber-300/70 mt-1">• {{ $s->product->name ?? 'Unknown' }} — {{ $s->rejection_reason }}</p>
+                    @endforeach
+                </div>
+                @endif
                 @else
                 <div class="px-6 py-16 text-center">
                     <div class="flex flex-col items-center">
