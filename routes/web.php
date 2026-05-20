@@ -49,8 +49,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class)->names('admin.users');
 
         Route::get('productions', [ProductionController::class, 'index'])->name('admin.productions.index');
-        Route::get('productions/{id}', [ProductionController::class, 'show'])->name('admin.productions.show');
-        Route::put('productions/{id}/update-status', [ProductionController::class, 'updateStatus'])->name('admin.productions.update-status');
+        Route::get('productions/{production}', [ProductionController::class, 'show'])->name('admin.productions.show');
+        Route::put('productions/{production}/update-status', [ProductionController::class, 'updateStatus'])->name('admin.productions.update-status');
         
         Route::get('scheduling', [ProductionController::class, 'schedulingIndex'])->name('admin.scheduling.index');
         Route::post('scheduling/generate', [ProductionController::class, 'generateSchedule'])->name('admin.scheduling.generate');
@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/profile', [ProfileController::class, 'update'])->name('operator.profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('operator.profile.password');
 
-        Route::patch('productions/{id}/status', [ProductionController::class, 'updateStatus'])->name('operator.productions.updateStatus');
+        Route::patch('productions/{production}/status', [ProductionController::class, 'updateStatus'])->name('operator.productions.updateStatus');
         Route::get('productions/{id}/recipe', [ProductionController::class, 'getRecipeByProduct'])->name('operator.productions.get-recipe');
         Route::resource('productions', ProductionController::class)->names('operator.productions');
         Route::resource('qc', QCController::class)->names('operator.qc');

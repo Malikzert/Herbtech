@@ -46,7 +46,15 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'unit' => 'nullable|string|max:50',
             'category' => 'nullable|string|max:100',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('image'), $filename);
+            $validated['image'] = $filename;
+        }
 
         Product::create($validated);
 
@@ -54,29 +62,44 @@ class ProductController extends Controller
             ->with('success', 'Produk berhasil dibuat.');
     }
 
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $product = Product::findOrFail($id);
+        if (request()->wantsJson()) {
+            $product->loadMissing('recipes.rawMaterial');
+            return response()->json([
+                'success' => true,
+                'data' => $product,
+            ]);
+        }
+
         return view('admin.products.show', compact('product'));
     }
 
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        $product = Product::findOrFail($id);
         return view('admin.products.edit', compact('product'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        $product = Product::findOrFail($id);
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'sku_code' => ['required', 'string', 'max:100', Rule::unique('products')->ignore($product->id)],
             'description' => 'nullable|string',
             'unit' => 'nullable|string|max:50',
             'category' => 'nullable|string|max:100',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($product->image && file_exists(public_path('image/' . $product->image))) {
+                @unlink(public_path('image/' . $product->image));
+            }
+            $image = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('image'), $filename);
+            $validated['image'] = $filename;
+        }
 
         $product->update($validated);
 
@@ -84,9 +107,8 @@ class ProductController extends Controller
             ->with('success', 'Produk berhasil diperbarui.');
     }
 
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        $product = Product::findOrFail($id);
         $product->delete();
 
         return redirect()->route('admin.products.index')

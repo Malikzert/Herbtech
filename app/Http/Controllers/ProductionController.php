@@ -113,22 +113,26 @@ class ProductionController extends Controller
             ->with('success', 'Produksi berhasil ' . ($status === 'in_progress' ? 'dimulai.' : 'disimpan sebagai draft.'));
     }
 
-    public function show(string $id)
+    public function show(Production $production)
     {
-        $production = Production::with('product', 'user', 'productionMaterials.rawMaterial', 'qualityControls')
-            ->findOrFail($id);
-
         if (!auth()->user()->can('admin') && $production->user_id !== auth()->id()) {
             abort(403);
+        }
+
+        if (request()->wantsJson()) {
+            $production->loadMissing('product', 'user', 'productionMaterials.rawMaterial', 'qualityControls');
+            return response()->json([
+                'success' => true,
+                'data' => $production,
+            ]);
         }
 
         $view = auth()->user()->can('admin') ? 'admin.productions.show' : 'operator.productions.show';
         return view($view, compact('production'));
     }
 
-    public function edit(string $id)
+    public function edit(Production $production)
     {
-        $production = Production::findOrFail($id);
 
         if (!auth()->user()->can('admin') && $production->user_id !== auth()->id()) {
             abort(403);
@@ -143,16 +147,15 @@ class ProductionController extends Controller
         return view('operator.productions.edit', compact('production', 'products'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Production $production)
     {
-        $production = Production::findOrFail($id);
 
         if (!auth()->user()->can('admin') && $production->user_id !== auth()->id()) {
             abort(403);
         }
 
         $validated = $request->validate([
-            'batch_number' => 'required|string|max:100|unique:productions,batch_number,' . $id,
+            'batch_number' => 'required|string|max:100|unique:productions,batch_number,' . $production->id,
             'product_id' => 'required|exists:products,id',
             'target_quantity' => 'required|integer|min:1',
             'actual_quantity' => 'nullable|integer|min:0',
@@ -174,10 +177,9 @@ class ProductionController extends Controller
             ->with('success', 'Produksi berhasil diperbarui.');
     }
 
-    public function updateStatus(Request $request, string $id)
+    public function updateStatus(Request $request, Production $production)
     {
-        $production = Production::with('productionMaterials.rawMaterial', 'product.recipes.rawMaterial')
-            ->findOrFail($id);
+        $production->loadMissing('productionMaterials.rawMaterial', 'product.recipes.rawMaterial');
 
         if (!auth()->user()->can('admin') && $production->user_id !== auth()->id()) {
             abort(403);
@@ -510,9 +512,8 @@ class ProductionController extends Controller
         return back()->with('error', $msg);
     }
 
-    public function destroy(string $id)
+    public function destroy(Production $production)
     {
-        $production = Production::findOrFail($id);
 
         if (!auth()->user()->can('admin') && $production->user_id !== auth()->id()) {
             abort(403);

@@ -42,7 +42,26 @@
     ::-webkit-scrollbar-thumb:hover { background: rgba(5, 150, 105, 0.5); }
 </style>
 
-<div x-data="{ showModal: false, modalMode: 'create', selectedProduct: {}, catOpen: false, catSelected: '{{ request('category') }}', catLabel: '{{ request('category') ?: 'Semua Kategori' }}' }">
+<div x-data="{ showModal: false, modalMode: 'create', selectedProduct: {},
+    detailModalOpen: false, detailData: null, detailLoading: false,
+    catOpen: false, catSelected: '{{ request('category') }}', catLabel: '{{ request('category') ?: 'Semua Kategori' }}',
+    viewMode: (localStorage.getItem('adminViewMode') || 'list'),
+    init() {
+        window.addEventListener('admin-view-change', (e) => { this.viewMode = e.detail; });
+    },
+    openDetail(id) {
+        this.detailLoading = true;
+        this.detailData = null;
+        this.detailModalOpen = true;
+        fetch('/admin/products/' + id, { headers: { 'Accept': 'application/json' } })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) { this.detailData = res.data; }
+                this.detailLoading = false;
+            })
+            .catch(() => { this.detailLoading = false; });
+    }
+}">
 
     {{-- STAT ROW --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -206,8 +225,8 @@
         </div>
     </div>
 
-    {{-- TABLE CARD --}}
-    <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
+    {{-- TABLE VIEW --}}
+    <div x-show="viewMode === 'list'" class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
         <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
         <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
             <div class="flex items-center gap-3">
@@ -261,6 +280,11 @@
                         <td class="px-6 py-4 text-sm text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">{{ $product->unit ?? '-' }}</td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-1">
+                                <button @click="openDetail({{ $product->id }})"
+                                    class="w-9 h-9 flex items-center justify-center text-emerald-200/40 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all duration-200"
+                                    title="Lihat Detail">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
                                 <button @click="selectedProduct = {{ Js::from($product) }}; showModal = true; modalMode = 'edit'"
                                     class="w-9 h-9 flex items-center justify-center text-emerald-200/40 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all duration-200"
                                     title="Edit">
@@ -291,6 +315,81 @@
             </table>
         </div>
 
+        @if($products->hasPages())
+        <div class="px-6 py-4 border-t border-emerald-500/10 bg-emerald-500/5">
+            {{ $products->links() }}
+        </div>
+        @endif
+        <div class="absolute bottom-0 right-0 w-16 h-[2px] bg-emerald-500/25"></div>
+        <div class="absolute bottom-0 right-0 w-[2px] h-16 bg-emerald-500/25"></div>
+    </div>
+
+    {{-- WIDGET VIEW --}}
+    <div x-show="viewMode === 'widget'" style="display: none;" class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
+        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Daftar Produk</h3>
+                    <p class="text-xs text-emerald-200/40">{{ $products->total() }} item</p>
+                </div>
+            </div>
+        </div>
+        <div class="widget-grid">
+            @forelse($products as $product)
+            <div class="widget-card cursor-pointer" @click="openDetail({{ $product->id }})">
+                <div class="widget-card-header">
+                    <img src="{{ $product->image ? asset('image/' . $product->image) : asset('image/(defaultPRK).png') }}" alt="{{ $product->name }}">
+                    @if($product->category)
+                    <span class="widget-card-badge" style="background:rgba(52,211,153,0.2);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">{{ $product->category }}</span>
+                    @endif
+                </div>
+                <div class="widget-card-body">
+                    <h3 class="widget-card-title">{{ $product->name }}</h3>
+                    <p class="widget-card-subtitle">{{ $product->sku_code }}</p>
+                    <div class="widget-card-details">
+                        @if($product->unit)
+                        <span class="widget-card-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                            {{ $product->unit }}
+                        </span>
+                        @endif
+                        @if($product->description)
+                        <span class="widget-card-detail" title="{{ $product->description }}">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Deskripsi
+                        </span>
+                        @endif
+                    </div>
+                    <div class="widget-card-spacer"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="widget-card-status" style="background:rgba(52,211,153,0.15);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">
+                            <span class="widget-card-status-dot" style="background:#34d399"></span>Aktif
+                        </span>
+                        <div class="widget-card-actions" style="border:none;margin:0;padding:0">
+                            <button @click.stop="selectedProduct = {{ Js::from($product) }}; showModal = true; modalMode = 'edit'" title="Edit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button @click.stop="selectedProduct = {{ Js::from($product) }}; showModal = true; modalMode = 'delete'" class="btn-delete" title="Hapus">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-full flex flex-col items-center py-20">
+                <div class="w-20 h-20 flex items-center justify-center border border-emerald-500/20 bg-emerald-500/5 mb-5" style="border-radius:0;">
+                    <svg class="w-10 h-10 text-emerald-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+                <p class="text-emerald-200/60 font-bold text-sm uppercase tracking-wider">Belum Ada Produk</p>
+                <p class="text-emerald-200/30 text-xs mt-2">Klik tombol "Tambah Produk" untuk memulai</p>
+            </div>
+            @endforelse
+        </div>
         @if($products->hasPages())
         <div class="px-6 py-4 border-t border-emerald-500/10 bg-emerald-500/5">
             {{ $products->links() }}
@@ -391,6 +490,17 @@
                                     class="hybrid-input w-full px-4 py-3 rounded-sm text-sm"></textarea>
                             </div>
 
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1.5">Gambar</label>
+                                <template x-if="modalMode === 'edit' && selectedProduct.image">
+                                    <div class="mb-2">
+                                        <img :src="'{{ asset('image') }}/' + selectedProduct.image" class="h-20 w-20 object-cover border border-emerald-500/20 rounded-sm">
+                                    </div>
+                                </template>
+                                <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/webp"
+                                    class="hybrid-input w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-sm file:border-0 file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-emerald-500/20 file:text-emerald-300 hover:file:bg-emerald-500/30 file:cursor-pointer cursor-pointer">
+                            </div>
+
                             <div class="flex justify-end gap-3 pt-3 border-t border-emerald-500/15">
                                 <button type="button" @click="showModal = false" class="px-5 py-2.5 bg-emerald-500/5 border border-emerald-500/25 text-emerald-200/60 hover:text-emerald-200 font-bold text-xs uppercase tracking-wider rounded-sm hover:bg-emerald-500/10 transition-all">Batal</button>
                                 <button type="submit" class="px-5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider shadow-lg"
@@ -399,6 +509,96 @@
                                         onmouseout="this.style.background='linear-gradient(135deg, #059669 0%, #047857 100%)'; this.style.boxShadow='0 0 20px rgba(5,150,105,0.2)'">Simpan</button>
                             </div>
                         </form>
+                    </template>
+                </div>
+                <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+                <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
+            </div>
+        </div>
+    </div>
+
+    {{-- DETAIL MODAL --}}
+    <div x-show="detailModalOpen" x-transition.opacity class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+        <div class="flex min-h-screen items-center justify-center p-4">
+            <div x-show="detailModalOpen" @click="detailModalOpen = false" class="fixed inset-0 bg-black/80 backdrop-blur-sm"></div>
+
+            <div x-show="detailModalOpen" @click.stop
+                class="relative w-full max-w-lg rounded-sm border border-emerald-500/30 bg-emerald-900/95 backdrop-blur-xl shadow-[0_0_60px_rgba(5,150,105,0.15)]">
+                <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+
+                <div class="flex justify-between items-center px-6 py-4 border-b border-emerald-500/15">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Detail Produk</h3>
+                            <p class="text-xs text-emerald-200/40">Informasi lengkap produk</p>
+                        </div>
+                    </div>
+                    <button @click="detailModalOpen = false" class="w-8 h-8 flex items-center justify-center text-emerald-200/30 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div class="px-6 pb-6">
+                    <div x-show="detailLoading" class="flex items-center justify-center py-12">
+                        <svg class="animate-spin h-8 w-8 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+
+                    <template x-if="detailData && !detailLoading">
+                        <div class="space-y-5">
+                            <div class="flex items-center gap-4">
+                                <template x-if="detailData.image">
+                                    <img :src="'{{ asset('image') }}/' + detailData.image" class="w-16 h-16 object-cover border border-emerald-500/20 rounded-sm">
+                                </template>
+                                <template x-if="!detailData.image">
+                                    <div class="w-16 h-16 flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 rounded-sm">
+                                        <svg class="w-8 h-8 text-emerald-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                                    </div>
+                                </template>
+                                <div>
+                                    <h4 class="text-lg font-black text-emerald-50" x-text="detailData.name"></h4>
+                                    <p class="text-xs text-emerald-200/40" x-text="detailData.sku_code || 'Tanpa SKU'"></p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-emerald-500/15">
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Kategori</p>
+                                    <p class="text-sm font-bold text-emerald-50" x-text="detailData.category || '-'"></p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Unit</p>
+                                    <p class="text-sm font-bold text-emerald-50" x-text="detailData.unit || '-'"></p>
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Deskripsi</p>
+                                <p class="text-sm text-emerald-200/80" x-text="detailData.description || 'Tidak ada deskripsi'"></p>
+                            </div>
+
+                            <div class="pt-3 border-t border-emerald-500/15">
+                                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-3">Komposisi Resep</p>
+                                <template x-if="detailData.recipes && detailData.recipes.length > 0">
+                                    <div class="space-y-2">
+                                        <template x-for="(recipe, idx) in detailData.recipes" :key="idx">
+                                            <div class="flex items-center justify-between px-3 py-2 bg-emerald-500/5 border border-emerald-500/10 rounded-sm">
+                                                <span class="text-sm font-bold text-emerald-50" x-text="recipe.raw_material?.name || 'Unknown'"></span>
+                                                <span class="text-xs font-mono text-emerald-200/60" x-text="recipe.quantity_needed + ' ' + (recipe.unit || '')"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <template x-if="!detailData.recipes || detailData.recipes.length === 0">
+                                    <p class="text-xs text-emerald-200/40 italic">Belum ada resep untuk produk ini</p>
+                                </template>
+                            </div>
+                        </div>
                     </template>
                 </div>
                 <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>

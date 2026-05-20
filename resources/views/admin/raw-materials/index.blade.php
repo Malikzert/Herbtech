@@ -58,7 +58,24 @@
 
 <div x-data="{ 
     showModal: false, modalMode: 'create', selectedMaterial: {},
-    typeOpen: false, typeSelected: '{{ request('type') }}', typeLabel: '{{ request('type') ? ucfirst(request('type')) : 'Semua Tipe' }}'
+    detailModalOpen: false, detailData: null, detailLoading: false,
+    typeOpen: false, typeSelected: '{{ request('type') }}', typeLabel: '{{ request('type') ? ucfirst(request('type')) : 'Semua Tipe' }}',
+    viewMode: (localStorage.getItem('adminViewMode') || 'list'),
+    init() {
+        window.addEventListener('admin-view-change', (e) => { this.viewMode = e.detail; });
+    },
+    openDetail(id) {
+        this.detailLoading = true;
+        this.detailData = null;
+        this.detailModalOpen = true;
+        fetch('/admin/raw-materials/' + id, { headers: { 'Accept': 'application/json' } })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) { this.detailData = res.data; }
+                this.detailLoading = false;
+            })
+            .catch(() => { this.detailLoading = false; });
+    }
 }">
 
     {{-- STAT ROW --}}
@@ -224,8 +241,8 @@
         </div>
     </div>
 
-    {{-- TABLE CARD --}}
-    <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
+    {{-- TABLE VIEW --}}
+    <div x-show="viewMode === 'list'" class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
         <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
         <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
             <div class="flex items-center gap-3">
@@ -314,6 +331,11 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-1">
+                                <button @click="openDetail({{ $material->id }})"
+                                    class="w-9 h-9 flex items-center justify-center text-emerald-200/40 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all duration-200"
+                                    title="Lihat Detail">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
                                 <button @click="selectedMaterial = {{ Js::from($material) }}; showModal = true; modalMode = 'edit'"
                                     class="w-9 h-9 flex items-center justify-center text-emerald-200/40 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all duration-200"
                                     title="Edit">
@@ -344,6 +366,97 @@
             </table>
         </div>
 
+        @if($rawMaterials->hasPages())
+        <div class="px-6 py-4 border-t border-emerald-500/10 bg-emerald-500/5">
+            {{ $rawMaterials->links() }}
+        </div>
+        @endif
+        <div class="absolute bottom-0 right-0 w-16 h-[2px] bg-emerald-500/25"></div>
+        <div class="absolute bottom-0 right-0 w-[2px] h-16 bg-emerald-500/25"></div>
+    </div>
+
+    {{-- WIDGET VIEW --}}
+    <div x-show="viewMode === 'widget'" style="display: none;" class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md shadow-[0_0_30px_rgba(5,150,105,0.08)]">
+        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+        <div class="flex items-center justify-between px-6 py-4 border-b border-emerald-500/15">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Daftar Bahan Baku</h3>
+                    <p class="text-xs text-emerald-200/40">{{ $rawMaterials->total() }} item</p>
+                </div>
+            </div>
+        </div>
+        <div class="widget-grid">
+            @forelse($rawMaterials as $material)
+            <div class="widget-card cursor-pointer" @click="openDetail({{ $material->id }})">
+                <div class="widget-card-header">
+                    <img src="{{ $material->image ? asset('image/' . $material->image) : asset('image/(defaultRAW).jpg') }}" alt="{{ $material->name }}">
+                    @switch($material->type)
+                        @case('herbal')
+                        <span class="widget-card-badge" style="background:rgba(52,211,153,0.2);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">Herbal</span>
+                        @break
+                        @case('packaging')
+                        <span class="widget-card-badge" style="background:rgba(96,165,250,0.2);color:#93c5fd;border:1px solid rgba(96,165,250,0.3)">Packaging</span>
+                        @break
+                        @case('additive')
+                        <span class="widget-card-badge" style="background:rgba(167,139,250,0.2);color:#c4b5fd;border:1px solid rgba(167,139,250,0.3)">Additive</span>
+                        @break
+                    @endswitch
+                </div>
+                <div class="widget-card-body">
+                    <h3 class="widget-card-title">{{ $material->name }}</h3>
+                    <p class="widget-card-subtitle">{{ $material->sku ?? '-' }}</p>
+                    <div class="widget-card-details">
+                        <span class="widget-card-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4"/></svg>
+                            {{ number_format($material->current_stock, 0) }} {{ $material->unit }}
+                        </span>
+                        @if($material->supplier)
+                        <span class="widget-card-detail">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            {{ $material->supplier }}
+                        </span>
+                        @endif
+                    </div>
+                    <div class="widget-card-spacer"></div>
+                    <div class="flex items-center justify-between">
+                        @if($material->current_stock <= 0)
+                        <span class="widget-card-status" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)">
+                            <span class="widget-card-status-dot" style="background:#ef4444"></span>Habis
+                        </span>
+                        @elseif($material->current_stock < ($material->min_stock_level ?? 10))
+                        <span class="widget-card-status" style="background:rgba(245,158,11,0.15);color:#fcd34d;border:1px solid rgba(245,158,11,0.3)">
+                            <span class="widget-card-status-dot" style="background:#f59e0b"></span>Rendah
+                        </span>
+                        @else
+                        <span class="widget-card-status" style="background:rgba(52,211,153,0.15);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">
+                            <span class="widget-card-status-dot" style="background:#34d399"></span>Tersedia
+                        </span>
+                        @endif
+                        <div class="widget-card-actions" style="border:none;margin:0;padding:0">
+                            <button @click.stop="selectedMaterial = {{ Js::from($material) }}; showModal = true; modalMode = 'edit'" title="Edit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                            <button @click.stop="selectedMaterial = {{ Js::from($material) }}; showModal = true; modalMode = 'delete'" class="btn-delete" title="Hapus">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="col-span-full flex flex-col items-center py-20">
+                <div class="w-20 h-20 flex items-center justify-center border border-emerald-500/20 bg-emerald-500/5 mb-5" style="border-radius:0;">
+                    <svg class="w-10 h-10 text-emerald-400/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                </div>
+                <p class="text-emerald-200/60 font-bold text-sm uppercase tracking-wider">Belum Ada Bahan Baku</p>
+                <p class="text-emerald-200/30 text-xs mt-2">Klik tombol "Tambah Bahan" untuk memulai</p>
+            </div>
+            @endforelse
+        </div>
         @if($rawMaterials->hasPages())
         <div class="px-6 py-4 border-t border-emerald-500/10 bg-emerald-500/5">
             {{ $rawMaterials->links() }}
@@ -407,7 +520,7 @@
                     </template>
 
                     <template x-if="modalMode !== 'delete'">
-                        <form :action="modalMode === 'create' ? '{{ route('admin.raw-materials.store') }}' : '/admin/raw-materials/' + selectedMaterial.id" method="POST" class="space-y-4 pt-4">
+                        <form :action="modalMode === 'create' ? '{{ route('admin.products.store') }}' : '/admin/products/' + selectedProduct.id" method="POST" class="space-y-4" enctype="multipart/form-data">
                             @csrf
                             <template x-if="modalMode === 'edit'">
                                 @method('PUT')
@@ -462,6 +575,17 @@
                                 </div>
                             </div>
 
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1.5">Gambar</label>
+                                <template x-if="modalMode === 'edit' && selectedMaterial.image">
+                                    <div class="mb-2">
+                                        <img :src="'{{ asset('image') }}/' + selectedMaterial.image" class="h-20 w-20 object-cover border border-emerald-500/20 rounded-sm">
+                                    </div>
+                                </template>
+                                <input type="file" name="image" accept="image/jpeg,image/png,image/jpg,image/webp"
+                                    class="hybrid-input w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-sm file:border-0 file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-emerald-500/20 file:text-emerald-300 hover:file:bg-emerald-500/30 file:cursor-pointer cursor-pointer">
+                            </div>
+
                             <div class="flex justify-end gap-3 pt-3 border-t border-emerald-500/15">
                                 <button type="button" @click="showModal = false" class="px-5 py-2.5 bg-emerald-500/5 border border-emerald-500/25 text-emerald-200/60 hover:text-emerald-200 font-bold text-xs uppercase tracking-wider rounded-sm hover:bg-emerald-500/10 transition-all">Batal</button>
                                 <button type="submit" class="px-5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider shadow-lg"
@@ -470,6 +594,99 @@
                                         onmouseout="this.style.background='linear-gradient(135deg, #059669 0%, #047857 100%)'; this.style.boxShadow='0 0 20px rgba(5,150,105,0.2)'">Simpan</button>
                             </div>
                         </form>
+                    </template>
+                </div>
+                <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+                <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
+            </div>
+        </div>
+    </div>
+
+    {{-- DETAIL MODAL --}}
+    <div x-show="detailModalOpen" x-transition.opacity class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+        <div class="flex min-h-screen items-center justify-center p-4">
+            <div x-show="detailModalOpen" @click="detailModalOpen = false" class="fixed inset-0 bg-black/80 backdrop-blur-sm"></div>
+
+            <div x-show="detailModalOpen" @click.stop
+                class="relative w-full max-w-lg rounded-sm border border-emerald-500/30 bg-emerald-900/95 backdrop-blur-xl shadow-[0_0_60px_rgba(5,150,105,0.15)]">
+                <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+
+                <div class="flex justify-between items-center px-6 py-4 border-b border-emerald-500/15">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 flex items-center justify-center bg-emerald-500/15 border border-emerald-500/30" style="border-radius: 0;">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Detail Bahan Baku</h3>
+                            <p class="text-xs text-emerald-200/40">Informasi lengkap bahan baku</p>
+                        </div>
+                    </div>
+                    <button @click="detailModalOpen = false" class="w-8 h-8 flex items-center justify-center text-emerald-200/30 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <div class="px-6 pb-6">
+                    <div x-show="detailLoading" class="flex items-center justify-center py-12">
+                        <svg class="animate-spin h-8 w-8 text-emerald-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+
+                    <template x-if="detailData && !detailLoading">
+                        <div class="space-y-5">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <template x-if="detailData.image">
+                                        <img :src="'{{ asset('image') }}/' + detailData.image" class="w-16 h-16 object-cover border border-emerald-500/20 rounded-sm">
+                                    </template>
+                                    <template x-if="!detailData.image">
+                                        <div class="w-16 h-16 flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 rounded-sm">
+                                            <svg class="w-8 h-8 text-emerald-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                                        </div>
+                                    </template>
+                                    <div>
+                                        <h4 class="text-lg font-black text-emerald-50" x-text="detailData.name"></h4>
+                                        <p class="text-xs text-emerald-200/40" x-text="detailData.sku || 'Tanpa SKU'"></p>
+                                    </div>
+                                </div>
+                                <span x-show="detailData.stock_status === 'available'"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 rounded-sm">
+                                    <span class="w-1.5 h-1.5" style="background: #34D399; border-radius: 0;"></span>
+                                    Tersedia
+                                </span>
+                                <span x-show="detailData.stock_status === 'low'"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20 rounded-sm">
+                                    <span class="w-1.5 h-1.5" style="background: #F59E0B; border-radius: 0;"></span>
+                                    Rendah
+                                </span>
+                                <span x-show="detailData.stock_status === 'out'"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-300 border border-red-500/20 rounded-sm">
+                                    <span class="w-1.5 h-1.5" style="background: #EF4444; border-radius: 0;"></span>
+                                    Habis
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-emerald-500/15">
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Supplier</p>
+                                    <p class="text-sm font-bold text-emerald-50" x-text="detailData.supplier || '-'"></p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Tipe</p>
+                                    <p class="text-sm font-bold text-emerald-50 capitalize" x-text="detailData.type || '-'"></p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Sisa Stok</p>
+                                    <p class="text-sm font-bold text-emerald-50" x-text="(detailData.current_stock || 0) + ' ' + (detailData.unit || '')"></p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Min. Stok Level</p>
+                                    <p class="text-sm font-bold text-emerald-50" x-text="detailData.min_stock_level || '0'"></p>
+                                </div>
+                            </div>
+                        </div>
                     </template>
                 </div>
                 <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>

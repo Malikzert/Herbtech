@@ -47,7 +47,15 @@ class RawMaterialController extends Controller
             'current_stock' => 'nullable|integer|min:0',
             'min_stock_level' => 'nullable|integer|min:0',
             'supplier' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('image'), $filename);
+            $validated['image'] = $filename;
+        }
 
         RawMaterial::create($validated);
 
@@ -55,42 +63,56 @@ class RawMaterialController extends Controller
             ->with('success', 'Bahan baku berhasil dibuat.');
     }
 
-    public function show(string $id)
+    public function show(RawMaterial $raw_material)
     {
-        $rawMaterial = RawMaterial::findOrFail($id);
-        return view('admin.raw-materials.show', compact('rawMaterial'));
+        if (request()->wantsJson()) {
+            $raw_material->loadMissing('productionMaterials.rawMaterial', 'recipes');
+            return response()->json([
+                'success' => true,
+                'data' => $raw_material->append('stock_status'),
+            ]);
+        }
+
+        return view('admin.raw-materials.show', compact('raw_material'));
     }
 
-    public function edit(string $id)
+    public function edit(RawMaterial $raw_material)
     {
-        $rawMaterial = RawMaterial::findOrFail($id);
-        return view('admin.raw-materials.edit', compact('rawMaterial'));
+        return view('admin.raw-materials.edit', compact('raw_material'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, RawMaterial $raw_material)
     {
-        $rawMaterial = RawMaterial::findOrFail($id);
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => ['nullable', 'string', 'max:100', Rule::unique('raw_materials')->ignore($rawMaterial->id)],
+            'sku' => ['nullable', 'string', 'max:100', Rule::unique('raw_materials')->ignore($raw_material->id)],
             'type' => 'required|in:herbal,packaging,additive',
             'unit' => 'required|string|max:50',
             'current_stock' => 'nullable|integer|min:0',
             'min_stock_level' => 'nullable|integer|min:0',
             'supplier' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $rawMaterial->update($validated);
+        if ($request->hasFile('image')) {
+            if ($raw_material->image && file_exists(public_path('image/' . $raw_material->image))) {
+                @unlink(public_path('image/' . $raw_material->image));
+            }
+            $image = $request->file('image');
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('image'), $filename);
+            $validated['image'] = $filename;
+        }
 
-        return redirect()->route('admin.raw-materials.show', $rawMaterial->id)
+        $raw_material->update($validated);
+
+        return redirect()->route('admin.raw-materials.show', $raw_material->id)
             ->with('success', 'Bahan baku berhasil diperbarui.');
     }
 
-    public function destroy(string $id)
+    public function destroy(RawMaterial $raw_material)
     {
-        $rawMaterial = RawMaterial::findOrFail($id);
-        $rawMaterial->delete();
+        $raw_material->delete();
 
         return redirect()->route('admin.raw-materials.index')
             ->with('success', 'Bahan baku berhasil dihapus.');

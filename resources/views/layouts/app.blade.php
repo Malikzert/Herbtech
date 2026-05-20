@@ -51,10 +51,150 @@
             -webkit-backdrop-filter: blur(8px);
             transition: background 0.5s ease;
         }
+
+        :root {
+            --valo-brown: #2c1810;
+            --valo-brown-medium: #3d2b1f;
+            --valo-brown-dark: #1a1210;
+            --valo-gold: #8B6914;
+            --valo-tan: #D4B896;
+            --valo-tan-light: #F5EDE0;
+            --valo-accent: #A0845C;
+        }
+
+        /* ===== WIDGET GRID (Operator Theme) ===== */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.25rem;
+            padding: 1.25rem;
+        }
+        .widget-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(61, 43, 31, 0.6);
+            background: rgba(26, 18, 16, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            transition: all 0.35s cubic-bezier(0.19,1,0.22,1);
+            display: flex;
+            flex-direction: column;
+        }
+        .widget-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 
+                0 0 25px rgba(139, 105, 20, 0.35),
+                0 0 60px rgba(139, 105, 20, 0.1),
+                0 0 100px rgba(139, 105, 20, 0.04),
+                0 12px 48px rgba(0, 0, 0, 0.35);
+            border-color: rgba(139, 105, 20, 0.6);
+        }
+        .widget-card-header {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(44,24,16,0.8), rgba(26,18,16,0.6));
+            flex-shrink: 0;
+        }
+        .widget-card-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.19,1,0.22,1);
+        }
+        .widget-card:hover .widget-card-header img {
+            transform: scale(1.1);
+        }
+        .widget-card-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.2rem 0.7rem;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-radius: 0;
+            backdrop-filter: blur(4px);
+        }
+        .widget-card-body {
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .widget-card-title {
+            font-weight: 700;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            line-height: 1.3;
+            margin-bottom: 0.15rem;
+        }
+        .widget-card-subtitle {
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            color: rgba(212,184,150,0.4);
+            margin-bottom: 0.75rem;
+        }
+        .widget-card-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+        .widget-card-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.55rem;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border: 1px solid rgba(61, 43, 31, 0.5);
+            background: rgba(44, 24, 16, 0.4);
+            color: rgba(212,184,150,0.7);
+            border-radius: 0;
+        }
+        .widget-card-detail svg {
+            width: 0.7rem;
+            height: 0.7rem;
+            opacity: 0.6;
+        }
+        .widget-card-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.65rem;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 0;
+        }
+        .widget-card-status-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 0;
+        }
+        .widget-card-spacer {
+            flex: 1;
+        }
     </style>
+    <script>
+        window.adminViewMode = localStorage.getItem('adminViewMode') || 'list';
+    </script>
     @stack('styles')
 </head>
-<body class="bg-wallpaper text-gray-800 antialiased relative" x-data="{ sidebarOpen: false }">
+<body class="bg-wallpaper text-gray-800 antialiased relative" x-data="{ sidebarOpen: false, viewMode: (localStorage.getItem('adminViewMode') || 'list') }"
+      x-init="
+        $watch('viewMode', val => {
+            localStorage.setItem('adminViewMode', val);
+            window.adminViewMode = val;
+            window.dispatchEvent(new CustomEvent('admin-view-change', { detail: val }));
+        });
+      ">
 
     <!-- Global Subtle Overlay -->
     <div class="fixed inset-0 bg-[#0f172a] opacity-10 backdrop-blur-sm z-0 pointer-events-none"></div>
@@ -105,7 +245,7 @@
                     </a>
                 @else
                     <!-- OPERATOR ROLE -->
-                    <div class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1 mt-3 px-2">Operasional</div>
+                    <div class="text-xs font-semibold text-[#D4B896] uppercase tracking-wider mb-1 mt-3 px-2">Operasional</div>
                     <a href="{{ route('operator.dashboard') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.dashboard') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                         <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         Dashboard
@@ -122,7 +262,7 @@
                         <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Quality Control
                     </a>
-                    <div class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1 mt-3 px-2">Informasi</div>
+                    <div class="text-xs font-semibold text-[#D4B896] uppercase tracking-wider mb-1 mt-3 px-2">Informasi</div>
                     <a href="{{ route('operator.raw-materials.index') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.raw-materials.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                         <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                         Monitoring Stok
@@ -132,14 +272,14 @@
                         List Produk
                     </a>
                     <div class="mt-auto pt-3 border-t border-white/10">
-                        <div class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1 px-2">Akun</div>
+                        <div class="text-xs font-semibold text-[#D4B896] uppercase tracking-wider mb-1 px-2">Akun</div>
                         <a href="{{ route('operator.profile.index') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.profile.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                             <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                             Profil Saya
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full flex items-center px-3 py-1.5 rounded-lg text-red-400 hover:bg-red-500/20 hover:text-red-300 transition">
+                            <button type="submit" class="w-full flex items-center px-3 py-1.5 rounded-lg text-[#D4B896]/60 hover:bg-[#D4B896]/10 hover:text-[#D4B896] transition">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                                 Keluar
                             </button>
@@ -161,13 +301,35 @@
                 </div>
                 
                 <div class="flex items-center gap-3">
+                    {{-- View Toggle --}}
+                    <button @click="viewMode = viewMode === 'list' ? 'widget' : 'list'"
+                        class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-white/5 transition-all duration-200 group"
+                        title="Ganti tampilan konten">
+                        <svg x-show="viewMode === 'list'" class="w-4 h-4 text-[#D4B896]/60 group-hover:text-[#D4B896] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                        </svg>
+                        <svg x-show="viewMode === 'widget'" class="w-4 h-4 text-[#D4B896]/60 group-hover:text-[#D4B896] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                        </svg>
+                        <div class="relative w-8 h-4 rounded-full transition-colors duration-300" :class="viewMode === 'widget' ? 'bg-[#8B6914]' : 'bg-white/15'">
+                            <div x-show="viewMode === 'list'" class="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white/80 shadow-md transition-all"></div>
+                            <div x-show="viewMode === 'widget'" class="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-white/80 shadow-md transition-all" style="display:none"></div>
+                        </div>
+                        <span class="text-[9px] font-bold uppercase tracking-wider text-[#D4B896]/50 group-hover:text-[#D4B896]/80 transition-colors hidden sm:inline">
+                            <span x-show="viewMode === 'list'">Daftar</span>
+                            <span x-show="viewMode === 'widget'" style="display:none">Widget</span>
+                        </span>
+                    </button>
+
+                    <div class="w-px h-5 bg-white/10"></div>
+
                     <div class="relative" x-data="{ userMenu: false }">
                         <button @click="userMenu = !userMenu" class="flex items-center space-x-2 focus:outline-none p-1.5 rounded-xl hover:bg-gray-100/50 transition">
                             <div class="text-right hidden md:block">
                                 <p class="text-sm font-bold text-white leading-tight">{{ auth()->check() ? auth()->user()->name : 'User' }}</p>
-                                <p class="text-xs {{ (auth()->check() && auth()->user()->role == 'operator') ? 'text-blue-200' : 'text-emerald-200' }} font-medium">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Role' }}</p>
+                                <p class="text-xs {{ (auth()->check() && auth()->user()->role == 'operator') ? 'text-[#D4B896]' : 'text-emerald-200' }} font-medium">{{ auth()->check() ? ucfirst(auth()->user()->role) : 'Role' }}</p>
                             </div>
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ (auth()->check() && auth()->user()->role == 'operator') ? 'from-blue-600 to-blue-800' : 'from-emerald-400 to-emerald-600' }} text-white flex items-center justify-center font-bold shadow-md border-2 border-white text-sm">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br {{ (auth()->check() && auth()->user()->role == 'operator') ? 'from-[#8B6914] to-[#5C4A1E]' : 'from-emerald-400 to-emerald-600' }} text-white flex items-center justify-center font-bold shadow-md border-2 border-white text-sm">
                                 {{ auth()->check() ? substr(auth()->user()->name, 0, 1) : 'U' }}
                             </div>
                         </button>
@@ -226,7 +388,7 @@
             ctx.scale(size, size);
             ctx.globalAlpha = alpha;
 
-            ctx.shadowColor = 'rgba(5, 150, 105, 0.3)';
+            ctx.shadowColor = 'rgba(139, 105, 20, 0.3)';
             ctx.shadowBlur = 6;
 
             ctx.beginPath();
@@ -267,11 +429,12 @@
             var animId;
 
             var colors = [
-                'rgba(5,150,105,0.6)',
-                'rgba(34,197,94,0.5)',
-                'rgba(22,163,74,0.5)',
-                'rgba(21,128,61,0.4)',
-                'rgba(5,150,105,0.35)',
+                'rgba(139,105,20,0.5)',
+                'rgba(212,184,150,0.35)',
+                'rgba(160,132,92,0.45)',
+                'rgba(107,87,64,0.4)',
+                'rgba(245,237,224,0.25)',
+                'rgba(92,74,30,0.35)',
             ];
 
             function resize() {

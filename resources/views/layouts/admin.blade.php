@@ -238,6 +238,153 @@
             48%{text-shadow:1px 0 #00ff41,-1px 0 #f0f}
             60%{text-shadow:none}
         }
+
+        /* ===== WIDGET GRID ===== */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.25rem;
+            padding: 1.25rem;
+        }
+        .widget-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(5, 150, 105, 0.2);
+            background: rgba(6, 78, 59, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            transition: all 0.35s cubic-bezier(0.19,1,0.22,1);
+            display: flex;
+            flex-direction: column;
+        }
+        .widget-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 
+                0 0 25px rgba(5, 150, 105, 0.4),
+                0 0 60px rgba(5, 150, 105, 0.12),
+                0 0 100px rgba(5, 150, 105, 0.05),
+                0 12px 48px rgba(0, 0, 0, 0.25);
+            border-color: rgba(5, 150, 105, 0.6);
+        }
+        .widget-card-header {
+            position: relative;
+            height: 160px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(5,150,105,0.15), rgba(6,78,59,0.3));
+            flex-shrink: 0;
+        }
+        .widget-card-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.19,1,0.22,1);
+        }
+        .widget-card:hover .widget-card-header img {
+            transform: scale(1.1);
+        }
+        .widget-card-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.2rem 0.7rem;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-radius: 0;
+            backdrop-filter: blur(4px);
+        }
+        .widget-card-body {
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .widget-card-title {
+            font-weight: 700;
+            color: rgba(255,255,255,0.92);
+            font-size: 0.9rem;
+            line-height: 1.3;
+            margin-bottom: 0.15rem;
+        }
+        .widget-card-subtitle {
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 0.75rem;
+        }
+        .widget-card-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+        .widget-card-detail {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.55rem;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border: 1px solid rgba(5, 150, 105, 0.18);
+            background: rgba(5, 150, 105, 0.08);
+            color: rgba(255,255,255,0.6);
+            border-radius: 0;
+        }
+        .widget-card-detail svg {
+            width: 0.7rem;
+            height: 0.7rem;
+            opacity: 0.6;
+        }
+        .widget-card-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.65rem;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 0;
+        }
+        .widget-card-status-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 0;
+        }
+        .widget-card-spacer {
+            flex: 1;
+        }
+        .widget-card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.15rem;
+            padding-top: 0.75rem;
+            margin-top: 0.75rem;
+            border-top: 1px solid rgba(5, 150, 105, 0.1);
+        }
+        .widget-card-actions button {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.25);
+            transition: all 0.2s ease;
+            border-radius: 0;
+            cursor: pointer;
+        }
+        .widget-card-actions button:hover {
+            color: rgba(255,255,255,0.8);
+            background: rgba(5, 150, 105, 0.15);
+        }
+        .widget-card-actions .btn-delete:hover {
+            color: #ef4444 !important;
+            background: rgba(239, 68, 68, 0.15) !important;
+        }
     </style>
     @stack('styles')
 </head>
@@ -259,9 +406,20 @@
     }
 @endphp
 <script>window.__flash=@json($__flash);</script>
-<body class="text-gray-800 antialiased" x-data="{ sidebarOpen: false, userMenu: false, notif: { show: false, flavor: 'created', message: '' } }"
+<body class="text-gray-800 antialiased" x-data="{ 
+    sidebarOpen: false, 
+    userMenu: false, 
+    notif: { show: false, flavor: 'created', message: '' },
+    viewMode: localStorage.getItem('adminViewMode') || 'list'
+}"
       x-on:notify.window="notif.show = true; notif.flavor = $event.detail.flavor || 'created'; notif.message = $event.detail.message; setTimeout(function(){ notif.show = false; }, 5000);"
       x-init="
+        window.adminViewMode = localStorage.getItem('adminViewMode') || 'list';
+        $watch('viewMode', val => {
+            localStorage.setItem('adminViewMode', val);
+            window.adminViewMode = val;
+            window.dispatchEvent(new CustomEvent('admin-view-change', { detail: val }));
+        });
         (function() {
             var f = window.__flash || {};
             if (f.success || f.error || f.warning || f.info) {
@@ -280,15 +438,15 @@
                 <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-50 w-64 glass-sidebar text-white transition-transform duration-300 ease-in-out lg:static lg:translate-x-0">
                     <div class="relative h-full">
                         <canvas id="sidebarStars" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
-                        <div class="relative z-10">
-                            <div class="flex items-center justify-center h-16 border-b border-white/10">
+                        <div class="relative z-10 flex flex-col h-full">
+                            <div class="flex items-center justify-center h-16 border-b border-white/10 shrink-0">
                                 <div class="flex items-center gap-3">
                                     <img src="{{ asset('image/logoht.png') }}" alt="Logo" class="w-8 h-8 object-contain filter brightness-0 invert">
                                     <span class="text-xl font-bold tracking-wider">HerbTech</span>
                                 </div>
                             </div>
 
-                            <nav class="mt-3 px-4 space-y-1">
+                            <nav class="flex-1 mt-3 px-4 space-y-1 overflow-y-auto overflow-x-hidden">
                                 <p class="text-xs font-semibold text-emerald-200 uppercase tracking-wider mb-2 px-4 text-shadow-sm">Menu Utama</p>
                                 
                                 <a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.dashboard') ? 'text-emerald-300' : '' }}">
@@ -347,6 +505,7 @@
                                     <span class="text-shadow-sm">Profil Saya</span>
                                 </a>
                             </nav>
+
                         </div>
                     </div>
                 </aside>
@@ -364,7 +523,29 @@
                                 <h2 class="text-xl font-bold text-white ml-4 lg:ml-5 text-glow-green">@yield('header', 'Dashboard')</h2>
                             </div>
                             
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-2">
+                                {{-- View Toggle --}}
+                                <button @click="viewMode = viewMode === 'list' ? 'widget' : 'list'"
+                                    class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all duration-200 group"
+                                    title="Ganti tampilan konten">
+                                    <svg x-show="viewMode === 'list'" class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                    </svg>
+                                    <svg x-show="viewMode === 'widget'" class="w-5 h-5 text-white/60 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                                    </svg>
+                                    <div class="relative w-9 h-4 rounded-full transition-colors duration-300" :class="viewMode === 'widget' ? 'bg-emerald-500' : 'bg-white/20'">
+                                        <div x-show="viewMode === 'list'" class="absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-md transition-all"></div>
+                                        <div x-show="viewMode === 'widget'" class="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-white shadow-md transition-all" style="display:none"></div>
+                                    </div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 group-hover:text-white/80 transition-colors hidden sm:inline">
+                                        <span x-show="viewMode === 'list'">Daftar</span>
+                                        <span x-show="viewMode === 'widget'" style="display:none">Widget</span>
+                                    </span>
+                                </button>
+
+                                <div class="w-px h-6 bg-white/10 mx-1"></div>
+
                                 <div class="relative" x-data>
                                     <button @click="userMenu = !userMenu" class="flex items-center space-x-3 focus:outline-none p-2 rounded-xl hover:bg-white/10 transition">
                                         <div class="text-right hidden md:block">

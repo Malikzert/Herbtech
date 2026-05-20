@@ -24,10 +24,9 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(to left,
-                rgba(5, 80, 120, 0.30) 0%,
-                rgba(0, 130, 165, 0.18) 40%,
-                rgba(0, 180, 195, 0.08) 75%,
-                rgba(255, 255, 255, 0.03) 100%
+                rgba(5, 80, 120, 0.65) 0%,
+                rgba(5, 80, 120, 0.45) 30%,
+                rgba(5, 80, 120, 0.25) 100%
             );
             clip-path: url(#waveClip);
             pointer-events: none;
@@ -53,6 +52,10 @@
             -webkit-filter: blur(6px);
         }
 
+        .ocean-blur {
+            display: none;
+        }
+
         .shimmer-svg {
             position: absolute;
             top: -30%;
@@ -60,7 +63,7 @@
             width: 150%;
             height: 160%;
             pointer-events: none;
-            z-index: 3;
+            z-index: 4;
             animation: shimmerSweep 18s ease-in-out infinite;
         }
 

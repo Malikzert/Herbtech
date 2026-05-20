@@ -1,95 +1,95 @@
 @extends('layouts.app')
 
 @section('title', 'Detail QC')
-@section('header', 'Detail Quality Control #' . $qc->id)
+@section('header', 'DETAIL QUALITY CONTROL #' . $qc->id)
 
 @section('content')
 <div class="space-y-6">
     <div class="flex justify-between items-center">
-        <a href="{{ route('operator.qc.index') }}" class="text-blue-800 hover:text-blue-900 font-medium flex items-center gap-2">
+        <a href="{{ route('operator.qc.index') }}" class="text-[#D4B896] hover:text-[#F5EDE0] font-medium flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Daftar
         </a>
-        <a href="{{ route('operator.qc.edit', $qc->id) }}" class="px-4 py-2 bg-amber-500 text-white font-medium rounded-lg hover:bg-amber-600 transition">Edit QC</a>
+        <a href="{{ route('operator.qc.edit', $qc->id) }}" class="px-4 py-2 bg-[#8B6914] hover:bg-[#A0845C] text-white font-medium transition">Edit QC</a>
     </div>
 
-    <div class="bg-white/60 backdrop-blur-md rounded-xl border border-white/20 p-6 shadow-sm glass-card">
-        <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mb-4">Informasi Inspeksi</h3>
-        
+    <div class="bg-[#1a1210]/80 backdrop-blur-md border border-[#3d2b1f]/50 p-6">
+        <h3 class="text-lg font-bold text-[#D4B896] border-b border-[#3d2b1f] pb-4 mb-4 uppercase tracking-[0.05em]">Informasi Inspeksi</h3>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-                <p class="text-sm text-gray-500">Batch Produksi</p>
-                <p class="text-base font-semibold text-gray-900">{{ $qc->production->batch_number ?? '-' }}</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740]">Batch Produksi</p>
+                <p class="text-base font-semibold text-white">{{ $qc->production->batch_number ?? '-' }}</p>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Produk</p>
-                <p class="text-base font-semibold text-gray-900">{{ $qc->production->product->name ?? '-' }}</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740]">Produk</p>
+                <p class="text-base font-semibold text-[#D4B896]">{{ $qc->production->product->name ?? '-' }}</p>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Inspektur</p>
-                <p class="text-base font-semibold text-gray-900">{{ $qc->inspector_name }}</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740]">Inspektur</p>
+                <p class="text-base font-semibold text-white">{{ $qc->inspector_name }}</p>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Waktu Inspeksi</p>
-                <p class="text-base font-semibold text-gray-900">{{ $qc->inspected_at->format('d M Y H:i') }}</p>
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740]">Waktu Inspeksi</p>
+                <p class="text-base font-semibold text-[#D4B896]">{{ $qc->inspected_at->format('d M Y H:i') }}</p>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Status</p>
-                <p class="text-base font-semibold text-gray-900 mt-1">
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740]">Status</p>
+                <p class="text-base font-semibold mt-1">
                     @switch($qc->status)
                         @case('passed')
-                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-200 text-blue-900">Passed</span>
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#A0845C]/20 text-[#F5EDE0] border border-[#A0845C]/30">Passed</span>
                             @break
                         @case('partial_reject')
-                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Partial Reject</span>
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#8B6914]/20 text-[#D4B896] border border-[#8B6914]/30">Partial Reject</span>
                             @break
                         @case('full_reject')
-                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Full Reject</span>
+                            <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#3d2b1f] text-[#6B5740] border border-[#3d2b1f]">Full Reject</span>
                             @break
                     @endswitch
                 </p>
             </div>
             <div>
-                <p class="text-sm text-gray-500">Tindakan Lanjut</p>
-                <p class="text-base font-semibold text-gray-900 mt-1">
-                    <span class="px-2 py-1 text-xs rounded-full {{ $qc->action == 'release' ? 'bg-blue-200 text-blue-900' : ($qc->action == 'rework' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700') }}">
+                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740]">Tindakan Lanjut</p>
+                <p class="text-base font-semibold mt-1">
+                    <span class="inline-block px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] {{ $qc->action == 'release' ? 'bg-[#A0845C]/20 text-[#F5EDE0] border border-[#A0845C]/30' : ($qc->action == 'rework' ? 'bg-[#8B6914]/20 text-[#D4B896] border border-[#8B6914]/30' : 'bg-[#3d2b1f] text-[#6B5740] border border-[#3d2b1f]') }}">
                         {{ ucfirst($qc->action) }}
                     </span>
                 </p>
             </div>
         </div>
 
-        <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mt-8 mb-4">Hasil Kuantitatif</h3>
+        <h3 class="text-lg font-bold text-[#D4B896] border-b border-[#3d2b1f] pb-4 mt-8 mb-4 uppercase tracking-[0.05em]">Hasil Kuantitatif</h3>
         <div class="grid grid-cols-3 gap-6 text-center">
-            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                <p class="text-sm text-gray-500 font-medium">Total Diperiksa</p>
-                <p class="text-3xl font-bold text-gray-800 mt-2">{{ $qc->total_inspected }}</p>
+            <div class="bg-[#2c1810]/60 border border-[#3d2b1f] p-4">
+                <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-[#6B5740]">Total Diperiksa</p>
+                <p class="text-3xl font-black text-white mt-2">{{ $qc->total_inspected }}</p>
             </div>
-            <div class="bg-blue-100 rounded-xl p-4 border border-blue-200">
-                <p class="text-sm text-blue-800 font-medium">Passed</p>
-                <p class="text-3xl font-bold text-blue-900 mt-2">{{ $qc->total_passed }}</p>
+            <div class="bg-[#A0845C]/10 border border-[#A0845C]/30 p-4">
+                <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-[#A0845C]">Passed</p>
+                <p class="text-3xl font-black text-[#F5EDE0] mt-2">{{ $qc->total_passed }}</p>
             </div>
-            <div class="bg-red-50 rounded-xl p-4 border border-red-100">
-                <p class="text-sm text-red-600 font-medium">Rejected</p>
-                <p class="text-3xl font-bold text-red-700 mt-2">{{ $qc->total_rejected }}</p>
+            <div class="bg-[#8B6914]/10 border border-[#8B6914]/30 p-4">
+                <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-[#8B6914]">Rejected</p>
+                <p class="text-3xl font-black text-[#D4B896] mt-2">{{ $qc->total_rejected }}</p>
             </div>
         </div>
 
         @if($qc->qcDefects && $qc->qcDefects->count() > 0)
-        <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mt-8 mb-4">Rincian Cacat</h3>
-        <div class="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-            <table class="w-full text-left text-sm text-gray-600">
-                <thead class="bg-gray-100 text-gray-700">
+        <h3 class="text-lg font-bold text-[#D4B896] border-b border-[#3d2b1f] pb-4 mt-8 mb-4 uppercase tracking-[0.05em]">Rincian Cacat</h3>
+        <div class="bg-[#2c1810]/60 border border-[#3d2b1f] overflow-hidden">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-[#2c1810] border-b border-[#3d2b1f]">
                     <tr>
-                        <th class="px-4 py-3 font-medium">Jenis Cacat</th>
-                        <th class="px-4 py-3 font-medium text-right">Jumlah (Botol)</th>
+                        <th class="px-4 py-3"><span class="text-[#D4B896] text-[10px] font-bold uppercase tracking-[0.15em]">Jenis Cacat</span></th>
+                        <th class="px-4 py-3 text-right"><span class="text-[#D4B896] text-[10px] font-bold uppercase tracking-[0.15em]">Jumlah (Botol)</span></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+                <tbody class="divide-y divide-[#3d2b1f]">
                     @foreach($qc->qcDefects as $defect)
-                    <tr>
-                        <td class="px-4 py-3">{{ $defect->defectCategory->name ?? 'Kategori tidak diketahui' }}</td>
-                        <td class="px-4 py-3 text-right font-medium text-red-600">{{ $defect->defect_quantity }}</td>
+                    <tr class="hover:bg-[#2c1810]/50 transition-colors duration-150">
+                        <td class="px-4 py-3 text-white">{{ $defect->defectCategory->name ?? 'Kategori tidak diketahui' }}</td>
+                        <td class="px-4 py-3 text-right font-bold text-[#D4B896]">{{ $defect->defect_quantity }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -98,8 +98,8 @@
         @endif
 
         @if($qc->notes)
-        <h3 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mt-8 mb-4">Catatan QC</h3>
-        <div class="bg-yellow-50/50 rounded-xl border border-yellow-100 p-4 text-gray-700">
+        <h3 class="text-lg font-bold text-[#D4B896] border-b border-[#3d2b1f] pb-4 mt-8 mb-4 uppercase tracking-[0.05em]">Catatan QC</h3>
+        <div class="bg-[#8B6914]/10 border border-[#8B6914]/30 p-4 text-[#D4B896]">
             {{ $qc->notes }}
         </div>
         @endif

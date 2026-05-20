@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RawMaterial extends Model
 {
     protected $fillable = [
-        'name', 'sku', 'type', 'unit', 'current_stock', 'min_stock_level', 'supplier'
+        'name', 'sku', 'type', 'unit', 'current_stock', 'min_stock_level', 'supplier', 'image'
     ];
 
     protected $casts = [

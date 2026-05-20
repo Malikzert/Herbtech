@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
 @section('title', 'Pengecekan Mutu (QC)')
-@section('header', 'Quality Control')
+@section('header', 'QUALITY CONTROL')
 
 @section('content')
 <div class="max-w-4xl mx-auto" x-data="qcForm()" x-init="if(selectedProductionId) { updateProductionInfo(); }">
     <div class="mb-4">
-        <a href="{{ route('operator.qc.index') }}" class="text-blue-800 hover:text-blue-900 font-medium flex items-center gap-2">
+        <a href="{{ route('operator.qc.index') }}" class="text-[#D4B896] hover:text-[#F5EDE0] font-medium flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali
         </a>
     </div>
 
-    <div class="bg-glass rounded-xl border border-white/50 p-6 shadow-sm glass-card">
+    <div class="bg-[#1a1210]/80 backdrop-blur-md border border-[#3d2b1f]/50 p-6">
         @if ($errors->any())
-            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+            <div class="mb-6 p-4 bg-[#3d2b1f] border-l-4 border-[#8B6914]">
                 <div class="flex items-center mb-2">
-                    <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <h3 class="text-sm font-bold text-red-800">Terdapat kesalahan pengisian form:</h3>
+                    <svg class="w-5 h-5 text-[#D4B896] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3 class="text-sm font-bold text-[#D4B896]">Terdapat kesalahan pengisian form:</h3>
                 </div>
-                <ul class="list-disc list-inside text-sm text-red-700 ml-2">
+                <ul class="list-disc list-inside text-sm text-[#D4B896]/80 ml-2">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -29,53 +29,51 @@
 
         <form action="{{ route('operator.qc.store') }}" method="POST">
             @csrf
-            
-            <div class="mb-6 border-b border-gray-200 pb-4">
+
+            <div class="mb-6 border-b border-[#3d2b1f] pb-4">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Batch Produksi</label>
-                    <select name="production_id" x-model="selectedProductionId" @change="updateProductionInfo" required class="modern-select w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700">
-                        <option value="">-- Pilih Batch --</option>
+                    <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740] mb-1">Pilih Batch Produksi</label>
+                    <select name="production_id" x-model="selectedProductionId" @change="updateProductionInfo" required class="w-full px-4 py-2.5 bg-[#2c1810]/60 border border-[#3d2b1f] text-[#D4B896] focus:ring-[#8B6914] focus:border-[#8B6914]">
+                        <option value="" class="bg-[#1a1210]">-- Pilih Batch --</option>
                         @foreach($productions as $production)
-                        <option value="{{ $production->id }}">{{ $production->batch_number }}</option>
+                        <option value="{{ $production->id }}" class="bg-[#1a1210]">{{ $production->batch_number }}</option>
                         @endforeach
                     </select>
                 </div>
-                
-                <h2 class="text-xl font-bold text-gray-800" x-text="selectedProductionId ? 'Pengecekan Mutu (QC) - ' + getBatchNumber() : 'Pilih batch untuk memulai QC'"></h2>
-                <p class="text-blue-900 font-medium mt-1" x-show="selectedProductionId" x-text="'Produk: ' + getProductName()"></p>
+
+                <h2 class="text-xl font-bold text-[#D4B896]" x-text="selectedProductionId ? 'Pengecekan Mutu (QC) - ' + getBatchNumber() : 'Pilih batch untuk memulai QC'"></h2>
+                <p class="text-[#A0845C] font-medium mt-1" x-show="selectedProductionId" x-text="'Produk: ' + getProductName()"></p>
             </div>
 
             <div class="space-y-6">
-                <!-- Inputs -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Total Barang Diproduksi</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740] mb-1">Total Barang Diproduksi</label>
                         <div class="relative">
-                            <input type="number" x-model.number="totalInspected" name="total_inspected" required min="1" readonly class="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed text-lg font-bold">
-                            <span class="absolute right-4 top-3 text-gray-400 font-medium">Botol</span>
+                            <input type="number" x-model.number="totalInspected" name="total_inspected" required min="1" readonly class="w-full px-4 py-2.5 bg-[#2c1810]/60 border border-[#3d2b1f] text-[#6B5740] cursor-not-allowed text-lg font-bold">
+                            <span class="absolute right-4 top-3 text-[#6B5740] font-medium">Botol</span>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-900 mb-1">Barang Lolos QC (Bagus)</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#A0845C] mb-1">Barang Lolos QC (Bagus)</label>
                         <div class="relative">
-                            <input type="number" x-model.number="totalPassed" @input="calculateRejected" name="total_passed" required min="0" class="w-full px-4 py-2.5 border border-blue-1000 rounded-lg focus:ring-2 focus:ring-blue-700 text-lg font-bold text-blue-900 bg-blue-100/50">
-                            <span class="absolute right-4 top-3 text-blue-800/50 font-medium">Botol</span>
+                            <input type="number" x-model.number="totalPassed" @input="calculateRejected" name="total_passed" required min="0" class="w-full px-4 py-2.5 bg-[#A0845C]/10 border border-[#A0845C]/30 focus:ring-[#8B6914] text-lg font-bold text-[#F5EDE0]">
+                            <span class="absolute right-4 top-3 text-[#A0845C]/50 font-medium">Botol</span>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-red-700 mb-1">Barang Cacat / Ditolak</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#8B6914] mb-1">Barang Cacat / Ditolak</label>
                         <div class="relative">
-                            <input type="number" x-model.number="totalRejected" @input="calculatePassed" name="total_rejected" required min="0" class="w-full px-4 py-2.5 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 text-lg font-bold text-red-700 bg-red-50/50">
-                            <span class="absolute right-4 top-3 text-red-600/50 font-medium">Botol</span>
+                            <input type="number" x-model.number="totalRejected" @input="calculatePassed" name="total_rejected" required min="0" class="w-full px-4 py-2.5 bg-[#8B6914]/10 border border-[#8B6914]/30 focus:ring-[#8B6914] text-lg font-bold text-[#D4B896]">
+                            <span class="absolute right-4 top-3 text-[#8B6914]/50 font-medium">Botol</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Defects -->
-                <div class="border-t border-gray-200 pt-6 mt-6">
+                <div class="border-t border-[#3d2b1f] pt-6 mt-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider">RINCIAN CACAT (Jika Ada)</h3>
-                        <button type="button" @click="addDefect()" class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-700 text-sm font-medium rounded-lg hover:bg-red-100 transition border border-red-200">
+                        <h3 class="text-[10px] font-bold text-[#D4B896] uppercase tracking-[0.15em]">RINCIAN CACAT (Jika Ada)</h3>
+                        <button type="button" @click="addDefect()" class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#8B6914]/20 text-[#D4B896] text-sm font-medium hover:bg-[#8B6914]/30 transition border border-[#8B6914]/30">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             Tambah Cacat
                         </button>
@@ -84,62 +82,61 @@
                     <div class="space-y-3">
                         <template x-for="(defect, index) in defects" :key="index">
                             <div class="flex items-center gap-4">
-                                <div class="text-gray-400 font-medium w-6 text-right" x-text="'-'"></div>
+                                <div class="text-[#6B5740] font-medium w-6 text-right" x-text="'-'"></div>
                                 <div class="flex-1">
-                                    <select x-model="defect.defect_cat_id" :name="`defects[${index}][defect_cat_id]`" required class="modern-select w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
-                                        <option value="">-- Pilih Jenis Cacat --</option>
+                                    <select x-model="defect.defect_cat_id" :name="`defects[${index}][defect_cat_id]`" required class="w-full px-3 py-2 text-sm bg-[#2c1810]/60 border border-[#3d2b1f] text-[#D4B896] focus:ring-[#8B6914] focus:border-[#8B6914]">
+                                        <option value="" class="bg-[#1a1210]">-- Pilih Jenis Cacat --</option>
                                         @foreach($defectCategories as $cat)
-                                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                            <option value="{{ $cat->id }}" class="bg-[#1a1210]">{{ $cat->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="w-32 relative">
-                                    <input type="number" x-model.number="defect.quantity" :name="`defects[${index}][quantity]`" required min="1" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 text-right pr-12">
-                                    <span class="absolute right-3 top-2 text-sm text-gray-500">Botol</span>
+                                    <input type="number" x-model.number="defect.quantity" :name="`defects[${index}][quantity]`" required min="1" class="w-full px-3 py-2 text-sm bg-[#2c1810]/60 border border-[#3d2b1f] text-[#D4B896] focus:ring-[#8B6914] text-right pr-12">
+                                    <span class="absolute right-3 top-2 text-sm text-[#6B5740]">Botol</span>
                                 </div>
-                                <button type="button" @click="removeDefect(index)" class="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                                <button type="button" @click="removeDefect(index)" class="p-2 text-[#6B5740] hover:text-[#D4B896] hover:bg-[#3d2b1f] transition">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                 </button>
                             </div>
                         </template>
-                        <div x-show="defects.length === 0" class="text-sm text-gray-500 italic py-2">
+                        <div x-show="defects.length === 0" class="text-sm text-[#6B5740] italic py-2">
                             Tidak ada rincian cacat yang ditambahkan.
                         </div>
                     </div>
                 </div>
 
-                <div class="border-t border-gray-200 pt-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Catatan QC</label>
-                    <textarea name="notes" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-700" placeholder="Tuliskan catatan tambahan jika diperlukan..."></textarea>
+                <div class="border-t border-[#3d2b1f] pt-6">
+                    <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#6B5740] mb-2">Catatan QC</label>
+                    <textarea name="notes" rows="2" class="w-full px-4 py-3 bg-[#2c1810]/60 border border-[#3d2b1f] text-[#D4B896] placeholder-[#6B5740] focus:ring-[#8B6914] focus:border-[#8B6914]" placeholder="Tuliskan catatan tambahan jika diperlukan..."></textarea>
                 </div>
 
-                <!-- Final Result -->
-                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                <div class="bg-[#2c1810]/60 border border-[#3d2b1f] p-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-4">
-                            <span class="font-bold text-gray-700">Hasil Akhir:</span>
+                            <span class="font-bold text-[#D4B896] uppercase text-[10px] tracking-[0.1em]">Hasil Akhir:</span>
                             <div class="flex gap-4">
                                 <label class="flex items-center gap-2 transition" :class="disableRelease ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'">
-                                    <input type="radio" name="final_status" value="release" x-model="finalResult" :disabled="disableRelease" class="w-4 h-4 text-blue-800 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span class="text-sm font-bold" :class="finalResult === 'release' ? 'text-blue-900' : 'text-gray-500'">Release</span>
+                                    <input type="radio" name="final_status" value="release" x-model="finalResult" :disabled="disableRelease" class="w-4 h-4 text-[#A0845C] border-[#3d2b1f] bg-[#2c1810] disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span class="text-sm font-bold" :class="finalResult === 'release' ? 'text-[#F5EDE0]' : 'text-[#6B5740]'">Release</span>
                                 </label>
                                 <label class="flex items-center gap-2 transition" :class="disableRework ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'">
-                                    <input type="radio" name="final_status" value="rework" x-model="finalResult" :disabled="disableRework" class="w-4 h-4 text-amber-600 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span class="text-sm font-bold" :class="finalResult === 'rework' ? 'text-amber-700' : 'text-gray-500'">Rework</span>
+                                    <input type="radio" name="final_status" value="rework" x-model="finalResult" :disabled="disableRework" class="w-4 h-4 text-[#8B6914] border-[#3d2b1f] bg-[#2c1810] disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span class="text-sm font-bold" :class="finalResult === 'rework' ? 'text-[#D4B896]' : 'text-[#6B5740]'">Rework</span>
                                 </label>
                                 <label class="flex items-center gap-2 transition" :class="disableReject ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'">
-                                    <input type="radio" name="final_status" value="reject" x-model="finalResult" :disabled="disableReject" class="w-4 h-4 text-red-600 border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span class="text-sm font-bold" :class="finalResult === 'reject' ? 'text-red-700' : 'text-gray-500'">Reject</span>
+                                    <input type="radio" name="final_status" value="reject" x-model="finalResult" :disabled="disableReject" class="w-4 h-4 text-[#6B5740] border-[#3d2b1f] bg-[#2c1810] disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span class="text-sm font-bold" :class="finalResult === 'reject' ? 'text-[#8B6914]' : 'text-[#6B5740]'">Reject</span>
                                 </label>
                             </div>
                         </div>
-                        <div class="text-xs text-gray-500 italic">(Dihitung otomatis)</div>
+                        <div class="text-[10px] text-[#6B5740] italic">(Dihitung otomatis)</div>
                     </div>
                     <p x-show="qcMessage" x-text="qcMessage" :class="qcMessageType" class="mt-3 text-sm font-medium"></p>
                 </div>
 
                 <div class="flex justify-end pt-2">
-                    <button type="submit" class="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-700 to-blue-800 text-white font-bold rounded-xl hover:from-blue-800 hover:to-blue-900 transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <button type="submit" class="w-full md:w-auto px-8 py-3 bg-[#8B6914] hover:bg-[#A0845C] text-white font-bold transition shadow-md hover:shadow-lg">
                         SIMPAN HASIL QC & MASUKKAN GUDANG
                     </button>
                 </div>
@@ -156,7 +153,7 @@
             'target_quantity' => $item->target_quantity
         ]];
     })) !!};
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const defaultProductionId = urlParams.get('production_id') || '';
 
@@ -173,22 +170,22 @@
             disableRework: false,
             disableReject: false,
             finalResult: 'release',
-            
+
             getBatchNumber() {
-                return this.selectedProductionId && productionsData[this.selectedProductionId] 
+                return this.selectedProductionId && productionsData[this.selectedProductionId]
                     ? productionsData[this.selectedProductionId].batch_number : '';
             },
-            
+
             getProductName() {
-                return this.selectedProductionId && productionsData[this.selectedProductionId] 
+                return this.selectedProductionId && productionsData[this.selectedProductionId]
                     ? productionsData[this.selectedProductionId].product_name : '';
             },
-            
+
             getTargetQuantity() {
-                return this.selectedProductionId && productionsData[this.selectedProductionId] 
+                return this.selectedProductionId && productionsData[this.selectedProductionId]
                     ? parseInt(productionsData[this.selectedProductionId].target_quantity) || 0 : 0;
             },
-            
+
             updateProductionInfo() {
                 let target = this.getTargetQuantity();
                 this.totalInspected = target;
@@ -243,27 +240,27 @@
                     this.disableRework = true;
                     this.disableReject = true;
                     this.qcMessage = 'Kualitas Sempurna (100%). Batch siap di-release.';
-                    this.qcMessageType = 'text-green-700';
+                    this.qcMessageType = 'text-[#A0845C]';
                 } else if (percentage >= 90) {
                     this.disableRelease = false;
                     this.disableRework = false;
                     this.disableReject = true;
                     this.qcMessage = 'Persentase lolos ' + percentage.toFixed(1) + '%. Pertimbangkan untuk Rework atau tetap Release.';
-                    this.qcMessageType = 'text-amber-600';
+                    this.qcMessageType = 'text-[#D4B896]';
                 } else if (percentage >= 40) {
                     this.finalResult = 'rework';
                     this.disableRelease = true;
                     this.disableRework = false;
                     this.disableReject = false;
                     this.qcMessage = 'Persentase lolos ' + percentage.toFixed(1) + '%. Kualitas di bawah standar, wajib Rework.';
-                    this.qcMessageType = 'text-red-600';
+                    this.qcMessageType = 'text-[#8B6914]';
                 } else {
                     this.finalResult = 'reject';
                     this.disableRelease = true;
                     this.disableRework = true;
                     this.disableReject = false;
                     this.qcMessage = 'Fatal Error (Lolos ' + percentage.toFixed(1) + '%). Batch gagal total dan wajib di-Reject.';
-                    this.qcMessageType = 'text-red-700 font-bold';
+                    this.qcMessageType = 'text-[#6B5740] font-bold';
                 }
             },
 
@@ -277,4 +274,5 @@
         }
     }
 </script>
+<style>[x-cloak] { display: none !important; }</style>
 @endsection
