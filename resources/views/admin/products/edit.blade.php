@@ -20,13 +20,13 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-emerald-200/80 mb-1.5">SKU</label>
-                <input type="text" name="sku_code" value="{{ old('sku_code', $product->sku_code) }}" required
-                    class="w-full h-11 px-4 bg-white/5 border border-white/20 rounded-lg text-sm text-emerald-50 font-mono placeholder-emerald-200/30 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 transition-all duration-200">
+                <input type="text" value="{{ $product->sku_code }}" readonly
+                    class="w-full h-11 px-4 bg-white/5 border border-white/20 rounded-lg text-sm text-emerald-50 font-mono opacity-60 cursor-not-allowed">
             </div>
 
             <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-emerald-200/80 mb-1.5">Kategori</label>
-                <input type="text" name="category" value="{{ old('category', $product->category) }}"
+                <label class="block text-xs font-bold uppercase tracking-wider text-emerald-200/80 mb-1.5">Jeniss</label>
+                <input type="text" name="jeniss" value="{{ old('jeniss', $product->jeniss) }}"
                     class="w-full h-11 px-4 bg-white/5 border border-white/20 rounded-lg text-sm text-emerald-50 placeholder-emerald-200/30 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/50 transition-all duration-200">
             </div>
 

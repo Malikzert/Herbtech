@@ -44,7 +44,7 @@
 
 <div x-data="{ showModal: false, modalMode: 'create', selectedProduct: {},
     detailModalOpen: false, detailData: null, detailLoading: false,
-    catOpen: false, catSelected: '{{ request('category') }}', catLabel: '{{ request('category') ?: 'Semua Kategori' }}',
+    catOpen: false, catSelected: '{{ request('jeniss') }}', catLabel: '{{ request('jeniss') ?: 'Semua Jeniss' }}',
     viewMode: (localStorage.getItem('adminViewMode') || 'list'),
     init() {
         window.addEventListener('admin-view-change', (e) => { this.viewMode = e.detail; });
@@ -87,8 +87,8 @@
                     <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                 </div>
                 <div>
-                    <p class="text-[10px] uppercase tracking-[0.15em] text-emerald-400/60 font-bold">Kategori</p>
-                    <p class="text-2xl font-black text-emerald-50 mt-0.5">{{ $categories->count() }}</p>
+                    <p class="text-[10px] uppercase tracking-[0.15em] text-emerald-400/60 font-bold">Jeniss</p>
+                    <p class="text-2xl font-black text-emerald-50 mt-0.5">{{ $jenissList->count() }}</p>
                 </div>
             </div>
             <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
@@ -139,10 +139,10 @@
                     <div class="relative" 
                          x-data="{ 
                             open: false, 
-                            catSelected: '{{ request('category') }}', 
-                            catLabel: '{{ request('category') ?: 'Semua Kategori' }}' 
+                            catSelected: '{{ request('jeniss') }}', 
+                            catLabel: '{{ request('jeniss') ?: 'Semua Jeniss' }}' 
                          }">
-                        <input type="hidden" name="category" :value="catSelected">
+                        <input type="hidden" name="jeniss" :value="catSelected">
                         <button type="button"
                             @click="open = !open; if(open) { $nextTick(() => { 
                                 let r = $el.getBoundingClientRect(); 
@@ -177,16 +177,16 @@
                                         <svg class="w-4 h-4 shrink-0" :class="!catSelected ? 'opacity-100' : 'opacity-0'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="font-bold uppercase tracking-wider text-[10px]">Semua Kategori</span>
+                                        <span class="font-bold uppercase tracking-wider text-[10px]">Semua Jeniss</span>
                                     </a>
-                                    @foreach($categories as $cat)
-                                    <a href="{{ route('admin.products.index', ['category' => $cat]) }}"
+                                    @foreach($jenissList as $jenis)
+                                    <a href="{{ route('admin.products.index', ['jeniss' => $jenis]) }}"
                                        class="w-full text-left px-4 py-2.5 text-sm transition-all duration-150 flex items-center gap-3 no-underline"
-                                       :class="catSelected === '{{ $cat }}' ? 'text-emerald-300 bg-emerald-500/20 font-bold' : 'text-emerald-200/60 hover:text-emerald-200 hover:bg-emerald-500/10'">
-                                        <svg class="w-4 h-4 shrink-0" :class="catSelected === '{{ $cat }}' ? 'opacity-100' : 'opacity-0'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                       :class="catSelected === '{{ $jenis }}' ? 'text-emerald-300 bg-emerald-500/20 font-bold' : 'text-emerald-200/60 hover:text-emerald-200 hover:bg-emerald-500/10'">
+                                        <svg class="w-4 h-4 shrink-0" :class="catSelected === '{{ $jenis }}' ? 'opacity-100' : 'opacity-0'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
                                         </svg>
-                                        <span class="font-bold uppercase tracking-wider text-[10px]">{{ $cat }}</span>
+                                        <span class="font-bold uppercase tracking-wider text-[10px]">{{ $jenis }}</span>
                                     </a>
                                     @endforeach
                                 </div>
@@ -202,7 +202,7 @@
                         Filter
                     </button>
 
-                    @if(request('search') || request('category'))
+                    @if(request('search') || request('jeniss'))
                     <a href="{{ route('admin.products.index') }}" class="h-11 px-5 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400/60 hover:text-emerald-300 border border-emerald-700/40 hover:border-emerald-500/50 rounded-sm transition-all duration-200">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         Reset
@@ -247,7 +247,7 @@
                         <th class="px-6 py-4 text-left">No</th>
                         <th class="px-6 py-4 text-left">Nama Produk</th>
                         <th class="px-6 py-4 text-left">SKU</th>
-                        <th class="px-6 py-4 text-left">Kategori</th>
+                        <th class="px-6 py-4 text-left">Jeniss</th>
                         <th class="px-6 py-4 text-left">Unit</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
@@ -268,10 +268,10 @@
                             <span class="text-sm font-mono text-emerald-200/60 group-hover:text-emerald-200/80 transition-colors">{{ $product->sku_code }}</span>
                         </td>
                         <td class="px-6 py-4">
-                            @if($product->category)
+                            @if($product->jeniss)
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 group-hover:bg-emerald-500/15 group-hover:border-emerald-500/30 transition-all" style="border-radius: 0;">
                                 <span class="w-1.5 h-1.5" style="background: #34D399; border-radius: 0;"></span>
-                                {{ $product->category }}
+                                {{ $product->jeniss }}
                             </span>
                             @else
                             <span class="text-xs text-emerald-200/30">-</span>
@@ -343,8 +343,8 @@
             <div class="widget-card cursor-pointer" @click="openDetail({{ $product->id }})">
                 <div class="widget-card-header">
                     <img src="{{ $product->image ? asset('image/' . $product->image) : asset('image/(defaultPRK).png') }}" alt="{{ $product->name }}">
-                    @if($product->category)
-                    <span class="widget-card-badge" style="background:rgba(52,211,153,0.2);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">{{ $product->category }}</span>
+                    @if($product->jeniss)
+                    <span class="widget-card-badge" style="background:rgba(52,211,153,0.2);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">{{ $product->jeniss }}</span>
                     @endif
                 </div>
                 <div class="widget-card-body">
@@ -467,14 +467,15 @@
 
                             <div>
                                 <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1.5">SKU Code</label>
-                                <input type="text" name="sku_code" x-model="selectedProduct.sku_code" required
-                                    class="hybrid-input w-full h-11 px-4 rounded-sm text-sm font-mono">
+                                <input type="text" x-model="selectedProduct.sku_code" readonly
+                                    :placeholder="modalMode === 'create' ? 'Auto-generated (PRD-xxxxxx)' : selectedProduct.sku_code"
+                                    class="hybrid-input w-full h-11 px-4 rounded-sm text-sm font-mono opacity-60 cursor-not-allowed">
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1.5">Kategori</label>
-                                    <input type="text" name="category" x-model="selectedProduct.category" placeholder="cth: Jamu"
+                                    <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1.5">Jeniss</label>
+                                    <input type="text" name="jeniss" x-model="selectedProduct.jeniss" placeholder="cth: Jamu"
                                         class="hybrid-input w-full h-11 px-4 rounded-sm text-sm">
                                 </div>
                                 <div>
@@ -568,8 +569,8 @@
 
                             <div class="grid grid-cols-2 gap-4 pt-4 border-t border-emerald-500/15">
                                 <div>
-                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Kategori</p>
-                                    <p class="text-sm font-bold text-emerald-50" x-text="detailData.category || '-'"></p>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Jeniss</p>
+                                    <p class="text-sm font-bold text-emerald-50" x-text="detailData.jeniss || '-'"></p>
                                 </div>
                                 <div>
                                     <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1">Unit</p>

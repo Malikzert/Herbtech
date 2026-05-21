@@ -9,6 +9,11 @@ class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
+        Scheduling::where('is_recommended', true)
+            ->where('status', 'draft')
+            ->where('recom_date', '<=', now()->toDateString())
+            ->update(['status' => 'approved']);
+
         $status = $request->get('status');
 
         $query = Scheduling::with('product:id,name')

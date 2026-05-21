@@ -334,7 +334,7 @@ class GeneticBatchRecommender
             $totalFitness += $fitness;
 
             $product = $this->products->firstWhere('id', $productId);
-            $type = $product ? $product->category : 'general';
+            $type = $product ? $product->jeniss : 'general';
             $productTypeCount[$type] = ($productTypeCount[$type] ?? 0) + 1;
         }
 
@@ -509,7 +509,7 @@ class GeneticBatchRecommender
         return [
             'product_id' => $productId,
             'product_name' => $product ? $product->name : 'Unknown',
-            'product_category' => $product ? $product->category : null,
+            'product_category' => $product ? $product->jeniss : null,
             'fitness_score' => round($fitness, 2),
             'fefo_score' => round($this->fefoScore[$productId] ?? 0, 2),
             'stock_score' => round($this->stockScore[$productId] ?? 0, 2),

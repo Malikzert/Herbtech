@@ -21,10 +21,10 @@
                 <span class="text-xs font-bold uppercase tracking-wider text-emerald-200/60">SKU</span>
                 <span class="text-sm font-medium font-mono text-emerald-50">{{ $product->sku_code }}</span>
             </div>
-            @if($product->category)
+            @if($product->jeniss)
             <div class="flex justify-between py-3 border-b border-white/10">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-200/60">Kategori</span>
-                <span class="text-sm font-medium text-emerald-50">{{ $product->category }}</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-200/60">Jeniss</span>
+                <span class="text-sm font-medium text-emerald-50">{{ $product->jeniss }}</span>
             </div>
             @endif
             @if($product->unit)

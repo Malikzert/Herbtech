@@ -17,8 +17,8 @@
 
             <div>
                 <label class="block text-sm font-medium black mb-1">SKU</label>
-                <input type="text" name="sku" value="{{ old('sku') }}" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition">
+                <input type="text" value="Auto-generated (RM-xxxxxx)" readonly disabled
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed">
             </div>
 
             <div>

@@ -350,7 +350,7 @@ class SchedulingController extends Controller
         foreach ($uniqueIds as $id) {
             $product = $this->products->firstWhere('id', $id);
             if ($product) {
-                $cat = $product->category ?? 'general';
+                $cat = $product->jeniss ?? 'general';
                 $categories[$cat] = ($categories[$cat] ?? 0) + 1;
             }
         }
@@ -549,7 +549,7 @@ class SchedulingController extends Controller
             $recommended[] = [
                 'product_id'          => $productId,
                 'product_name'        => $product->name ?? 'Unknown',
-                'product_category'    => $product->category ?? null,
+                'product_category'    => $product->jeniss ?? null,
                 'priority_order'      => $i + 1,
                 'fefo_score'          => round($fefo, 2),
                 'stock_score'         => round($stock, 2),

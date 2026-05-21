@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\RawMaterial;
+use App\Models\RawMaterialQc;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class RawMaterialController extends Controller
 {
@@ -41,7 +41,6 @@ class RawMaterialController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'nullable|string|max:100|unique:raw_materials',
             'type' => 'required|in:herbal,packaging,additive',
             'unit' => 'required|string|max:50',
             'current_stock' => 'nullable|integer|min:0',
@@ -57,7 +56,17 @@ class RawMaterialController extends Controller
             $validated['image'] = $filename;
         }
 
-        RawMaterial::create($validated);
+        $rawMaterial = RawMaterial::create($validated);
+
+        RawMaterialQc::create([
+            'raw_material_id' => $rawMaterial->id,
+            'user_id' => auth()->id(),
+            'total_qty_checked' => 0,
+            'good_qty' => 0,
+            'bad_qty' => 0,
+            'qc_percentage' => 0,
+            'status' => 'waiting',
+        ]);
 
         return redirect()->route('admin.raw-materials.index')
             ->with('success', 'Bahan baku berhasil dibuat.');
@@ -85,7 +94,6 @@ class RawMaterialController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => ['nullable', 'string', 'max:100', Rule::unique('raw_materials')->ignore($raw_material->id)],
             'type' => 'required|in:herbal,packaging,additive',
             'unit' => 'required|string|max:50',
             'current_stock' => 'nullable|integer|min:0',

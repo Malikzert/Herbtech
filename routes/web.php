@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RawMaterialController;
+use App\Http\Controllers\RawMaterialQcController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\QCController;
@@ -42,6 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/profile', [ProfileController::class, 'update'])->name('admin.profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('admin.profile.password');
         
+        Route::get('raw-materials/qc', [RawMaterialQcController::class, 'adminIndex'])->name('admin.raw-materials.qc.index');
+        Route::post('raw-materials/qc/{id}/resend', [RawMaterialQcController::class, 'adminResend'])->name('admin.raw-materials.qc.resend');
         Route::resource('raw-materials', RawMaterialController::class)->names('admin.raw-materials');
         Route::resource('products', ProductController::class)->names('admin.products');
         Route::resource('recipes', RecipeController::class)->names('admin.recipes');
@@ -80,6 +83,8 @@ Route::middleware('auth')->group(function () {
         Route::get('schedules', [ScheduleController::class, 'index'])->name('operator.schedules.index');
 
         Route::get('raw-materials', [RawMaterialController::class, 'index'])->name('operator.raw-materials.index');
+        Route::get('raw-materials/qc', [RawMaterialQcController::class, 'operatorIndex'])->name('operator.raw-materials.qc.index');
+        Route::post('raw-materials/qc', [RawMaterialQcController::class, 'operatorStore'])->name('operator.raw-materials.qc.store');
         Route::get('products', [ProductController::class, 'index'])->name('operator.products.index');
     });
 });

@@ -119,7 +119,7 @@
     {{-- TABEL DATA --}}
     @if($reportType === 'production' && ($productions ?? collect())->isNotEmpty())
     <table>
-        <thead><tr><th style="width:22px;text-align:center">No</th><th>No Batch</th><th>Nama Produk</th><th>Kategori</th><th>Operator</th><th>Tanggal</th><th style="text-align:center">Durasi</th><th style="text-align:center">Status</th></tr></thead>
+        <thead><tr><th style="width:22px;text-align:center">No</th><th>No Batch</th><th>Nama Produk</th><th>Jeniss</th><th>Operator</th><th>Tanggal</th><th style="text-align:center">Durasi</th><th style="text-align:center">Status</th></tr></thead>
         <tbody>
             @foreach($productions as $i => $p)
             @php
@@ -130,7 +130,7 @@
                 <td style="text-align:center">{{ $i + 1 }}</td>
                 <td>{{ $p->batch_number }}</td>
                 <td>{{ $p->product->name ?? '-' }}</td>
-                <td>{{ $p->product->category ?? '-' }}</td>
+                <td>{{ $p->product->jeniss ?? '-' }}</td>
                 <td>{{ $p->user->name ?? '-' }}</td>
                 <td>{{ $p->created_at->format('d M Y') }}</td>
                 <td style="text-align:center">{{ (int) ($p->estimated_duration ?? 0) }}</td>

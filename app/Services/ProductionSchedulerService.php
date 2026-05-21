@@ -220,7 +220,7 @@ class ProductionSchedulerService
     private function calculateMachineEfficiencyPenalty(Production $production, array &$usedMachineSlots, Carbon $startTime): float
     {
         $penalty = 0.0;
-        $productionType = $production->product->category ?? 'general';
+        $productionType = $production->product->jeniss ?? 'general';
 
         $dayKey = $startTime->toDateString();
         if (!isset($usedMachineSlots[$dayKey])) {

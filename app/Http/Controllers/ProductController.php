@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $category = $request->get('category');
+        $jeniss = $request->get('jeniss');
         
         $query = Product::query();
         
@@ -22,15 +21,15 @@ class ProductController extends Controller
             });
         }
         
-        if ($category) {
-            $query->where('category', $category);
+        if ($jeniss) {
+            $query->where('jeniss', $jeniss);
         }
         
         $products = $query->latest()->paginate(10)->appends($request->query());
-        $categories = Product::distinct()->pluck('category')->filter()->values();
+        $jenissList = Product::distinct()->pluck('jeniss')->filter()->values();
         
         $view = auth()->user()->can('admin') ? 'admin.products.index' : 'operator.products.index';
-        return view($view, compact('products', 'categories'));
+        return view($view, compact('products', 'jenissList'));
     }
 
     public function create()
@@ -42,10 +41,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku_code' => 'required|string|max:100|unique:products',
             'description' => 'nullable|string',
             'unit' => 'nullable|string|max:50',
-            'category' => 'nullable|string|max:100',
+            'jeniss' => 'nullable|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
@@ -84,10 +82,9 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku_code' => ['required', 'string', 'max:100', Rule::unique('products')->ignore($product->id)],
             'description' => 'nullable|string',
             'unit' => 'nullable|string|max:50',
-            'category' => 'nullable|string|max:100',
+            'jeniss' => 'nullable|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 

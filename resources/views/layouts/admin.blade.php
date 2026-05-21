@@ -734,6 +734,11 @@
                                     <span class="text-shadow-sm">Bahan Baku</span>
                                 </a>
 
+                                <a href="{{ route('admin.raw-materials.qc.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.raw-materials.qc.*') ? 'text-emerald-300' : '' }}">
+                                    <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="text-shadow-sm">QC Bahan Baku</span>
+                                </a>
+
                                 <a href="{{ route('admin.recipes.index') }}" class="sidebar-link flex items-center px-4 py-2.5 rounded-lg transition text-white {{ request()->routeIs('admin.recipes.*') ? 'text-emerald-300' : '' }}">
                                     <svg class="w-5 h-5 mr-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                     <span class="text-shadow-sm">Resep</span>

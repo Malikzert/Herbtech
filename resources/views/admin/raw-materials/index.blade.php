@@ -265,7 +265,7 @@
                         <th class="px-6 py-4 text-left">SKU</th>
                         <th class="px-6 py-4 text-left">Tipe</th>
                         <th class="px-6 py-4 text-left">Stok</th>
-                        <th class="px-6 py-4 text-left">Status</th>
+                        <th class="px-6 py-4 text-left">Status QC</th>
                         <th class="px-6 py-4 text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -312,20 +312,30 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            @if($material->current_stock <= 0)
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-300 border border-red-500/20" style="border-radius: 0;">
-                                <span class="w-1.5 h-1.5" style="background: #EF4444; border-radius: 0;"></span>
-                                Habis
+                            @if($material->qc_status === 'waiting')
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-300 border border-sky-500/20" style="border-radius: 0;">
+                                <span class="w-1.5 h-1.5" style="background: #38BDF8; border-radius: 0;"></span>
+                                Menunggu QC
                             </span>
-                            @elseif($material->current_stock < ($material->min_stock_level ?? 10))
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20" style="border-radius: 0;">
-                                <span class="w-1.5 h-1.5" style="background: #F59E0B; border-radius: 0;"></span>
-                                Rendah
-                            </span>
-                            @else
+                            @elseif($material->qc_status === 'accept')
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/20" style="border-radius: 0;">
                                 <span class="w-1.5 h-1.5" style="background: #34D399; border-radius: 0;"></span>
-                                Tersedia
+                                Diterima
+                            </span>
+                            @elseif($material->qc_status === 'rework')
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20" style="border-radius: 0;">
+                                <span class="w-1.5 h-1.5" style="background: #F59E0B; border-radius: 0;"></span>
+                                QC Ulang
+                            </span>
+                            @elseif($material->qc_status === 'decline')
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-300 border border-red-500/20" style="border-radius: 0;">
+                                <span class="w-1.5 h-1.5" style="background: #EF4444; border-radius: 0;"></span>
+                                Ditolak
+                            </span>
+                            @else
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-gray-500/10 text-gray-400 border border-gray-500/20" style="border-radius: 0;">
+                                <span class="w-1.5 h-1.5" style="background: #6B7280; border-radius: 0;"></span>
+                                {{ $material->qc_status ?? '-' }}
                             </span>
                             @endif
                         </td>
@@ -423,17 +433,25 @@
                     </div>
                     <div class="widget-card-spacer"></div>
                     <div class="flex items-center justify-between">
-                        @if($material->current_stock <= 0)
-                        <span class="widget-card-status" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)">
-                            <span class="widget-card-status-dot" style="background:#ef4444"></span>Habis
+                        @if($material->qc_status === 'waiting')
+                        <span class="widget-card-status" style="background:rgba(56,189,248,0.15);color:#7dd3fc;border:1px solid rgba(56,189,248,0.3)">
+                            <span class="widget-card-status-dot" style="background:#38BDF8"></span>Menunggu QC
                         </span>
-                        @elseif($material->current_stock < ($material->min_stock_level ?? 10))
+                        @elseif($material->qc_status === 'accept')
+                        <span class="widget-card-status" style="background:rgba(52,211,153,0.15);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">
+                            <span class="widget-card-status-dot" style="background:#34d399"></span>Diterima
+                        </span>
+                        @elseif($material->qc_status === 'rework')
                         <span class="widget-card-status" style="background:rgba(245,158,11,0.15);color:#fcd34d;border:1px solid rgba(245,158,11,0.3)">
-                            <span class="widget-card-status-dot" style="background:#f59e0b"></span>Rendah
+                            <span class="widget-card-status-dot" style="background:#f59e0b"></span>QC Ulang
+                        </span>
+                        @elseif($material->qc_status === 'decline')
+                        <span class="widget-card-status" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3)">
+                            <span class="widget-card-status-dot" style="background:#ef4444"></span>Ditolak
                         </span>
                         @else
-                        <span class="widget-card-status" style="background:rgba(52,211,153,0.15);color:#6ee7b7;border:1px solid rgba(52,211,153,0.3)">
-                            <span class="widget-card-status-dot" style="background:#34d399"></span>Tersedia
+                        <span class="widget-card-status" style="background:rgba(107,114,128,0.15);color:#9ca3af;border:1px solid rgba(107,114,128,0.3)">
+                            <span class="widget-card-status-dot" style="background:#6b7280"></span>{{ $material->qc_status ?? '-' }}
                         </span>
                         @endif
                         <div class="widget-card-actions" style="border:none;margin:0;padding:0">
@@ -520,7 +538,7 @@
                     </template>
 
                     <template x-if="modalMode !== 'delete'">
-                        <form :action="modalMode === 'create' ? '{{ route('admin.products.store') }}' : '/admin/products/' + selectedProduct.id" method="POST" class="space-y-4" enctype="multipart/form-data">
+                        <form :action="modalMode === 'create' ? '{{ route('admin.raw-materials.store') }}' : '/admin/raw-materials/' + selectedMaterial.id" method="POST" class="space-y-4" enctype="multipart/form-data">
                             @csrf
                             <template x-if="modalMode === 'edit'">
                                 @method('PUT')
@@ -535,8 +553,9 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1.5">SKU</label>
-                                    <input type="text" name="sku" x-model="selectedMaterial.sku" placeholder="Optional"
-                                        class="hybrid-input w-full h-11 px-4 rounded-sm text-sm font-mono">
+                                    <input type="text" x-model="selectedMaterial.sku" readonly
+                                        :placeholder="modalMode === 'create' ? 'Auto-generated (RM-xxxxxx)' : selectedMaterial.sku"
+                                        class="hybrid-input w-full h-11 px-4 rounded-sm text-sm font-mono opacity-60 cursor-not-allowed">
                                 </div>
                                 <div>
                                     <label class="block text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-1.5">Tipe</label>
@@ -651,20 +670,25 @@
                                         <p class="text-xs text-emerald-200/40" x-text="detailData.sku || 'Tanpa SKU'"></p>
                                     </div>
                                 </div>
-                                <span x-show="detailData.stock_status === 'available'"
+                                <span x-show="detailData.qc_status === 'waiting'"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-300 border border-sky-500/20 rounded-sm">
+                                    <span class="w-1.5 h-1.5" style="background: #38BDF8; border-radius: 0;"></span>
+                                    Menunggu QC
+                                </span>
+                                <span x-show="detailData.qc_status === 'accept'"
                                     class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 rounded-sm">
                                     <span class="w-1.5 h-1.5" style="background: #34D399; border-radius: 0;"></span>
-                                    Tersedia
+                                    Diterima
                                 </span>
-                                <span x-show="detailData.stock_status === 'low'"
+                                <span x-show="detailData.qc_status === 'rework'"
                                     class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20 rounded-sm">
                                     <span class="w-1.5 h-1.5" style="background: #F59E0B; border-radius: 0;"></span>
-                                    Rendah
+                                    QC Ulang
                                 </span>
-                                <span x-show="detailData.stock_status === 'out'"
+                                <span x-show="detailData.qc_status === 'decline'"
                                     class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-300 border border-red-500/20 rounded-sm">
                                     <span class="w-1.5 h-1.5" style="background: #EF4444; border-radius: 0;"></span>
-                                    Habis
+                                    Ditolak
                                 </span>
                             </div>
 

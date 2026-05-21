@@ -64,9 +64,9 @@ class ReportController extends Controller
             fputcsv($output, [], $delimiter);
 
             if ($reportType === 'production') {
-                fputcsv($output, ['NO;NO_BATCH;NAMA_PRODUK;KATEGORI;OPERATOR;TANGGAL;DURASI;STATUS'], $delimiter);
+                fputcsv($output, ['NO;NO_BATCH;NAMA_PRODUK;JENISS;OPERATOR;TANGGAL;DURASI;STATUS'], $delimiter);
                 foreach ($data['productions'] ?? [] as $i => $p) {
-                    fputcsv($output, [$i + 1, trim($p->batch_number ?? ''), trim($p->product->name ?? '-'), trim($p->product->category ?? '-'), trim($p->user->name ?? '-'), $p->created_at->format('d-m-Y H:i'), (int) ($p->estimated_duration ?? 0), trim($p->status)], $delimiter);
+                    fputcsv($output, [$i + 1, trim($p->batch_number ?? ''), trim($p->product->name ?? '-'), trim($p->product->jeniss ?? '-'), trim($p->user->name ?? '-'), $p->created_at->format('d-m-Y H:i'), (int) ($p->estimated_duration ?? 0), trim($p->status)], $delimiter);
                 }
             } elseif ($reportType === 'qc') {
                 fputcsv($output, ['NO;ID_QC;NO_BATCH;INSPECTOR;TANGGAL;HASIL;TINDAKAN'], $delimiter);
@@ -205,7 +205,7 @@ class ReportController extends Controller
                     $i + 1,
                     $p->batch_number,
                     $p->product->name ?? '-',
-                    $p->product->category ?? '-',
+                    $p->product->jeniss ?? '-',
                     $p->user->name ?? '-',
                     $p->created_at->format('d M Y'),
                     (int) ($p->estimated_duration ?? 0),

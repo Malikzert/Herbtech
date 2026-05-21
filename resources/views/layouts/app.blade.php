@@ -613,6 +613,10 @@
                         Quality Control
                     </a>
                     <div class="text-xs font-semibold text-[#93C5FD] uppercase tracking-wider mb-1 mt-3 px-2">Informasi</div>
+                    <a href="{{ route('operator.raw-materials.qc.index') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.raw-materials.qc.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
+                        <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        QC Bahan Baku
+                    </a>
                     <a href="{{ route('operator.raw-materials.index') }}" class="flex items-center px-3 py-1.5 rounded-lg transition {{ request()->routeIs('operator.raw-materials.*') ? 'bg-white/20 font-bold' : 'hover:bg-white/15' }}">
                         <svg class="w-4 h-4 mr-2 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                         Monitoring Stok

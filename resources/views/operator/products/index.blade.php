@@ -34,10 +34,10 @@
                     class="w-full h-11 pl-10 pr-4 bg-[#1e293b]/60 border border-[#334155] text-[#93C5FD] placeholder-[#64748B] text-sm focus:ring-[#1DA1F2] focus:border-[#1DA1F2] focus:outline-none transition">
             </div>
 
-            <select name="category" class="h-11 px-4 py-2 bg-[#1e293b]/60 border border-[#334155] text-[#93C5FD] text-sm focus:ring-[#1DA1F2] focus:border-[#1DA1F2] focus:outline-none transition cursor-pointer">
-                <option value="" class="bg-[#0f172a]">Semua Kategori</option>
-                @foreach($categories as $cat)
-                <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }} class="bg-[#0f172a]">{{ $cat }}</option>
+            <select name="jeniss" class="h-11 px-4 py-2 bg-[#1e293b]/60 border border-[#334155] text-[#93C5FD] text-sm focus:ring-[#1DA1F2] focus:border-[#1DA1F2] focus:outline-none transition cursor-pointer">
+                <option value="" class="bg-[#0f172a]">Semua Jeniss</option>
+                @foreach($jenissList as $jenis)
+                <option value="{{ $jenis }}" {{ request('jeniss') === $jenis ? 'selected' : '' }} class="bg-[#0f172a]">{{ $jenis }}</option>
                 @endforeach
             </select>
 
@@ -46,7 +46,7 @@
                 Filter
             </button>
 
-            @if(request('search') || request('category'))
+            @if(request('search') || request('jeniss'))
             <a href="{{ route('operator.products.index') }}" class="h-11 px-5 bg-[#334155] hover:bg-[#1e293b] text-[#93C5FD] font-medium transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 Reset
@@ -65,7 +65,7 @@
                 <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">No</span></th>
                 <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Nama Produk</span></th>
                 <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">SKU</span></th>
-                <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Kategori</span></th>
+                <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Jeniss</span></th>
                 <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Unit</span></th>
                 <th class="px-6 py-3.5 text-right"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Aksi</span></th>
             </tr>
@@ -82,8 +82,8 @@
                 </td>
                 <td class="px-6 py-4 text-sm text-[#93C5FD] font-mono">{{ $product->sku_code }}</td>
                 <td class="px-6 py-4">
-                    @if($product->category)
-                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#1DA1F2]/20 text-[#93C5FD] border border-[#1DA1F2]/30">{{ $product->category }}</span>
+                    @if($product->jeniss)
+                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#1DA1F2]/20 text-[#93C5FD] border border-[#1DA1F2]/30">{{ $product->jeniss }}</span>
                     @else
                     <span class="text-xs text-[#64748B]">-</span>
                     @endif
@@ -136,8 +136,8 @@
         <div class="widget-card cursor-pointer" @click="openDetail({{ $product->id }})">
             <div class="widget-card-header">
                 <img src="{{ $product->image ? asset('image/' . $product->image) : asset('image/(defaultPRK).png') }}" alt="{{ $product->name }}">
-                @if($product->category)
-                <span class="widget-card-badge" style="background:rgba(29,161,242,0.25);color:#93C5FD;border:1px solid rgba(29,161,242,0.4)">{{ $product->category }}</span>
+                @if($product->jeniss)
+                <span class="widget-card-badge" style="background:rgba(29,161,242,0.25);color:#93C5FD;border:1px solid rgba(29,161,242,0.4)">{{ $product->jeniss }}</span>
                 @endif
             </div>
             <div class="widget-card-body">
@@ -228,8 +228,8 @@
 
                         <div class="grid grid-cols-2 gap-4 pt-4 border-t border-[#334155]">
                             <div>
-                                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#64748B] mb-1">Kategori</p>
-                                <p class="text-sm font-bold text-[#DBEAFE]" x-text="detailData.category || '-'"></p>
+                                <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#64748B] mb-1">Jeniss</p>
+                                <p class="text-sm font-bold text-[#DBEAFE]" x-text="detailData.jeniss || '-'"></p>
                             </div>
                             <div>
                                 <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#64748B] mb-1">Unit</p>

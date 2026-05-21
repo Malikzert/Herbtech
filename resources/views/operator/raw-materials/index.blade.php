@@ -67,7 +67,7 @@
                 <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">SKU</span></th>
                 <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Tipe</span></th>
                 <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Stok</span></th>
-                <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Status</span></th>
+                <th class="px-6 py-3.5 text-left"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Status QC</span></th>
                 <th class="px-6 py-3.5 text-right"><span class="text-[#93C5FD] text-[10px] font-bold uppercase tracking-[0.15em]">Aksi</span></th>
             </tr>
         </thead>
@@ -101,12 +101,16 @@
                     </div>
                 </td>
                 <td class="px-6 py-4">
-                    @if($material->current_stock <= 0)
-                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#334155] text-[#64748B] border border-[#334155]">Habis</span>
-                    @elseif($material->current_stock < ($material->min_stock_level ?? 10))
-                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#1DA1F2]/20 text-[#93C5FD] border border-[#1DA1F2]/30">Rendah</span>
+                    @if($material->qc_status === 'waiting')
+                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-sky-500/20 text-sky-300 border border-sky-500/30">Menunggu QC</span>
+                    @elseif($material->qc_status === 'accept')
+                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#3B82F6]/20 text-[#DBEAFE] border border-[#3B82F6]/30">Diterima</span>
+                    @elseif($material->qc_status === 'rework')
+                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#1DA1F2]/20 text-[#93C5FD] border border-[#1DA1F2]/30">QC Ulang</span>
+                    @elseif($material->qc_status === 'decline')
+                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#334155] text-[#64748B] border border-[#334155]">Ditolak</span>
                     @else
-                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#3B82F6]/20 text-[#DBEAFE] border border-[#3B82F6]/30">Tersedia</span>
+                    <span class="inline-block px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] bg-[#334155] text-[#64748B] border border-[#334155]">{{ $material->qc_status ?? '-' }}</span>
                     @endif
                 </td>
                 <td class="px-6 py-4 text-right">
@@ -184,17 +188,25 @@
                     @endif
                 </div>
                 <div class="widget-card-spacer"></div>
-                @if($material->current_stock <= 0)
-                <span class="widget-card-status" style="background:rgba(61,43,31,0.5);color:#64748B;border:1px solid rgba(61,43,31,0.6)">
-                    <span class="widget-card-status-dot" style="background:#64748B"></span>Habis
+                @if($material->qc_status === 'waiting')
+                <span class="widget-card-status" style="background:rgba(56,189,248,0.2);color:#7dd3fc;border:1px solid rgba(56,189,248,0.3)">
+                    <span class="widget-card-status-dot" style="background:#38BDF8"></span>Menunggu QC
                 </span>
-                @elseif($material->current_stock < ($material->min_stock_level ?? 10))
+                @elseif($material->qc_status === 'accept')
+                <span class="widget-card-status" style="background:rgba(59,130,246,0.2);color:#DBEAFE;border:1px solid rgba(59,130,246,0.3)">
+                    <span class="widget-card-status-dot" style="background:#DBEAFE"></span>Diterima
+                </span>
+                @elseif($material->qc_status === 'rework')
                 <span class="widget-card-status" style="background:rgba(139,105,20,0.2);color:#93C5FD;border:1px solid rgba(139,105,20,0.3)">
-                    <span class="widget-card-status-dot" style="background:#93C5FD"></span>Rendah
+                    <span class="widget-card-status-dot" style="background:#93C5FD"></span>QC Ulang
+                </span>
+                @elseif($material->qc_status === 'decline')
+                <span class="widget-card-status" style="background:rgba(61,43,31,0.5);color:#64748B;border:1px solid rgba(61,43,31,0.6)">
+                    <span class="widget-card-status-dot" style="background:#64748B"></span>Ditolak
                 </span>
                 @else
-                <span class="widget-card-status" style="background:rgba(59,130,246,0.2);color:#DBEAFE;border:1px solid rgba(59,130,246,0.3)">
-                    <span class="widget-card-status-dot" style="background:#DBEAFE"></span>Tersedia
+                <span class="widget-card-status" style="background:rgba(61,43,31,0.5);color:#64748B;border:1px solid rgba(61,43,31,0.6)">
+                    <span class="widget-card-status-dot" style="background:#64748B"></span>{{ $material->qc_status ?? '-' }}
                 </span>
                 @endif
             </div>
@@ -262,20 +274,25 @@
                                     <p class="text-xs text-[#64748B]" x-text="detailData.sku || 'Tanpa SKU'"></p>
                                 </div>
                             </div>
-                            <span x-show="detailData.stock_status === 'available'"
+                            <span x-show="detailData.qc_status === 'waiting'"
+                                class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30 rounded-sm">
+                                <span class="w-1.5 h-1.5" style="background: #38BDF8; border-radius: 0;"></span>
+                                Menunggu QC
+                            </span>
+                            <span x-show="detailData.qc_status === 'accept'"
                                 class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-[#3B82F6]/20 text-[#DBEAFE] border border-[#3B82F6]/30 rounded-sm">
                                 <span class="w-1.5 h-1.5" style="background: #DBEAFE; border-radius: 0;"></span>
-                                Tersedia
+                                Diterima
                             </span>
-                            <span x-show="detailData.stock_status === 'low'"
+                            <span x-show="detailData.qc_status === 'rework'"
                                 class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-[#1DA1F2]/20 text-[#93C5FD] border border-[#1DA1F2]/30 rounded-sm">
                                 <span class="w-1.5 h-1.5" style="background: #93C5FD; border-radius: 0;"></span>
-                                Rendah
+                                QC Ulang
                             </span>
-                            <span x-show="detailData.stock_status === 'out'"
+                            <span x-show="detailData.qc_status === 'decline'"
                                 class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider bg-[#334155] text-[#64748B] border border-[#334155] rounded-sm">
                                 <span class="w-1.5 h-1.5" style="background: #64748B; border-radius: 0;"></span>
-                                Habis
+                                Ditolak
                             </span>
                         </div>
 
