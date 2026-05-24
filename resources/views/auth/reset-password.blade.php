@@ -36,7 +36,7 @@
         <div>
             <label for="password" class="block text-sm font-medium text-white/80 mb-2">Password Baru</label>
             <input type="password" id="password" name="password" class="input-glass" placeholder="••••••••" required>
-            <p class="mt-1.5 text-xs text-white/50">Minimal 8 karakter</p>
+            <p class="mt-1.5 text-xs text-red-300/80 font-mono">WAJIB: min 8 karakter, huruf besar/kecil, angka, dan simbol (@, #, $, dll)</p>
         </div>
 
         <div>

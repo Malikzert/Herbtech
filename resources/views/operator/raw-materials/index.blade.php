@@ -5,21 +5,9 @@
 
 @section('content')
 <div x-data="{ viewMode: (localStorage.getItem('adminViewMode') || 'list'),
-    detailModalOpen: false, detailData: null, detailLoading: false,
+    detailModalOpen: false, detailData: null,
     init() {
         window.addEventListener('admin-view-change', (e) => { this.viewMode = e.detail; });
-    },
-    openDetail(id) {
-        this.detailLoading = true;
-        this.detailData = null;
-        this.detailModalOpen = true;
-        fetch('/admin/raw-materials/' + id, { headers: { 'Accept': 'application/json' } })
-            .then(r => r.json())
-            .then(res => {
-                if (res.success) { this.detailData = res.data; }
-                this.detailLoading = false;
-            })
-            .catch(() => { this.detailLoading = false; });
     }
 }">
 
@@ -114,7 +102,7 @@
                     @endif
                 </td>
                 <td class="px-6 py-4 text-right">
-                    <button @click="openDetail({{ $material->id }})"
+                    <button @click="detailData = {{ Js::from($material) }}; detailModalOpen = true"
                         class="w-9 h-9 flex items-center justify-center text-[#64748B] hover:text-[#93C5FD] hover:bg-[#1e293b]/50 transition-all duration-200"
                         title="Lihat Detail">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -157,7 +145,7 @@
     </div>
     <div class="widget-grid">
         @forelse($rawMaterials as $material)
-        <div class="widget-card cursor-pointer" @click="openDetail({{ $material->id }})">
+        <div class="widget-card cursor-pointer" @click="detailData = {{ Js::from($material) }}; detailModalOpen = true">
             <div class="widget-card-header">
                 <img src="{{ $material->image ? asset('image/' . $material->image) : asset('image/(defaultRAW).jpg') }}" alt="{{ $material->name }}">
                 @switch($material->type)
@@ -250,14 +238,7 @@
             </div>
 
             <div class="px-6 pb-6">
-                <div x-show="detailLoading" class="flex items-center justify-center py-12">
-                    <svg class="animate-spin h-8 w-8 text-[#93C5FD]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </div>
-
-                <template x-if="detailData && !detailLoading">
+                <template x-if="detailData">
                     <div class="space-y-5">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-4">

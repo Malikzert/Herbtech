@@ -60,12 +60,42 @@
 <div class="space-y-6">
 
     {{-- Flash Messages --}}
-    @if($errors->any())
-    <div class="relative overflow-hidden rounded-sm border border-red-500/30 bg-red-900/60 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.2)] flex items-start gap-3">
+    @if(session('success'))
+    <div class="relative overflow-hidden border border-sky-500 bg-[#0b0f19]/90 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.3)] flex items-start gap-3 font-mono">
+        <svg class="w-5 h-5 shrink-0 mt-0.5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div>
+            <p class="font-bold text-xs uppercase tracking-wider text-sky-400">BERHASIL</p>
+            <p class="text-sm text-sky-300/80 mt-1">{{ session('success') }}</p>
+        </div>
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="relative overflow-hidden border border-red-500 bg-[#0b0f19]/90 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.3)] flex items-start gap-3 font-mono">
         <svg class="w-5 h-5 shrink-0 mt-0.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <div>
-            <p class="font-bold text-xs uppercase tracking-wider text-red-300">Terjadi kesalahan validasi:</p>
-            <ul class="list-disc list-inside text-sm text-red-200/80 mt-1">
+            <p class="font-bold text-xs uppercase tracking-wider text-red-400">GAGAL</p>
+            <p class="text-sm text-red-300/80 mt-1">{{ session('error') }}</p>
+        </div>
+    </div>
+    @endif
+
+    @if(session('warning'))
+    <div class="relative overflow-hidden border border-amber-500 bg-[#0b0f19]/90 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.3)] flex items-start gap-3 font-mono">
+        <svg class="w-5 h-5 shrink-0 mt-0.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div>
+            <p class="font-bold text-xs uppercase tracking-wider text-amber-400">PERINGATAN</p>
+            <p class="text-sm text-amber-300/80 mt-1">{{ session('warning') }}</p>
+        </div>
+    </div>
+    @endif
+
+    @if($errors->any())
+    <div class="relative overflow-hidden border border-red-500 bg-[#0b0f19]/90 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.3)] flex items-start gap-3 font-mono">
+        <svg class="w-5 h-5 shrink-0 mt-0.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div>
+            <p class="font-bold text-xs uppercase tracking-wider text-red-400">Terjadi kesalahan validasi:</p>
+            <ul class="list-disc list-inside text-sm text-red-300/80 mt-1">
                 @foreach($errors->all() as $err)
                 <li>{{ $err }}</li>
                 @endforeach
@@ -76,106 +106,6 @@
 
 
 
-    {{-- GA RESULTS --}}
-    @php $ga = session('ga_result') ?? $ga_result_from_db; @endphp
-    @if($ga)
-    <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
-        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
-        <div class="flex items-center justify-between mt-3 mb-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 flex items-center justify-center bg-blue-500/15 border border-blue-500/30" style="border-radius: 0;">
-                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                </div>
-                <div>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Hasil Rekomendasi Batch</h3>
-                    <p class="text-xs text-emerald-200/40">{{ ($ga['generations'] ?? 0) > 0 ? 'Dioptimalkan dengan Algoritma Genetika (' . $ga['generations'] . ' generasi)' : 'Rekomendasi langsung berdasarkan skor' }}</p>
-                </div>
-            </div>
-            <button onclick="this.closest('.relative').remove()" class="w-8 h-8 flex items-center justify-center text-emerald-200/30 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-        </div>
-
-        {{-- Recommended --}}
-        <div class="mb-4">
-            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-2 flex items-center gap-2">
-                <span class="w-2 h-2 bg-emerald-400" style="border-radius: 0;"></span>
-                Batch Direkomendasikan ({{ count($ga['recommended_batches']) }})
-            </h4>
-            <div class="space-y-2">
-                @foreach($ga['recommended_batches'] as $batch)
-                <div class="flex items-center justify-between p-3 border border-emerald-500/15 bg-emerald-500/5" style="border-radius: 0;">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <span class="w-6 h-6 flex items-center justify-center text-[10px] font-black bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0" style="border-radius: 0;">{{ $loop->iteration }}</span>
-                        <div class="min-w-0">
-                            <p class="text-sm font-bold text-emerald-50/90 truncate">{{ $batch['product_name'] }}</p>
-                            <p class="text-[10px] text-emerald-200/40 truncate">Reject: {{ $batch['reject_rate'] ?? 0 }}%</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 shrink-0">
-                        <div class="text-right">
-                            <span class="text-[10px] text-emerald-200/40 block">FEFO</span>
-                            <span class="text-xs font-bold text-emerald-50/80">{{ $batch['fefo_score'] ?? '-' }}</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-[10px] text-emerald-200/40 block">Stok</span>
-                            <span class="text-xs font-bold text-emerald-50/80">{{ $batch['stock_score'] ?? '-' }}</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-[10px] text-emerald-200/40 block">Fitness</span>
-                            <span class="text-xs font-bold text-emerald-300">{{ $batch['fitness_score'] ?? '-' }}</span>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-
-        {{-- Not Recommended --}}
-        @if(!empty($ga['not_recommended_batches']))
-        <div class="mb-4">
-            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-400/60 mb-2 flex items-center gap-2">
-                <span class="w-2 h-2 bg-amber-400" style="border-radius: 0;"></span>
-                Batch Tidak Direkomendasikan ({{ count($ga['not_recommended_batches']) }})
-            </h4>
-            <div class="space-y-2">
-                @foreach($ga['not_recommended_batches'] as $batch)
-                <div class="p-3 border border-amber-500/15 bg-amber-500/5" style="border-radius: 0;">
-                    <div class="flex items-start gap-3">
-                        <span class="w-6 h-6 flex items-center justify-center text-[10px] font-black bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0 mt-0.5" style="border-radius: 0;">{{ $loop->iteration }}</span>
-                        <div>
-                            <p class="text-sm font-bold text-emerald-50/90">{{ $batch['product_name'] }}</p>
-                            <p class="text-[10px] text-amber-300/80 mt-1">{{ $batch['reason'] }}</p>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-
-        {{-- Remaining Stock --}}
-        @if(!empty($ga['remaining_stock']))
-        <div>
-            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-2 flex items-center gap-2">
-                <span class="w-2 h-2 bg-blue-400" style="border-radius: 0;"></span>
-                Simulasi Sisa Stok
-            </h4>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                @foreach($ga['remaining_stock'] as $stock)
-                <div class="p-2 border border-emerald-500/10 bg-emerald-500/5" style="border-radius: 0;">
-                    <p class="text-[10px] font-bold text-emerald-50/70 truncate" title="{{ $stock['name'] }}">{{ $stock['name'] }}</p>
-                    <p class="text-xs font-black {{ $stock['remaining_stock'] <= 0 ? 'text-red-400' : 'text-emerald-300' }}">{{ number_format($stock['remaining_stock'], 2) }} <span class="text-[9px] font-normal text-emerald-200/40">{{ $stock['unit'] }}</span></p>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-
-        <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
-        <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
-    </div>
-    @endif
 
     {{-- STATS --}}
     @php
@@ -400,7 +330,6 @@
                                     Preview
                                 </button>
                                 <button type="submit" name="action" value="approve"
-                                        onclick="return confirm('Setujui jadwal yang dipilih?')"
                                         class="px-5 py-2.5 rounded-sm text-[10px] font-bold uppercase tracking-wider flex items-center gap-2"
                                         style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #fff; transition: all 0.2s ease; border: none;"
                                         onmouseover="this.style.background='linear-gradient(135deg, #10B981 0%, #059669 100%)'; this.style.boxShadow='0 0 20px rgba(5,150,105,0.4)'"
@@ -409,7 +338,6 @@
                                     Approve
                                 </button>
                                 <button type="submit" name="action" value="reset"
-                                        onclick="return confirm('Reset jadwal untuk batch terpilih?')"
                                         class="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/25 text-emerald-200/60 hover:text-red-400 hover:border-red-500/30 rounded-sm transition-all duration-200 flex items-center gap-2">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                     Reset
@@ -489,6 +417,108 @@
                 <div class="absolute bottom-0 right-0 w-16 h-[2px] bg-emerald-500/25"></div>
                 <div class="absolute bottom-0 right-0 w-[2px] h-16 bg-emerald-500/25"></div>
             </div>
+
+    {{-- GA RESULTS --}}
+    @php $ga = session('ga_result') ?? $ga_result_from_db; @endphp
+    @if($ga)
+    <div class="relative overflow-hidden rounded-sm border border-emerald-500/25 bg-emerald-900/60 backdrop-blur-md p-5 shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
+        <div class="h-[2px] bg-gradient-to-r from-emerald-500/60 via-emerald-400/30 to-transparent"></div>
+        <div class="flex items-center justify-between mt-3 mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 flex items-center justify-center bg-blue-500/15 border border-blue-500/30" style="border-radius: 0;">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-50">Hasil Rekomendasi Batch</h3>
+                    <p class="text-xs text-emerald-200/40">{{ ($ga['generations'] ?? 0) > 0 ? 'Dioptimalkan dengan Algoritma Genetika (' . $ga['generations'] . ' generasi)' : 'Rekomendasi langsung berdasarkan skor' }}</p>
+                </div>
+            </div>
+            <button onclick="this.closest('.relative').remove()" class="w-8 h-8 flex items-center justify-center text-emerald-200/30 hover:text-emerald-300 hover:bg-emerald-500/15 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        {{-- Recommended --}}
+        <div class="mb-4">
+            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 bg-emerald-400" style="border-radius: 0;"></span>
+                Batch Direkomendasikan ({{ count($ga['recommended_batches']) }})
+            </h4>
+            <div class="space-y-2">
+                @foreach($ga['recommended_batches'] as $batch)
+                <div class="flex items-center justify-between p-3 border border-emerald-500/15 bg-emerald-500/5" style="border-radius: 0;">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <span class="w-6 h-6 flex items-center justify-center text-[10px] font-black bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0" style="border-radius: 0;">{{ $loop->iteration }}</span>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-emerald-50/90 truncate">{{ $batch['product_name'] }}</p>
+                            <p class="text-[10px] text-emerald-200/40 truncate">Reject: {{ $batch['reject_rate'] ?? 0 }}%</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 shrink-0">
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-200/40 block">FEFO</span>
+                            <span class="text-xs font-bold text-emerald-50/80">{{ $batch['fefo_score'] ?? '-' }}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-200/40 block">Stok</span>
+                            <span class="text-xs font-bold text-emerald-50/80">{{ $batch['stock_score'] ?? '-' }}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-200/40 block">Fitness</span>
+                            <span class="text-xs font-bold text-emerald-300">{{ $batch['fitness_score'] ?? '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Not Recommended --}}
+        @if(!empty($ga['not_recommended_batches']))
+        <div class="mb-4">
+            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-400/60 mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 bg-amber-400" style="border-radius: 0;"></span>
+                Batch Tidak Direkomendasikan ({{ count($ga['not_recommended_batches']) }})
+            </h4>
+            <div class="space-y-2">
+                @foreach($ga['not_recommended_batches'] as $batch)
+                <div class="p-3 border border-amber-500/15 bg-amber-500/5" style="border-radius: 0;">
+                    <div class="flex items-start gap-3">
+                        <span class="w-6 h-6 flex items-center justify-center text-[10px] font-black bg-amber-500/15 text-amber-400 border border-amber-500/30 shrink-0 mt-0.5" style="border-radius: 0;">{{ $loop->iteration }}</span>
+                        <div>
+                            <p class="text-sm font-bold text-emerald-50/90">{{ $batch['product_name'] }}</p>
+                            <p class="text-[10px] text-amber-300/80 mt-1">{{ $batch['reason'] }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- Remaining Stock --}}
+        @if(!empty($ga['remaining_stock']))
+        <div>
+            <h4 class="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-400/60 mb-2 flex items-center gap-2">
+                <span class="w-2 h-2 bg-blue-400" style="border-radius: 0;"></span>
+                Simulasi Sisa Stok
+            </h4>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                @foreach($ga['remaining_stock'] as $stock)
+                <div class="p-2 border border-emerald-500/10 bg-emerald-500/5" style="border-radius: 0;">
+                    <p class="text-[10px] font-bold text-emerald-50/70 truncate" title="{{ $stock['name'] }}">{{ $stock['name'] }}</p>
+                    <p class="text-xs font-black {{ $stock['remaining_stock'] <= 0 ? 'text-red-400' : 'text-emerald-300' }}">{{ number_format($stock['remaining_stock'], 2) }} <span class="text-[9px] font-normal text-emerald-200/40">{{ $stock['unit'] }}</span></p>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        <div class="absolute bottom-0 right-0 w-12 h-[2px] bg-emerald-500/30"></div>
+        <div class="absolute bottom-0 right-0 w-[2px] h-12 bg-emerald-500/30"></div>
+    </div>
+    @endif
+
         </div>
 
         {{-- RIGHT: GA Config + Low Stock --}}
@@ -717,17 +747,17 @@ document.getElementById('generateForm')?.addEventListener('submit', function(e) 
         body: new FormData(this),
         headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
     })
-    .then(res => res.json())
-    .then(data => {
+    .then(res => res.json().then(data => ({ data, ok: res.ok })))
+    .then(({ data, ok }) => {
         clearInterval(progressInterval);
-        if (data.success) {
+        if (ok && data.success) {
             progressBar.style.width = '100%';
             progressPercent.textContent = '100%';
             progressBar.classList.remove('progress-bar-indeterminate');
             showNotification('success', data.message);
             setTimeout(() => window.location.reload(), 1500);
         } else {
-            showNotification('warning', data.message);
+            showAlert('error', data.message || 'Terjadi kesalahan saat menjalankan algoritma.');
             btn.disabled = false;
             spinner.classList.add('hidden');
             icon.style.display = '';
@@ -735,9 +765,9 @@ document.getElementById('generateForm')?.addEventListener('submit', function(e) 
             progressWrapper.classList.add('hidden');
         }
     })
-    .catch(() => {
+    .catch((err) => {
         clearInterval(progressInterval);
-        showNotification('error', 'Terjadi kesalahan saat menjalankan algoritma.');
+        showAlert('error', 'Terjadi kesalahan internal pada optimasi fungsi fitness algoritma.');
         btn.disabled = false;
         spinner.classList.add('hidden');
         icon.style.display = '';
@@ -800,6 +830,25 @@ function showNotification(type, message) {
         }
     }
     window.dispatchEvent(new CustomEvent('notify', { detail: { type: type, message: message } }));
+}
+
+function showAlert(type, message) {
+    const container = document.querySelector('.space-y-6');
+    if (!container) return;
+    const existing = container.querySelector('.ga-error-alert');
+    if (existing) existing.remove();
+    const isError = type === 'error';
+    const div = document.createElement('div');
+    div.className = 'ga-error-alert relative overflow-hidden border-l-4 ' + (isError ? 'border-red-500' : 'border-amber-500') + ' bg-slate-950/90 backdrop-blur-md p-4 shadow-[0_4px_24px_rgba(0,0,0,0.3)] flex items-start gap-3 font-mono';
+    div.innerHTML =
+        '<svg class="w-5 h-5 shrink-0 mt-0.5 ' + (isError ? 'text-red-400' : 'text-amber-400') + '" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' +
+        '<div>' +
+        '<p class="font-bold text-xs uppercase tracking-wider ' + (isError ? 'text-red-400' : 'text-amber-400') + '">' + (isError ? 'GAGAL' : 'PERINGATAN') + '</p>' +
+        '<p class="text-sm ' + (isError ? 'text-red-300/80' : 'text-amber-300/80') + ' mt-1">' + message + '</p>' +
+        '</div>' +
+        '<button onclick="this.parentElement.remove()" class="ml-auto shrink-0 w-5 h-5 flex items-center justify-center ' + (isError ? 'text-red-400/50 hover:text-red-300' : 'text-amber-400/50 hover:text-amber-300') + ' transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>';
+    container.insertBefore(div, container.firstChild);
+    setTimeout(function() { if (div.parentElement) div.remove(); }, 8000);
 }
 
 document.addEventListener('DOMContentLoaded', updateSelectedCount);

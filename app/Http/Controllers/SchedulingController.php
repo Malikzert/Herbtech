@@ -49,43 +49,104 @@ class SchedulingController extends Controller
             abort(403);
         }
 
-        $this->loadData();
+        $isAjax = $request->ajax() || $request->wantsJson();
 
-        if ($this->products->isEmpty()) {
-            return back()->with('warning', 'Tidak ada produk tersedia untuk dijadwalkan.');
+        try {
+            // ---- Pre-validation: Produk Sudah Masuk Rencana Produksi Aktif ----
+            $productionIds = $request->input('production_ids', []);
+            if (!empty($productionIds)) {
+                $activeProductions = Production::whereIn('id', $productionIds)
+                    ->whereIn('status', ['pending', 'in_progress', 'qc_check', 'rework'])
+                    ->where('algorithm_generated', true)
+                    ->exists();
+
+                if ($activeProductions) {
+                    $msg = 'Proses ditolak! Produk yang terpilih sudah masuk ke dalam antrean penjadwalan produksi aktif periode ini.';
+                    return $isAjax
+                        ? response()->json(['success' => false, 'message' => $msg], 422)
+                        : back()->with('error', $msg);
+                }
+            }
+
+            // ---- Pre-validation: Bahan Baku dengan Status QC Pending ----
+            $pendingQcMaterials = RawMaterial::whereIn('qc_status', ['waiting', 'rework'])
+                ->where('is_active', true)
+                ->get();
+
+            if ($pendingQcMaterials->isNotEmpty()) {
+                $names = $pendingQcMaterials->pluck('name')->implode(', ');
+                $msg = "Proses gagal! Terdapat komponen bahan baku pada resep yang statusnya masih Waiting (Belum di-QC oleh Operator): {$names}.";
+                return $isAjax
+                    ? response()->json(['success' => false, 'message' => $msg], 422)
+                    : back()->with('error', $msg);
+            }
+
+            // ---- Pre-validation: Stok Bahan Baku ----
+            $lowStockMaterials = RawMaterial::where(function ($q) {
+                $q->where('current_stock', '<=', \DB::raw('min_stock_level'))
+                  ->orWhere('current_stock', '<=', 0);
+            })->where('is_active', true)->get();
+
+            if ($lowStockMaterials->isNotEmpty()) {
+                $names = $lowStockMaterials->pluck('name')->implode(', ');
+                $msg = "Gagal memproses jadwal! Sisa stok bahan baku saat ini tidak mencukupi batas minimum kebutuhan batch produksi. Bahan dengan stok rendah: {$names}.";
+                return $isAjax
+                    ? response()->json(['success' => false, 'message' => $msg], 422)
+                    : back()->with('error', $msg);
+            }
+
+            $this->loadData();
+
+            if ($this->products->isEmpty()) {
+                $msg = 'Tidak ada produk tersedia untuk dijadwalkan.';
+                return $isAjax
+                    ? response()->json(['success' => false, 'message' => $msg], 422)
+                    : back()->with('warning', $msg);
+            }
+
+            // ---- 1. Hitung skor FEFO & volume stok tiap produk ----
+            $this->calculateScores();
+
+            // ---- 2. Jalankan Algoritma Genetika ----
+            $productIds = $this->products->pluck('id')->toArray();
+            $bestChromosome = $this->runGeneticAlgorithm($productIds);
+
+            // ---- 3. Bangun output rekomendasi ----
+            $result = $this->buildRecommendation($bestChromosome, $productIds);
+
+            // ---- 4. Simpan hasil ke tabel `schedulings` ----
+            $this->persistResults($result, $request);
+
+            // ---- 5. Kembalikan response ----
+            if ($isAjax) {
+                return response()->json([
+                    'success'               => true,
+                    'message'               => 'Rekomendasi batch berhasil dibuat menggunakan Algoritma Genetika.',
+                    'recommended_batches'   => $result['recommended'],
+                    'not_recommended_batches' => $result['not_recommended'],
+                ]);
+            }
+
+            return redirect()->route('admin.scheduling.index')
+                ->with('success', 'Rekomendasi batch berhasil dibuat menggunakan Algoritma Genetika.')
+                ->with('ga_result', [
+                    'recommended_batches'     => $result['recommended'],
+                    'not_recommended_batches' => $result['not_recommended'],
+                    'remaining_stock'         => $result['remaining_stock'],
+                    'generations'             => self::MAX_GENERATIONS,
+                    'message'                 => 'Rekomendasi batch berhasil dibuat menggunakan Algoritma Genetika.',
+                ]);
+        } catch (\Exception $e) {
+            \Log::error('GA Algorithm error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+
+            $msg = 'Terjadi kesalahan internal pada optimasi fungsi fitness algoritma.';
+
+            if ($isAjax) {
+                return response()->json(['success' => false, 'message' => $msg], 500);
+            }
+
+            return back()->with('error', $msg);
         }
-
-        // ---- 1. Hitung skor FEFO & volume stok tiap produk ----
-        $this->calculateScores();
-
-        // ---- 2. Jalankan Algoritma Genetika ----
-        $productIds = $this->products->pluck('id')->toArray();
-        $bestChromosome = $this->runGeneticAlgorithm($productIds);
-
-        // ---- 3. Bangun output rekomendasi ----
-        $result = $this->buildRecommendation($bestChromosome, $productIds);
-
-        // ---- 4. Simpan hasil ke tabel `schedulings` ----
-        $this->persistResults($result, $request);
-
-        // ---- 5. Kembalikan Collection terpisah ----
-        if ($request->ajax() || $request->wantsJson()) {
-            return response()->json([
-                'success'               => true,
-                'recommended_batches'   => $result['recommended'],
-                'not_recommended_batches' => $result['not_recommended'],
-            ]);
-        }
-
-        return redirect()->route('admin.scheduling.index')
-            ->with('success', 'Rekomendasi batch berhasil dibuat menggunakan Algoritma Genetika.')
-            ->with('ga_result', [
-                'recommended_batches'     => $result['recommended'],
-                'not_recommended_batches' => $result['not_recommended'],
-                'remaining_stock'         => $result['remaining_stock'],
-                'generations'             => self::MAX_GENERATIONS,
-                'message'                 => 'Rekomendasi batch berhasil dibuat menggunakan Algoritma Genetika.',
-            ]);
     }
 
     // ============================================================
@@ -135,7 +196,7 @@ class SchedulingController extends Controller
         $this->products = Product::with('recipes.rawMaterial')->get();
 
         // Index bahan baku untuk akses cepat
-        $this->materialStock = RawMaterial::all()->keyBy('id');
+        $this->materialStock = RawMaterial::where('is_active', true)->get()->keyBy('id');
 
         // Cache relasi produk -> [bahan baku]
         foreach ($this->products as $product) {

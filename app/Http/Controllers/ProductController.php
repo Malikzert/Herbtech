@@ -45,6 +45,14 @@ class ProductController extends Controller
             'unit' => 'nullable|string|max:50',
             'jeniss' => 'nullable|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'name.required' => 'Nama produk wajib diisi.',
+            'name.max' => 'Nama produk maksimal 255 karakter.',
+            'unit.max' => 'Satuan produk maksimal 50 karakter.',
+            'jeniss.max' => 'Kategori produk maksimal 100 karakter.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         if ($request->hasFile('image')) {
@@ -53,6 +61,8 @@ class ProductController extends Controller
             $image->move(public_path('image'), $filename);
             $validated['image'] = $filename;
         }
+
+        $validated['sku_code'] = 'TEMP-' . uniqid();
 
         Product::create($validated);
 
@@ -86,6 +96,14 @@ class ProductController extends Controller
             'unit' => 'nullable|string|max:50',
             'jeniss' => 'nullable|string|max:100',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'name.required' => 'Nama produk wajib diisi.',
+            'name.max' => 'Nama produk maksimal 255 karakter.',
+            'unit.max' => 'Satuan produk maksimal 50 karakter.',
+            'jeniss.max' => 'Kategori produk maksimal 100 karakter.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         if ($request->hasFile('image')) {

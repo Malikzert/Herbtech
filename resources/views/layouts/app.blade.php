@@ -780,6 +780,12 @@
 
             <!-- Page Content -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 md:p-8 z-10">
+                {{-- Flash & Validation Alerts --}}
+                <div class="space-y-4 mb-6">
+                    <x-alert-success />
+                    <x-alert-error />
+                    <x-alert-warning />
+                </div>
                 @yield('content')
             </main>
         </div>

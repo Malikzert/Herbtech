@@ -88,16 +88,6 @@
         </div>
     </div>
 
-    {{-- ALERTS --}}
-    @if(session('success'))
-    <div class="mb-6 border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-md p-4" style="border-radius:0;">
-        <div class="flex items-center gap-3">
-            <svg class="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <p class="text-sm font-bold text-emerald-200">{{ session('success') }}</p>
-        </div>
-    </div>
-    @endif
-
     {{-- NOTIFICATION: New QC Passed Alerts --}}
     @php
         $newlyPassed = \App\Models\RawMaterialQc::where('status', 'passed')

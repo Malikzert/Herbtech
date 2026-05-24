@@ -13,7 +13,7 @@
         this.detailLoading = true;
         this.detailData = null;
         this.detailModalOpen = true;
-        fetch('/admin/products/' + id, { headers: { 'Accept': 'application/json' } })
+        fetch('{{ url('operator/products') }}/' + id, { headers: { 'Accept': 'application/json' } })
             .then(r => r.json())
             .then(res => {
                 if (res.success) { this.detailData = res.data; }

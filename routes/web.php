@@ -85,6 +85,8 @@ Route::middleware('auth')->group(function () {
         Route::get('raw-materials', [RawMaterialController::class, 'index'])->name('operator.raw-materials.index');
         Route::get('raw-materials/qc', [RawMaterialQcController::class, 'operatorIndex'])->name('operator.raw-materials.qc.index');
         Route::post('raw-materials/qc', [RawMaterialQcController::class, 'operatorStore'])->name('operator.raw-materials.qc.store');
+        Route::post('raw-materials/qc/bulk-pass', [RawMaterialQcController::class, 'operatorBulkPass'])->name('operator.raw-materials.qc.bulk-pass');
         Route::get('products', [ProductController::class, 'index'])->name('operator.products.index');
+        Route::get('products/{product}', [ProductController::class, 'show'])->name('operator.products.show');
     });
 });

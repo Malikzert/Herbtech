@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class RawMaterial extends Model
 {
     protected $fillable = [
-        'name', 'sku', 'type', 'unit', 'current_stock', 'min_stock_level', 'supplier', 'image', 'qc_status'
+        'name', 'sku', 'type', 'unit', 'current_stock', 'min_stock_level', 'supplier', 'image', 'qc_status', 'is_active'
     ];
 
     protected $casts = [
         'current_stock' => 'integer',
         'min_stock_level' => 'integer',
+        'is_active' => 'boolean',
     ];
 
     protected static function booted()

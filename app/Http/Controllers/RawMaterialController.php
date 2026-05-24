@@ -47,6 +47,21 @@ class RawMaterialController extends Controller
             'min_stock_level' => 'nullable|integer|min:0',
             'supplier' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'name.required' => 'Nama bahan baku wajib diisi.',
+            'name.max' => 'Nama bahan baku maksimal 255 karakter.',
+            'type.required' => 'Jenis bahan baku (Herbal/Packaging/Additive) wajib dipilih.',
+            'type.in' => 'Jenis bahan baku tidak valid. Pilih Herbal, Packaging, atau Additive.',
+            'unit.required' => 'Satuan bahan baku wajib diisi (contoh: kg, gram, liter).',
+            'unit.max' => 'Satuan bahan baku maksimal 50 karakter.',
+            'current_stock.integer' => 'Jumlah stok harus berupa angka bulat.',
+            'current_stock.min' => 'Jumlah stok tidak boleh negatif.',
+            'min_stock_level.integer' => 'Batas minimum stok harus berupa angka bulat.',
+            'min_stock_level.min' => 'Batas minimum stok tidak boleh negatif.',
+            'supplier.max' => 'Nama supplier maksimal 255 karakter.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         if ($request->hasFile('image')) {
@@ -100,6 +115,21 @@ class RawMaterialController extends Controller
             'min_stock_level' => 'nullable|integer|min:0',
             'supplier' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'name.required' => 'Nama bahan baku wajib diisi.',
+            'name.max' => 'Nama bahan baku maksimal 255 karakter.',
+            'type.required' => 'Jenis bahan baku (Herbal/Packaging/Additive) wajib dipilih.',
+            'type.in' => 'Jenis bahan baku tidak valid. Pilih Herbal, Packaging, atau Additive.',
+            'unit.required' => 'Satuan bahan baku wajib diisi (contoh: kg, gram, liter).',
+            'unit.max' => 'Satuan bahan baku maksimal 50 karakter.',
+            'current_stock.integer' => 'Jumlah stok harus berupa angka bulat.',
+            'current_stock.min' => 'Jumlah stok tidak boleh negatif.',
+            'min_stock_level.integer' => 'Batas minimum stok harus berupa angka bulat.',
+            'min_stock_level.min' => 'Batas minimum stok tidak boleh negatif.',
+            'supplier.max' => 'Nama supplier maksimal 255 karakter.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         if ($request->hasFile('image')) {

@@ -59,7 +59,7 @@ class ProductionController extends Controller
     public function create(Request $request)
     {
         $products = Product::all();
-        $rawMaterials = \App\Models\RawMaterial::all();
+        $rawMaterials = \App\Models\RawMaterial::where('is_active', true)->get();
         $scheduling = null;
 
         if ($request->has('scheduling_id')) {
@@ -87,6 +87,24 @@ class ProductionController extends Controller
             'materials' => 'nullable|array',
             'materials.*.raw_material_id' => 'required|exists:raw_materials,id',
             'materials.*.quantity' => 'required|numeric|min:0.1',
+        ], [
+            'batch_number.required' => 'Nomor batch wajib diisi.',
+            'batch_number.unique' => 'Nomor batch sudah digunakan, gunakan nomor lain.',
+            'batch_number.max' => 'Nomor batch maksimal 100 karakter.',
+            'product_id.required' => 'Produk wajib dipilih untuk produksi.',
+            'product_id.exists' => 'Produk yang dipilih tidak ditemukan.',
+            'target_quantity.required' => 'Jumlah target produksi wajib diisi.',
+            'target_quantity.integer' => 'Jumlah target produksi harus berupa angka bulat.',
+            'target_quantity.min' => 'Jumlah target produksi minimal 1 unit.',
+            'start_date.required' => 'Tanggal mulai produksi wajib diisi.',
+            'start_date.date' => 'Format tanggal mulai produksi tidak valid.',
+            'pic_name.max' => 'Nama PIC maksimal 255 karakter.',
+            'materials.array' => 'Data bahan baku harus berupa array.',
+            'materials.*.raw_material_id.required' => 'Setiap bahan baku wajib dipilih.',
+            'materials.*.raw_material_id.exists' => 'Bahan baku yang dipilih tidak ditemukan.',
+            'materials.*.quantity.required' => 'Jumlah kebutuhan setiap bahan baku wajib diisi.',
+            'materials.*.quantity.numeric' => 'Jumlah kebutuhan bahan baku harus berupa angka.',
+            'materials.*.quantity.min' => 'Jumlah kebutuhan bahan baku minimal 0.1.',
         ]);
 
         $isOperator = !auth()->user()->can('admin');
@@ -189,6 +207,22 @@ class ProductionController extends Controller
             'end_date' => 'nullable|date',
             'pic_name' => 'nullable|string|max:255',
             'status' => ['nullable', Rule::in(['draft', 'pending', 'in_progress', 'qc_check', 'rework', 'completed', 'cancelled'])],
+        ], [
+            'batch_number.required' => 'Nomor batch wajib diisi.',
+            'batch_number.unique' => 'Nomor batch sudah digunakan, gunakan nomor lain.',
+            'batch_number.max' => 'Nomor batch maksimal 100 karakter.',
+            'product_id.required' => 'Produk wajib dipilih.',
+            'product_id.exists' => 'Produk yang dipilih tidak ditemukan.',
+            'target_quantity.required' => 'Jumlah target produksi wajib diisi.',
+            'target_quantity.integer' => 'Jumlah target produksi harus berupa angka bulat.',
+            'target_quantity.min' => 'Jumlah target produksi minimal 1 unit.',
+            'actual_quantity.integer' => 'Jumlah aktual harus berupa angka bulat.',
+            'actual_quantity.min' => 'Jumlah aktual tidak boleh negatif.',
+            'start_date.required' => 'Tanggal mulai produksi wajib diisi.',
+            'start_date.date' => 'Format tanggal mulai tidak valid.',
+            'end_date.date' => 'Format tanggal selesai tidak valid.',
+            'pic_name.max' => 'Nama PIC maksimal 255 karakter.',
+            'status.in' => 'Status produksi yang dipilih tidak valid.',
         ]);
 
         $isOperator = !auth()->user()->can('admin');
@@ -214,6 +248,9 @@ class ProductionController extends Controller
         $allowedStatuses = ['draft', 'pending', 'in_progress', 'qc_check', 'rework', 'completed', 'cancelled'];
         $validated = $request->validate([
             'status' => ['required', Rule::in($allowedStatuses)],
+        ], [
+            'status.required' => 'Status produksi wajib dipilih.',
+            'status.in' => 'Status produksi yang dipilih tidak valid. Pilih salah satu: Draft, Pending, In Progress, QC Check, Rework, Completed, atau Cancelled.',
         ]);
 
         $newStatus = $validated['status'];
@@ -293,7 +330,7 @@ class ProductionController extends Controller
         if (!empty($insufficient)) {
             return [
                 'passed'  => false,
-                'message' => 'Stok bahan baku tidak mencukupi: ' . implode(', ', $insufficient),
+                'message' => 'Gagal memproses jadwal! Sisa stok bahan baku saat ini tidak mencukupi batas minimum kebutuhan batch produksi. Detail: ' . implode(', ', $insufficient),
             ];
         }
 
@@ -347,7 +384,7 @@ class ProductionController extends Controller
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        $lowStockMaterials = \App\Models\RawMaterial::where(function ($q) {
+        $lowStockMaterials = \App\Models\RawMaterial::where('is_active', true)->where(function ($q) {
             $q->where('current_stock', '<=', \DB::raw('min_stock_level'))
               ->orWhere(function ($sub) {
                   $sub->whereNotNull('expired_date')
@@ -473,6 +510,13 @@ class ProductionController extends Controller
             'production_ids' => 'required|array|min:1',
             'production_ids.*' => 'exists:productions,id',
             'action' => 'required|in:approve,reset,regenerate',
+        ], [
+            'production_ids.required' => 'Pilih minimal satu batch produksi untuk diproses.',
+            'production_ids.array' => 'Data batch produksi tidak valid.',
+            'production_ids.min' => 'Pilih minimal satu batch produksi.',
+            'production_ids.*.exists' => 'Salah satu batch produksi yang dipilih tidak ditemukan.',
+            'action.required' => 'Tindakan (Approve/Reset/Regenerate) wajib dipilih.',
+            'action.in' => 'Tindakan yang dipilih tidak valid.',
         ]);
 
         $scheduler = app(ProductionSchedulerService::class);
@@ -492,7 +536,11 @@ class ProductionController extends Controller
         }
 
         if ($result['success']) {
-            return back()->with('success', 'Jadwal berhasil disetujui!');
+            $messages = [
+                'approve' => 'Jadwal produksi batch berhasil disetujui dan diteruskan ke panel Operator!',
+                'reset' => 'Antrean jadwal produksi berhasil di-reset. Sistem siap untuk melakukan komputasi ulang!',
+            ];
+            return back()->with('success', $messages[$validated['action']] ?? 'Jadwal berhasil diproses!');
         }
 
         if (!empty($result['stock_warnings'])) {

@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function admin()
     {
         $totalProductions = Production::count();
-        $lowStockCount = RawMaterial::where('current_stock', '<', 10)->count();
+        $lowStockCount = RawMaterial::where('is_active', true)->where('current_stock', '<', 10)->count();
         $pendingQcCount = Production::where('status', 'qc_check')->count();
         $totalProducts = Product::count();
         
@@ -29,6 +29,7 @@ class DashboardController extends Controller
 
         // Chart data: Stok Bahan Baku (exclude packaging / pcs)
         $rawMaterials = RawMaterial::select('name', 'current_stock')
+            ->where('is_active', true)
             ->where(function($q) {
                 $q->where('type', '!=', 'packaging')
                   ->orWhereNull('type');
@@ -110,10 +111,10 @@ class DashboardController extends Controller
         $qcPassRate = $qcInspected > 0 ? round(($qcPassedTotal / $qcInspected) * 100, 1) : 0;
 
         // Material stock health
-        $totalMaterials = RawMaterial::count();
-        $safeStockCount = RawMaterial::where('current_stock', '>=', DB::raw('min_stock_level'))->count();
-        $lowStockCount = RawMaterial::where('current_stock', '>', 0)->where('current_stock', '<', DB::raw('min_stock_level'))->count();
-        $outStockCount = RawMaterial::where('current_stock', '<=', 0)->count();
+        $totalMaterials = RawMaterial::where('is_active', true)->count();
+        $safeStockCount = RawMaterial::where('is_active', true)->where('current_stock', '>=', DB::raw('min_stock_level'))->count();
+        $lowStockCount = RawMaterial::where('is_active', true)->where('current_stock', '>', 0)->where('current_stock', '<', DB::raw('min_stock_level'))->count();
+        $outStockCount = RawMaterial::where('is_active', true)->where('current_stock', '<=', 0)->count();
 
         // Weekly production activity (last 7 days)
         $weeklyLabels = [];

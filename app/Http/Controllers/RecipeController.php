@@ -29,8 +29,9 @@ class RecipeController extends Controller
         
         $recipes = $query->latest()->paginate(10)->appends($request->query());
         $products = Product::all();
+        $rawMaterials = RawMaterial::where('is_active', true)->get();
         
-        return view('admin.recipes.index', compact('recipes', 'products'));
+        return view('admin.recipes.index', compact('recipes', 'products', 'rawMaterials'));
     }
 
     public function getByProduct($productId)
@@ -46,6 +47,15 @@ class RecipeController extends Controller
             'raw_material_id' => 'required|exists:raw_materials,id',
             'quantity_needed' => 'required|numeric|min:0.01',
             'unit' => 'nullable|string|max:50',
+        ], [
+            'product_id.required' => 'Produk wajib dipilih.',
+            'product_id.exists' => 'Produk yang dipilih tidak ditemukan.',
+            'raw_material_id.required' => 'Bahan baku wajib dipilih.',
+            'raw_material_id.exists' => 'Bahan baku yang dipilih tidak ditemukan.',
+            'quantity_needed.required' => 'Jumlah kebutuhan bahan baku wajib diisi.',
+            'quantity_needed.numeric' => 'Jumlah kebutuhan harus berupa angka.',
+            'quantity_needed.min' => 'Jumlah kebutuhan minimal 0.01.',
+            'unit.max' => 'Satuan maksimal 50 karakter.',
         ]);
 
         $existing = Recipe::where('product_id', $validated['product_id'])
@@ -68,6 +78,13 @@ class RecipeController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantities' => 'required|array',
             'quantities.*' => 'nullable|numeric|min:0.01',
+        ], [
+            'product_id.required' => 'Produk wajib dipilih.',
+            'product_id.exists' => 'Produk yang dipilih tidak ditemukan.',
+            'quantities.required' => 'Data jumlah kebutuhan bahan baku wajib diisi.',
+            'quantities.array' => 'Format data bahan baku tidak valid.',
+            'quantities.*.numeric' => 'Jumlah kebutuhan setiap bahan baku harus berupa angka.',
+            'quantities.*.min' => 'Jumlah kebutuhan setiap bahan baku minimal 0.01.',
         ]);
 
         $product = Product::findOrFail($validated['product_id']);

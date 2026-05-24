@@ -60,7 +60,7 @@
     showModal: false, 
     selectedProductId: '',
     selectedProductName: '',
-    rawMaterials: {{ Js::from(\App\Models\RawMaterial::all()->map(fn($rm) => ['id' => $rm->id, 'name' => $rm->name, 'sku' => $rm->sku, 'unit' => $rm->unit])) }},
+    rawMaterials: {{ Js::from(\App\Models\RawMaterial::where('is_active', true)->get()->map(fn($rm) => ['id' => $rm->id, 'name' => $rm->name, 'sku' => $rm->sku, 'unit' => $rm->unit])) }},
     recipeData: {},
     async loadRecipes() {
         if(this.selectedProductId) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ResetPasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,10 @@ class PasswordController extends Controller
     {
         $request->validate([
             'email' => ['required', 'email', 'exists:users,email'],
+        ], [
+            'email.required' => 'Email wajib diisi untuk mereset kata sandi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.exists' => 'Email tidak terdaftar dalam sistem.',
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -51,13 +56,9 @@ class PasswordController extends Controller
         ]);
     }
 
-    public function resetPassword(Request $request)
+    public function resetPassword(ResetPasswordRequest $request)
     {
-        $request->validate([
-            'token' => ['required'],
-            'email' => ['required', 'email', 'exists:users,email'],
-            'password' => ['required', 'confirmed', RulesPassword::min(8)],
-        ]);
+        $validated = $request->validated();
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),

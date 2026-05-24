@@ -230,7 +230,7 @@
 
     submitForm() {
         if (!this.selectedStatus || !this.isQcValid) return;
-        $refs.qcForm.submit();
+        this.$nextTick(() => { $refs.qcForm.submit(); });
     }
 }">
 
@@ -305,6 +305,14 @@
                     <p class="text-xs text-sky-200/40">{{ $materials->total() }} material menunggu pemeriksaan</p>
                 </div>
             </div>
+            <form method="POST" action="{{ route('operator.raw-materials.qc.bulk-pass') }}" onsubmit="return confirm('Yakin ingin meloloskan semua bahan baku yang menunggu QC ke 100% PASSED?')">
+                @csrf
+                <button type="submit"
+                    class="h-9 px-4 text-xs font-bold uppercase tracking-wider border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/15 hover:border-emerald-400/50 transition-all duration-200 flex items-center gap-1.5" style="border-radius:0;">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                    Bulk Pass QC
+                </button>
+            </form>
         </div>
 
         <div class="overflow-x-auto">
@@ -412,7 +420,7 @@
                     <form x-ref="qcForm" method="POST" action="{{ route('operator.raw-materials.qc.store') }}" class="space-y-4">
                         @csrf
                         <input type="hidden" name="raw_material_id" :value="selectedMaterial?.id">
-                        <input type="hidden" name="status" :value="selectedStatus">
+                        <input type="hidden" name="status" x-model="selectedStatus">
 
                         {{-- Material Info Card --}}
                         <div class="info-card flex items-center gap-4 p-4 bg-sky-50 border border-sky-200" style="border-radius:0;">

@@ -65,7 +65,7 @@ class GeneticBatchRecommender
     {
         $this->products = Product::with('recipes.rawMaterial')->get();
 
-        $this->materials = RawMaterial::all()->keyBy('id');
+        $this->materials = RawMaterial::where('is_active', true)->get()->keyBy('id');
 
         $this->recipes = Recipe::with('rawMaterial')->get();
 

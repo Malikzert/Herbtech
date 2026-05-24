@@ -82,7 +82,7 @@ class ProductionSchedulerService
 
     private function loadMaterialData(Collection $productions): void
     {
-        $rawMaterials = RawMaterial::with('recipes')->get()->keyBy('id');
+        $rawMaterials = RawMaterial::where('is_active', true)->with('recipes')->get()->keyBy('id');
     }
 
     private function calculatePriorityLevels(Collection $productions): void
@@ -389,7 +389,7 @@ class ProductionSchedulerService
             Log::warning('approveSchedule: stock insufficient', ['issues' => $stockIssues]);
             return [
                 'success' => false,
-                'message' => 'Stok bahan baku tidak mencukupi untuk batch ini: ' . implode('; ', $stockIssues),
+                'message' => 'Gagal memproses jadwal! Sisa stok bahan baku saat ini tidak mencukupi batas minimum kebutuhan batch produksi. Detail: ' . implode('; ', $stockIssues),
                 'stock_warnings' => $stockIssues,
             ];
         }

@@ -193,16 +193,28 @@
                     </div>
 
                     {{-- Password requirements hint --}}
-                    <div class="p-3 rounded-lg bg-white/5 border border-white/10">
-                        <p class="text-[10px] uppercase tracking-wider text-emerald-200/60 font-semibold mb-2">Persyaratan Password</p>
+                    <div class="p-3 rounded-lg bg-red-500/10 border border-red-500/30">
+                        <p class="text-[10px] uppercase tracking-wider text-red-300 font-semibold mb-2 font-mono">Persyaratan Password WAJIB</p>
                         <ul class="space-y-1">
-                            <li class="flex items-center gap-2 text-xs text-emerald-200/60">
-                                <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                            <li class="flex items-center gap-2 text-xs text-red-200/80 font-mono">
+                                <svg class="w-3 h-3 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                                 Minimal 8 karakter
                             </li>
-                            <li class="flex items-center gap-2 text-xs text-emerald-200/60">
-                                <svg class="w-3 h-3 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                Kombinasi huruf dan angka
+                            <li class="flex items-center gap-2 text-xs text-red-200/80 font-mono">
+                                <svg class="w-3 h-3 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Huruf BESAR (A-Z)
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-red-200/80 font-mono">
+                                <svg class="w-3 h-3 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Huruf kecil (a-z)
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-red-200/80 font-mono">
+                                <svg class="w-3 h-3 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Angka (0-9)
+                            </li>
+                            <li class="flex items-center gap-2 text-xs text-red-200/80 font-mono">
+                                <svg class="w-3 h-3 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Karakter spesial/simbol (@, #, $, dll)
                             </li>
                         </ul>
                     </div>
